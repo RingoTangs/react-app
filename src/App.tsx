@@ -1,11 +1,19 @@
-function App() {
-  return (
-    <div className="flex h-full w-full items-center justify-center">
-      <button className="rounded-md bg-blue-500 p-2 text-white" type="button">
-        Click me
-      </button>
-    </div>
-  )
+import { routeTree } from './routeTree.gen'
+
+const router = createRouter({
+  routeTree,
+  defaultPreload: 'intent',
+  scrollRestoration: true,
+})
+
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router
+  }
+}
+
+const App: React.FC = () => {
+  return <RouterProvider router={router} />
 }
 
 export default App

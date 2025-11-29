@@ -4,10 +4,13 @@ export default () => {
   return autoImport({
     include: [/\.[tj]sx?$/],
     imports: [
+      // tailwind-variants
       {
         from: 'tailwind-variants',
         imports: ['tv', 'cn', 'cx'],
       },
+
+      // @tanstack/react-query
       {
         from: '@tanstack/react-query',
         imports: [
@@ -21,10 +24,14 @@ export default () => {
           'QueryClientProvider',
         ],
       },
+
+      // @tanstack/react-query-devtools
       {
         from: '@tanstack/react-query-devtools',
-        imports: ['ReactQueryDevtools'],
+        imports: ['ReactQueryDevtools', 'TanStackQueryDevtools'],
       },
+
+      // react
       {
         from: 'react',
         imports: [
@@ -37,9 +44,29 @@ export default () => {
           'StrictMode',
         ],
       },
+
+      // react-dom/client
       {
         from: 'react-dom/client',
         imports: ['createRoot'],
+      },
+
+      // @tanstack/react-router
+      {
+        from: '@tanstack/react-router',
+        imports: [
+          'RouterProvider',
+          'createRouter',
+          'Link',
+          'Outlet',
+          'createRootRoute',
+        ],
+      },
+
+      // @tanstack/react-router-devtools
+      {
+        from: '@tanstack/react-router-devtools',
+        imports: ['TanStackRouterDevtools'],
       },
     ],
     dirs: ['src/utils'],

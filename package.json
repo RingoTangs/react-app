@@ -13,7 +13,8 @@
     "format:check": "prettier --check .",
     "format": "prettier --write .",
     "typecheck": "tsc -b",
-    "check": "pnpm lint && pnpm format:check && pnpm typecheck"
+    "check": "pnpm lint && pnpm format:check && pnpm typecheck",
+    "clean-types": "rimraf ./types/auto-imports.d.ts"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.17",
@@ -40,6 +41,7 @@
     "eslint-plugin-react-refresh": "^0.4.24",
     "prettier": "^3.6.2",
     "prettier-plugin-tailwindcss": "^0.7.1",
+    "rimraf": "^6.1.2",
     "sass": "^1.94.2",
     "typescript": "^5.9.3",
     "unplugin-auto-import": "^20.3.0",

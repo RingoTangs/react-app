@@ -10,7 +10,16 @@ export default () => {
       },
       {
         from: '@tanstack/react-query',
-        imports: ['useQuery', 'useMutation', 'useQueryClient'],
+        imports: [
+          'useQuery',
+          'useQueries',
+          'useInfiniteQuery',
+          'useMutation',
+          'useQueryClient',
+          'queryOptions',
+          'QueryClient',
+          'QueryClientProvider',
+        ],
       },
       {
         from: 'react',

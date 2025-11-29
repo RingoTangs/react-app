@@ -25,3 +25,4 @@ dist-ssr
 *.sw?
 
 types/auto-imports.d.ts
+routeTree.gen.ts

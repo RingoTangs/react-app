@@ -1,8 +1,6 @@
-export const Route = createRootRoute({
-  component: RootComponent,
-})
+import { createRootRoute, Outlet } from '@tanstack/react-router'
 
-function RootComponent() {
+const RootComponent: React.FC = () => {
   return (
     <>
       <Outlet />
@@ -10,3 +8,7 @@ function RootComponent() {
     </>
   )
 }
+
+export const Route = createRootRoute({
+  component: RootComponent,
+})

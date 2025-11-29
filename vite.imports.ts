@@ -54,13 +54,7 @@ export default () => {
       // @tanstack/react-router
       {
         from: '@tanstack/react-router',
-        imports: [
-          'RouterProvider',
-          'createRouter',
-          'Link',
-          'Outlet',
-          'createRootRoute',
-        ],
+        imports: ['RouterProvider', 'createRouter'],
       },
 
       // @tanstack/react-router-devtools

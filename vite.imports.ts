@@ -33,7 +33,7 @@ export default () => {
         ],
       },
     ],
-    dirs: [],
+    dirs: ['src/utils'],
     dts: 'types/auto-imports.d.ts',
   })
 }

@@ -1,0 +1,13 @@
+**/.git
+**/.svn
+**/.hg
+**/node_modules
+**/dist
+**/build
+**/.output
+**/.data
+**/pnpm-lock.yaml
+**/*.log
+**/.env.*
+**/.gitignore
+**/*.md

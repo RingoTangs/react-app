@@ -1,0 +1,19 @@
+import antfu from '@antfu/eslint-config'
+import prettier from 'eslint-config-prettier'
+
+export default antfu({
+  type: 'app',
+  react: true,
+  typescript: true,
+  stylistic: false,
+  formatters: false,
+  gitignore: true,
+  ignores: [
+    '**/node_modules/**',
+    '**/dist/**',
+    '**/build/**',
+    '**/.output/**',
+    '**/pnpm-lock.yaml',
+    '**/*.md',
+  ],
+}).append(prettier)

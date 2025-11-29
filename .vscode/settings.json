@@ -50,5 +50,8 @@
   ],
 
   "files.encoding": "utf8",
-  "files.eol": "\n"
+  "files.eol": "\n",
+
+  // tailwindcss
+  "tailwindCSS.classFunctions": ["tv"]
 }

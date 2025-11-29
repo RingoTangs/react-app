@@ -9,5 +9,6 @@
   "semi": false,
   "trailingComma": "all",
   "arrowParens": "always",
-  "plugins": ["prettier-plugin-tailwindcss"]
+  "plugins": ["prettier-plugin-tailwindcss"],
+  "tailwindFunctions": ["tv"]
 }

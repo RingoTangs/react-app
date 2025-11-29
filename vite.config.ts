@@ -12,8 +12,6 @@ export default defineConfig({
     AutoImport({
       include: [/\.[tj]sx?$/],
       imports: [
-        'react',
-        'react-dom',
         {
           from: 'tailwind-variants',
           imports: ['tv', 'cn', 'cx'],

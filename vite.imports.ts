@@ -22,6 +22,10 @@ export default () => {
         ],
       },
       {
+        from: '@tanstack/react-query-devtools',
+        imports: ['ReactQueryDevtools'],
+      },
+      {
         from: 'react',
         imports: [
           'useState',
@@ -30,7 +34,12 @@ export default () => {
           'useMemo',
           'useRef',
           'useContext',
+          'StrictMode',
         ],
+      },
+      {
+        from: 'react-dom/client',
+        imports: ['createRoot'],
       },
     ],
     dirs: ['src/utils'],

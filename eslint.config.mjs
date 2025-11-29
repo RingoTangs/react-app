@@ -16,4 +16,8 @@ export default antfu({
     '**/pnpm-lock.yaml',
     '**/*.md',
   ],
-}).append(prettier)
+})
+  .overrideRules({
+    'react-refresh/only-export-components': 'off',
+  })
+  .append(prettier)

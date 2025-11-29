@@ -5,7 +5,7 @@
   "private": true,
   "packageManager": "pnpm@10.24.0",
   "scripts": {
-    "dev": "vite",
+    "dev": "pnpm clean-types && vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "lint": "eslint .",
@@ -31,6 +31,7 @@
   "devDependencies": {
     "@antfu/eslint-config": "^6.2.0",
     "@eslint-react/eslint-plugin": "^2.3.9",
+    "@tanstack/react-query-devtools": "^5.91.1",
     "@types/node": "^20.19.25",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",

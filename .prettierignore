@@ -10,5 +10,4 @@
 **/*.log
 **/.env.*
 **/.gitignore
-**/*.md
 routeTree.gen.ts

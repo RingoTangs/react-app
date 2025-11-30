@@ -29,7 +29,7 @@ This is a React 19 + TypeScript + Vite app using:
 
 - React hooks: `useState`, `useEffect`, `useCallback`, `useMemo`, `useRef`, `useContext`, `StrictMode`
 - React Query: `useQuery`, `useMutation`, `useQueryClient`, `queryOptions`, etc.
-- Router: `Link`, `TanStackRouterDevtools`
+- Router: `Link`, `useNavigate`, `TanStackRouterDevtools`
 - Utilities from `src/utils/`: all exports are auto-imported
 - UI: `tv`, `cn`, `cx` from tailwind-variants, `ErrorBoundary`
 

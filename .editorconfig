@@ -1,0 +1,52 @@
+# .editorconfig
+# 让 EditorConfig 本身在子目录也能生效
+root = true
+
+# 所有文件通用规则
+[*]
+charset = utf-8                    # 编码统一 UTF-8
+end_of_line = lf                   # 强制 LF（和你的 endOfLine: "lf" 对齐）
+insert_final_newline = true        # 文件结尾必须有一行空行
+trim_trailing_whitespace = true    # 删除行尾空格
+indent_style = space               # 用空格缩进（而非 Tab）
+indent_size = 2                    # 2 个空格，和 tabWidth: 2 保持一致
+
+# Markdown 特殊处理
+[*.{md,mdx}]
+trim_trailing_whitespace = false
+max_line_length = 100              # 很多人喜欢在 Markdown 里看到垂直标尺，和 printWidth 一致
+
+# JSON / JSONC / JSON5
+[*.{json,json5,jsonc}]
+indent_size = 2
+insert_final_newline = true
+
+# YAML
+[*.{yml,yaml}]
+indent_size = 2
+
+# Tailwind 相关文件也保持一致
+[*.{js,jsx,ts,tsx,vue,astro,svelte,html}]
+indent_size = 2
+
+# Dockerfile
+[{Dockerfile,*.dockerfile}]
+indent_style = tab                 # Dockerfile 官方推荐用 Tab
+indent_size = 4                    # 其实没用，只是占位，编辑器会认 tab
+
+# Shell
+[*.sh]
+end_of_line = lf
+indent_size = 2
+
+# Makefile
+[Makefile]
+indent_style = tab                 # Makefile 必须用 Tab
+
+# Gitignore
+[.gitignore]
+trim_trailing_whitespace = false
+
+# 如果以后加了 Python、Go、Java 等语言，也可以继续在这里补规则
+# [*.py]
+# indent_size = 4

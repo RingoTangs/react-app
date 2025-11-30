@@ -15,5 +15,12 @@
     "types": ["vite/client", "vitest/globals"],
     "allowImportingTsExtensions": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.d.ts", "types/**/*.d.ts"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.d.ts",
+    "types/**/*.d.ts",
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx"
+  ]
 }

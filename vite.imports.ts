@@ -22,6 +22,7 @@ export default () => {
           'queryOptions',
           'QueryClient',
           'QueryClientProvider',
+          'QueryErrorResetBoundary',
         ],
       },
 
@@ -61,6 +62,11 @@ export default () => {
       {
         from: '@tanstack/react-router-devtools',
         imports: ['TanStackRouterDevtools'],
+      },
+      // react-error-boundary
+      {
+        from: 'react-error-boundary',
+        imports: ['ErrorBoundary'],
       },
     ],
     dirs: ['src/utils'],

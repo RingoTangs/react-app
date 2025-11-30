@@ -1,6 +1,6 @@
 const queryClient = new QueryClient()
 
-const QueryProvider: React.FC<{ children: React.ReactNode }> = ({
+export const QueryProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   return (
@@ -14,5 +14,3 @@ const QueryProvider: React.FC<{ children: React.ReactNode }> = ({
     </QueryClientProvider>
   )
 }
-
-export default QueryProvider

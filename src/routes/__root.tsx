@@ -1,5 +1,5 @@
 import { createRootRoute, Outlet } from '@tanstack/react-router'
-import PageErrorFallback from '@/components/PageErrorFallback'
+import { PageErrorFallback } from '@/components/builtin'
 
 const RootComponent: React.FC = () => {
   return (

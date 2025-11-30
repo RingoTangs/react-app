@@ -6,7 +6,7 @@
 
     /* Bundler mode */
     "moduleResolution": "bundler",
-    "types": ["node"],
+    "types": ["node", "vitest/config"],
     "allowImportingTsExtensions": true
   },
   "include": ["vite.config.ts"]

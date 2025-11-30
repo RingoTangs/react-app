@@ -8,6 +8,7 @@ export default antfu({
   stylistic: false,
   formatters: false,
   gitignore: true,
+  test: true,
   ignores: [
     '**/node_modules/**',
     '**/dist/**',

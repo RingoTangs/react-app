@@ -1,0 +1,88 @@
+.page-error-fallback-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #f9fafb; /* Light gray background */
+  font-family:
+    'Inter',
+    system-ui,
+    -apple-system,
+    sans-serif;
+  text-align: center;
+  padding: 2rem;
+}
+
+.page-error-image {
+  max-width: 100%;
+  width: 400px;
+  height: auto;
+  margin-bottom: 2rem;
+  filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.1));
+}
+
+.page-error-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #111827; /* Dark gray */
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.page-error-description {
+  font-size: 1.125rem;
+  color: #6b7280; /* Medium gray */
+  margin-bottom: 2rem;
+  max-width: 500px;
+  line-height: 1.5;
+}
+
+.page-error-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.page-error-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+}
+
+.page-error-button-primary {
+  background-color: #2563eb; /* Blue 600 */
+  color: white;
+  box-shadow:
+    0 4px 6px -1px rgba(37, 99, 235, 0.1),
+    0 2px 4px -1px rgba(37, 99, 235, 0.06);
+}
+
+.page-error-button-primary:hover {
+  background-color: #1d4ed8; /* Blue 700 */
+  transform: translateY(-1px);
+  box-shadow:
+    0 6px 8px -1px rgba(37, 99, 235, 0.15),
+    0 3px 6px -1px rgba(37, 99, 235, 0.1);
+}
+
+.page-error-button-secondary {
+  background-color: white;
+  color: #374151; /* Gray 700 */
+  border: 1px solid #d1d5db; /* Gray 300 */
+}
+
+.page-error-button-secondary:hover {
+  background-color: #f3f4f6; /* Gray 50 */
+  border-color: #9ca3af; /* Gray 400 */
+  color: #111827; /* Gray 900 */
+}

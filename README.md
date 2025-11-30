@@ -27,7 +27,7 @@ A modern, production-ready React application template built with the latest web 
 
 ```bash
 # Clone the repository
-git clone <your-repo-url>
+git clone https://github.com/RingoTangs/react-app.git
 cd react-app
 
 # Install dependencies
@@ -148,25 +148,11 @@ Pre-configured Axios instance with:
 - Error handling by status code
 
 ```typescript
-import http from '@/utils/http'
+// Auto import
+// import http from '@/utils/http'
 
 // Use the http client
 const data = await http.get('/endpoint')
-```
-
-### Environment Variables
-
-Create a `.env` file in the root directory:
-
-```env
-VITE_API_BASE_URL=https://api.example.com
-```
-
-Access in code via:
-
-```typescript
-import { env } from '@/utils/env'
-const apiUrl = env.VITE_API_BASE_URL
 ```
 
 ## 🎨 Styling
@@ -181,7 +167,8 @@ This template uses Tailwind CSS v4 with a custom configuration. The design syste
 Example component with Tailwind Variants:
 
 ```typescript
-import { tv } from 'tailwind-variants'
+// auto import
+// import { tv } from 'tailwind-variants'
 
 const button = tv({
   base: 'rounded px-4 py-2',

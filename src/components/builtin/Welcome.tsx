@@ -45,7 +45,7 @@ export const Welcome: React.FC = () => {
               Get Started
             </Link>
             <a
-              href="https://github.com"
+              href="https://github.com/RingoTangs/react-app"
               target="_blank"
               rel="noopener noreferrer"
               className="rounded-full border border-slate-600 bg-slate-800/50 px-8 py-3 font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:border-slate-500 hover:bg-slate-700/50"

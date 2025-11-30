@@ -5,7 +5,14 @@ const RootComponent: React.FC = () => {
   return (
     <QueryErrorResetBoundary>
       {({ reset }) => (
-        <ErrorBoundary onReset={reset} FallbackComponent={PageErrorFallback}>
+        <ErrorBoundary
+          onReset={reset}
+          FallbackComponent={PageErrorFallback}
+          onError={(error, info) => {
+            // Sentry / 自建日志
+            console.error('ErrorBoundary onError', error, info)
+          }}
+        >
           <Outlet />
           <TanStackRouterDevtools position="bottom-left" />
         </ErrorBoundary>

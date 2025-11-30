@@ -16,6 +16,12 @@ const button = tv({
 })
 
 const PageErrorFallback: React.FC<FallbackProps> = ({ resetErrorBoundary }) => {
+  const navigate = useNavigate()
+
+  const handleBackHome = () => {
+    navigate({ to: '/' }).then(() => resetErrorBoundary())
+  }
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-8 text-center font-sans">
       <h1 className="mb-4 text-4xl leading-tight font-bold text-gray-900">
@@ -33,9 +39,13 @@ const PageErrorFallback: React.FC<FallbackProps> = ({ resetErrorBoundary }) => {
         >
           Try Again
         </button>
-        <Link to="/" className={button({ intent: 'secondary' })}>
+        <button
+          type="button"
+          onClick={handleBackHome}
+          className={button({ intent: 'secondary' })}
+        >
           Back to Home
-        </Link>
+        </button>
       </div>
     </div>
   )

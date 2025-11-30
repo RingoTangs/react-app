@@ -55,7 +55,7 @@ export default () => {
       // @tanstack/react-router
       {
         from: '@tanstack/react-router',
-        imports: ['Link'],
+        imports: ['Link', 'useNavigate'],
       },
 
       // @tanstack/react-router-devtools

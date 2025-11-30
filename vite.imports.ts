@@ -29,7 +29,7 @@ export default () => {
       // @tanstack/react-query-devtools
       {
         from: '@tanstack/react-query-devtools',
-        imports: ['ReactQueryDevtools', 'TanStackQueryDevtools'],
+        imports: ['ReactQueryDevtools'],
       },
 
       // react

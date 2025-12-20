@@ -4,6 +4,19 @@ export default () => {
   return autoImport({
     include: [/\.[tj]sx?$/],
     imports: [
+      // react
+      {
+        from: 'react',
+        imports: [
+          'StrictMode',
+          'useState',
+          'useEffect',
+          'useMemo',
+          'useCallback',
+          'useRef',
+        ],
+      },
+
       // tailwind-variants
       {
         from: 'tailwind-variants',
@@ -13,43 +26,7 @@ export default () => {
       // @tanstack/react-query
       {
         from: '@tanstack/react-query',
-        imports: [
-          'useQuery',
-          'useQueries',
-          'useInfiniteQuery',
-          'useMutation',
-          'useQueryClient',
-          'queryOptions',
-          'QueryClient',
-          'QueryClientProvider',
-          'QueryErrorResetBoundary',
-        ],
-      },
-
-      // @tanstack/react-query-devtools
-      {
-        from: '@tanstack/react-query-devtools',
-        imports: ['ReactQueryDevtools'],
-      },
-
-      // react
-      {
-        from: 'react',
-        imports: [
-          'useState',
-          'useEffect',
-          'useCallback',
-          'useMemo',
-          'useRef',
-          'useContext',
-          'StrictMode',
-        ],
-      },
-
-      // react-dom/client
-      {
-        from: 'react-dom/client',
-        imports: ['createRoot'],
+        imports: ['useQuery', 'useMutation', 'useQueryClient'],
       },
 
       // @tanstack/react-router
@@ -58,11 +35,6 @@ export default () => {
         imports: ['Link', 'useNavigate'],
       },
 
-      // @tanstack/react-router-devtools
-      {
-        from: '@tanstack/react-router-devtools',
-        imports: ['TanStackRouterDevtools'],
-      },
       // react-error-boundary
       {
         from: 'react-error-boundary',

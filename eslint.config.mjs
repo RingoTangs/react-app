@@ -16,7 +16,6 @@ export default antfu({
     '**/.output/**',
     '**/pnpm-lock.yaml',
     '**/*.md',
-    'routeTree.gen.ts',
   ],
 })
   .overrideRules({

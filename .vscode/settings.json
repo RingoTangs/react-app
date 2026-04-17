@@ -2,7 +2,7 @@
   // Use prettier to format code
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
-
+  "prettier.requireConfig": true,
   // Auto fix
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
@@ -61,7 +61,8 @@
   // tanstack router
   "files.readonlyInclude": {
     "**/routeTree.gen.ts": true,
-    "**/auto-imports.d.ts": true
+    "**/auto-imports.d.ts": true,
+    "node_modules/**": true
   },
   "files.watcherExclude": {
     "**/routeTree.gen.ts": true

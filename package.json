@@ -4,6 +4,9 @@
   "version": "0.0.0",
   "private": true,
   "packageManager": "pnpm@10.24.0",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "scripts": {
     "dev": "pnpm clean-types && vite",
     "build": "tsc -b && vite build",

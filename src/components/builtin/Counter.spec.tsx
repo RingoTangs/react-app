@@ -1,6 +1,5 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { Counter } from './Counter'
-import '@testing-library/jest-dom'
 
 afterEach(cleanup)
 

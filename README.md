@@ -110,6 +110,21 @@ src/features/<feature-name>/
 
 Do not create empty folders by default. Add a folder only when the feature has code that clearly belongs there. Keep feature-specific requests under the owning feature, and add shared request infrastructure under `shared/api` only when a real transport layer is introduced.
 
+### Routes vs Feature Pages
+
+Page-level business components belong in `features/<feature-name>/ui`. Route files should stay thin and focus on route semantics: path mapping, route params, search schemas, loaders, guards, and route-level pending or error behavior.
+
+```tsx
+import { createFileRoute } from '@tanstack/react-router'
+import { UserListPage } from '@/features/users/ui/UserListPage'
+
+export const Route = createFileRoute('/users')({
+  component: UserListPage,
+})
+```
+
+Reusable fallback pages such as generic not-found or error states belong in `shared/ui` when they are not owned by a specific feature.
+
 ## Template Defaults
 
 - Router and React Query devtools are enabled only in development.

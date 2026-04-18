@@ -4,6 +4,17 @@
   "version": "0.0.0",
   "private": true,
   "packageManager": "pnpm@10.24.0",
+  "description": "Team-oriented React application template built with Vite, TanStack Router, TanStack Query, Tailwind CSS, and Vitest.",
+  "license": "UNLICENSED",
+  "keywords": [
+    "react",
+    "vite",
+    "typescript",
+    "tanstack-router",
+    "tanstack-query",
+    "tailwindcss",
+    "template"
+  ],
   "engines": {
     "node": ">=22.0.0"
   },
@@ -17,23 +28,25 @@
     "format": "prettier --write .",
     "typecheck": "tsc -b",
     "check": "pnpm lint && pnpm format:check && pnpm typecheck && pnpm test:run",
+    "check:ci": "pnpm check",
+    "check:fix": "pnpm lint:fix && pnpm format",
     "test": "vitest",
     "test:run": "vitest run",
+    "lint-staged": "lint-staged",
     "prepare": "husky"
   },
   "dependencies": {
-    "@tailwindcss/vite": "^4.2.2",
     "@tanstack/react-query": "^5.99.0",
     "@tanstack/react-router": "^1.168.22",
     "dayjs": "^1.11.20",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "react-error-boundary": "^6.1.1",
-    "tailwind-variants": "^3.2.2",
-    "tailwindcss": "^4.2.2"
+    "tailwind-variants": "^3.2.2"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^6.2.0",
+    "@tailwindcss/vite": "^4.2.2",
     "@tanstack/react-query-devtools": "^5.99.0",
     "@tanstack/react-router-devtools": "^1.166.13",
     "@tanstack/router-plugin": "^1.167.22",
@@ -52,6 +65,7 @@
     "lint-staged": "^16.4.0",
     "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.7.2",
+    "tailwindcss": "^4.2.2",
     "typescript": "^5.9.3",
     "vite": "^8.0.8",
     "vitest": "^4.1.4"

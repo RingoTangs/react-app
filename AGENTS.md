@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-Application code lives in `src/`. App infrastructure lives in `src/app`: providers, router setup, runtime config, devtools, and monitoring. TanStack file routes live in `src/routes` and should stay thin, delegating page implementation to `src/features`. Reusable product-agnostic UI belongs in `src/shared/ui`; pure helpers belong in `src/shared/lib`. Business or demo capabilities should be grouped by domain under `src/features`. Repo-level ambient declarations may be added under `types/` when needed. Generated router output is committed as `src/routeTree.gen.ts`; avoid manual edits.
+Application code lives in `src/`. App infrastructure lives in `src/app`: providers, router setup, runtime config, devtools, and monitoring. TanStack file routes live in `src/routes` and should stay thin, delegating page implementation to `src/features`. Reusable product-agnostic UI belongs in `src/shared/ui`; pure helpers belong in `src/shared/lib`. Business or demo capabilities should be grouped by domain under `src/features`; feature modules may add `api`, `model`, `hooks`, `lib`, and `constants` by need. Repo-level ambient declarations may be added under `types/` when needed. Generated router output is committed as `src/routeTree.gen.ts`; avoid manual edits.
 
 ## Build, Test, and Development Commands
 
@@ -33,4 +33,4 @@ Recent history follows conventional prefixes such as `chore:`, `refactor:`, and 
 
 ## Agent-Specific Notes
 
-Do not hand-edit generated files unless the underlying generator input changed. Do not reintroduce generic top-level `components/` or `utils/` directories; use `shared` or `features` based on ownership. Keep `app` free of business logic, keep route files focused on URL-to-page mapping, and keep shared code independent of app, route, and feature modules. Keep edits focused, avoid unrelated formatting churn, and leave the worktree clean except for intentional changes. README is the source of truth for the full directory tree; this file should stay focused on contributor and agent operating rules.
+Do not hand-edit generated files unless the underlying generator input changed. Do not reintroduce generic top-level `components/` or `utils/` directories; use `shared` or `features` based on ownership. Do not create empty feature subdirectories or add a top-level `src/api`; feature-specific requests belong under the owning feature unless a generated SDK or shared transport layer is introduced. Keep `app` free of business logic, keep route files focused on URL-to-page mapping, and keep shared code independent of app, route, and feature modules. Keep edits focused, avoid unrelated formatting churn, and leave the worktree clean except for intentional changes. README is the source of truth for the full directory tree; this file should stay focused on contributor and agent operating rules.

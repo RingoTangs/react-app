@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 export const Counter: React.FC<{ initial?: number }> = ({ initial = 0 }) => {
   const [count, setCount] = useState(initial)
 

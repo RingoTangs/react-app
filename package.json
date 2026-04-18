@@ -17,7 +17,7 @@
     "format:check": "prettier --check .",
     "format": "prettier --write .",
     "typecheck": "tsc -b",
-    "check": "pnpm lint && pnpm format:check && pnpm typecheck",
+    "check": "pnpm lint && pnpm format:check && pnpm typecheck && pnpm test:run",
     "clean-types": "rimraf ./types/auto-imports.d.ts",
     "test": "vitest",
     "test:run": "vitest run",

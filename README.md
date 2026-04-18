@@ -1,251 +1,63 @@
 # React App Template
 
-A modern, production-ready React application template built with the latest web technologies. Features type-safe routing, powerful data fetching, and a beautiful UI foundation.
+A team-oriented React starter built on React 19, Vite 8, TanStack Router, TanStack Query, Tailwind CSS v4, and Vitest. The template keeps runtime defaults conservative and pushes app wiring, monitoring, and transport setup into explicit boundaries.
 
-## ✨ Features
+## Quick Start
 
-- ⚛️ **React 19** - Latest React with improved performance and new features
-- 🔷 **TypeScript** - Full type safety and enhanced developer experience
-- ⚡ **Vite** - Lightning-fast development and optimized builds
-- 🧭 **TanStack Router** - Type-safe file-based routing with automatic code splitting
-- 🔄 **TanStack Query** - Powerful async state management and data fetching
-- 🎨 **Tailwind CSS v4** - Utility-first CSS framework with the latest features
-- 🎯 **Auto Import** - Import React hooks and utilities automatically
-- 📦 **pnpm** - Fast, disk space efficient package manager
-- 🔍 **ESLint + Prettier** - Code quality and formatting
-- 🪝 **Husky** - Git hooks for maintaining code quality
-- 🎭 **Error Boundaries** - Graceful error handling with custom fallback UI
+### Requirements
 
-## 🚀 Quick Start
+- Node.js `>=22.0.0`
+- pnpm `>=10.24.0`
 
-### Prerequisites
-
-- Node.js >= 18
-- pnpm >= 10.24.0
-
-### Installation
+### Run locally
 
 ```bash
-# Clone the repository
-git clone https://github.com/RingoTangs/react-app.git
-cd react-app
-
-# Install dependencies
 pnpm install
-
-# Start development server
 pnpm dev
 ```
 
-The app will be available at `http://localhost:3000`
+The dev server runs on `http://localhost:3000`.
 
-## 📜 Available Scripts
-
-```bash
-# Development
-pnpm dev          # Start development server with hot reload
-
-# Build
-pnpm build        # Build for production
-pnpm preview      # Preview production build locally
-
-# Code Quality
-pnpm lint         # Run ESLint
-pnpm lint:fix     # Fix ESLint errors automatically
-pnpm format       # Format code with Prettier
-pnpm format:check # Check code formatting
-pnpm typecheck    # Run TypeScript type checking
-pnpm check        # Run all checks (lint + format + typecheck)
-```
-
-## 📁 Project Structure
-
-```
-react-app/
-├── src/
-│   ├── routes/              # File-based routing
-│   │   ├── __root.tsx      # Root layout with error boundary
-│   │   ├── index.tsx       # Home page
-│   │   └── error.tsx       # Error test page
-│   ├── components/
-│   │   └── builtin/        # Built-in reusable components
-│   │       ├── Button.tsx
-│   │       ├── NotFound.tsx
-│   │       ├── PageErrorFallback.tsx
-│   │       ├── QueryProvider.tsx
-│   │       └── Welcome.tsx
-│   ├── utils/              # Utility functions
-│   │   ├── dayjs.ts       # Date/time utilities
-│   │   ├── env.ts         # Environment variables
-│   │   ├── http.ts        # HTTP client (Axios)
-│   │   └── sleep.ts       # Sleep utility
-│   ├── App.tsx            # Root application component
-│   ├── main.tsx           # Application entry point
-│   └── style.css          # Global styles
-├── public/                # Static assets
-├── types/                 # TypeScript type definitions
-├── vite.config.ts         # Vite configuration
-├── vite.imports.ts        # Auto-import configuration
-├── tsconfig.*.json        # TypeScript configuration
-└── package.json
-```
-
-## 🛠️ Technology Stack
-
-### Core
-
-- **React 19.2.0** - UI library
-- **TypeScript 5.9** - Type safety
-- **Vite 7.2** - Build tool and dev server
-
-### Routing & Data
-
-- **@tanstack/react-router** - Type-safe routing
-- **@tanstack/react-query** - Server state management
-- **axios** - HTTP client
-
-### Styling
-
-- **Tailwind CSS v4** - Utility-first CSS
-- **tailwind-variants** - Component variant management
-- **tailwind-merge** - Intelligent class merging
-
-### Development Tools
-
-- **unplugin-auto-import** - Automatic imports
-- **ESLint** (@antfu/eslint-config) - Linting
-- **Prettier** - Code formatting
-- **Husky** - Git hooks
-- **lint-staged** - Run linters on staged files
-
-## 🔧 Configuration
-
-### Path Aliases
-
-The project uses `@/` as an alias for the `src/` directory:
-
-```typescript
-import { Button } from '@/components/builtin'
-```
-
-### Auto Import
-
-The following are automatically imported without explicit import statements:
-
-- **React Hooks**: `useState`, `useEffect`, `useMemo`, `useCallback`, etc.
-- **React Query**: `useQuery`, `useMutation`, `useQueryClient`, etc.
-- **Router**: `Link`, `useNavigate`
-- **Tailwind**: `tv`, `cn`, `cx`
-- **Utils**: All functions from `src/utils/`
-
-### HTTP Client
-
-Pre-configured Axios instance with:
-
-- Auto token injection from localStorage
-- Request/response interceptors
-- Retry logic
-- Error handling by status code
-
-```typescript
-// Auto import
-// import http from '@/utils/http'
-
-// Use the http client
-const data = await http.get('/endpoint')
-```
-
-## 🎨 Styling
-
-This template uses Tailwind CSS v4 with a custom configuration. The design system includes:
-
-- Responsive design utilities
-- Custom color schemes with gradients
-- Glassmorphism effects
-- Smooth transitions and animations
-
-Example component with Tailwind Variants:
-
-```typescript
-// auto import
-// import { tv } from 'tailwind-variants'
-
-const button = tv({
-  base: 'rounded px-4 py-2',
-  variants: {
-    intent: {
-      primary: 'bg-blue-600 text-white',
-      secondary: 'bg-gray-200 text-gray-900',
-    },
-  },
-})
-```
-
-## 🧪 Error Handling
-
-The app includes comprehensive error handling:
-
-- **Error Boundaries**: Catch React component errors
-- **Custom Fallback UI**: Beautiful error pages
-- **404 Page**: Custom not found page
-- **Query Error Reset**: Integration with React Query error recovery
-
-## 📝 Code Quality
-
-### Pre-commit Hooks
-
-Husky and lint-staged automatically run on commit:
-
-- ESLint fixes
-- Prettier formatting
-- Only on staged files
-
-### Code Style
-
-- **Indentation**: 2 spaces
-- **Quotes**: Single quotes
-- **Semi-colons**: No
-- **Trailing commas**: Yes
-- **Line endings**: LF
-
-## 🚢 Deployment
-
-### Build for Production
+## Scripts
 
 ```bash
-pnpm build
+pnpm dev          # start Vite dev server
+pnpm build        # typecheck and create a production build
+pnpm preview      # preview the built app locally
+pnpm test         # run Vitest in watch mode
+pnpm test:run     # run tests once
+pnpm lint         # run ESLint
+pnpm format:check # verify Prettier formatting
+pnpm check        # lint + format + typecheck + test
 ```
 
-The optimized files will be in the `dist/` directory.
+## Project Layout
 
-### Deploy to Vercel
+```text
+src/
+  app/          # app config, providers, router wiring, monitoring, HTTP factory
+  components/   # reusable UI and fallback pages
+  routes/       # TanStack file routes
+  utils/        # small shared utilities and compatibility re-exports
+```
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
+Key boundaries:
 
-### Deploy to Netlify
+- `src/app/config/env.ts` is the single entry for environment-derived config.
+- `src/app/providers` owns app-level providers.
+- `src/app/monitoring/reportError.ts` is the integration point for Sentry or another logger.
+- `src/utils/http.ts` exposes a neutral HTTP client; auth and retry should be added by feature code or app-specific plugins.
 
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start)
+## Template Defaults
 
-## 🤝 Contributing
+- Router and React Query devtools are enabled only in development.
+- Auto-import is intentionally limited to Tailwind variant helpers (`tv`, `cn`, `cx`).
+- React Query uses conservative defaults: `staleTime: 30s`, `retry: 1`, `refetchOnWindowFocus: false`.
+- Error boundaries recover through `QueryErrorResetBoundary` and report through a single adapter.
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+## Development Rules
 
-## 📄 License
-
-This project is licensed under the MIT License.
-
-## 🙏 Acknowledgments
-
-- [Vite](https://vitejs.dev/)
-- [React](https://react.dev/)
-- [TanStack](https://tanstack.com/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [@antfu/eslint-config](https://github.com/antfu/eslint-config)
-
----
-
-Built with ❤️ using modern web technologies
+- Use explicit imports for React, router, and app utilities.
+- Keep business logic out of `app/`; add product behavior under feature modules as the project grows.
+- Do not hand-edit generated router output in `src/routeTree.gen.ts`.
+- Run `pnpm check` before opening a PR.

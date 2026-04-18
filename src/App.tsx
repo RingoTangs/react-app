@@ -1,19 +1,6 @@
-import { createRouter, RouterProvider } from '@tanstack/react-router'
-import { NotFound, QueryProvider } from '@/components/builtin'
-import { routeTree } from './routeTree.gen'
-
-const router = createRouter({
-  routeTree,
-  defaultPreload: 'intent',
-  scrollRestoration: true,
-  defaultNotFoundComponent: NotFound,
-})
-
-declare module '@tanstack/react-router' {
-  interface Register {
-    router: typeof router
-  }
-}
+import { RouterProvider } from '@tanstack/react-router'
+import { QueryProvider } from '@/app/providers/QueryProvider'
+import { router } from '@/app/router/router'
 
 const App: React.FC = () => {
   return (

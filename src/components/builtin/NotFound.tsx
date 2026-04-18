@@ -1,3 +1,4 @@
+import { useNavigate } from '@tanstack/react-router'
 import { Button } from './Button'
 
 export const NotFound: React.FC = () => {

@@ -1,6 +1,8 @@
 import { QueryErrorResetBoundary } from '@tanstack/react-query'
 import { createRootRoute, Outlet } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
+import { ErrorBoundary } from 'react-error-boundary'
+import { reportError } from '@/app/monitoring/reportError'
+import { RouterDevtools } from '@/app/router/RouterDevtools'
 import { PageErrorFallback } from '@/components/builtin'
 
 const RootComponent: React.FC = () => {
@@ -11,12 +13,11 @@ const RootComponent: React.FC = () => {
           onReset={reset}
           FallbackComponent={PageErrorFallback}
           onError={(error, info) => {
-            // Sentry / 自建日志
-            console.error('ErrorBoundary onError', error, info)
+            reportError(error, info)
           }}
         >
           <Outlet />
-          <TanStackRouterDevtools position="bottom-left" />
+          <RouterDevtools />
         </ErrorBoundary>
       )}
     </QueryErrorResetBoundary>

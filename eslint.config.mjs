@@ -14,6 +14,7 @@ export default antfu({
     '**/dist/**',
     '**/build/**',
     '**/.output/**',
+    '**/routeTree.gen.ts',
     '**/pnpm-lock.yaml',
     '**/*.md',
   ],

@@ -2,11 +2,11 @@
 
 ## Project Structure & Module Organization
 
-Application code lives in `src/`. App wiring and infrastructure live in `src/app`, route files are under `src/routes`, reusable UI belongs in `src/shared/ui`, and pure helpers belong in `src/shared/lib`. Business or demo capabilities should be grouped under `src/features`. Generated router output is committed as `src/routeTree.gen.ts`; avoid manual edits. TypeScript config is split across `tsconfig*.json`, and repo-level tooling lives in `vite.config.ts`, `eslint.config.mjs`, and `.prettierrc`.
+Application code lives in `src/`. App infrastructure lives in `src/app`: providers, router setup, runtime config, devtools, and monitoring. TanStack file routes live in `src/routes` and should stay thin, delegating page implementation to `src/features`. Reusable product-agnostic UI belongs in `src/shared/ui`; pure helpers belong in `src/shared/lib`. Business or demo capabilities should be grouped by domain under `src/features`. Generated router output is committed as `src/routeTree.gen.ts`; avoid manual edits.
 
 ## Build, Test, and Development Commands
 
-Use `pnpm` with Node `>=22`.
+Use `pnpm@10.24.0` with Node `>=22.0.0`. `.npmrc` enables `engine-strict=true`, so installs should fail on unsupported Node versions.
 
 - `pnpm dev` starts Vite on `http://localhost:3000`.
 - `pnpm build` runs TypeScript project builds, then creates a production bundle in `dist/`.
@@ -15,6 +15,9 @@ Use `pnpm` with Node `>=22`.
 - `pnpm lint` checks ESLint rules, `pnpm lint:fix` applies safe fixes.
 - `pnpm format:check` verifies formatting, and `pnpm format` rewrites files.
 - `pnpm check` is the main pre-PR gate: lint, Prettier, typecheck, and tests together.
+- `pnpm check:ci` is the stable CI entrypoint and delegates to `pnpm check`.
+- `pnpm check:fix` applies local lint fixes and Prettier formatting.
+- `pnpm lint-staged` runs the staged-file checks used by the pre-commit hook.
 
 ## Coding Style & Naming Conventions
 
@@ -30,4 +33,4 @@ Recent history follows conventional prefixes such as `chore:`, `refactor:`, and 
 
 ## Agent-Specific Notes
 
-Do not hand-edit generated files unless the underlying generator input changed. Keep edits focused, avoid unrelated formatting churn, and leave the worktree clean except for intentional changes.
+Do not hand-edit generated files unless the underlying generator input changed. Do not reintroduce generic top-level `components/` or `utils/` directories; use `shared` or `features` based on ownership. Keep `app` free of business logic, keep route files focused on URL-to-page mapping, and keep shared code independent of app, route, and feature modules. Keep edits focused, avoid unrelated formatting churn, and leave the worktree clean except for intentional changes. README is the source of truth for the full directory tree; this file should stay focused on contributor and agent operating rules.

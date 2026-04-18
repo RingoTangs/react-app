@@ -39,7 +39,6 @@ src/
   shared/       # reusable UI, pure helpers, and shared assets
   features/     # business or demo capabilities grouped by domain
   routes/       # TanStack file routes and page composition
-  utils/        # temporary compatibility re-exports during migration
 ```
 
 Key boundaries:
@@ -47,7 +46,7 @@ Key boundaries:
 - `src/app/config/env.ts` is the single entry for environment-derived config.
 - `src/app/providers` owns app-level providers.
 - `src/app/monitoring/reportError.ts` is the integration point for Sentry or another logger.
-- `src/utils/http.ts` exposes a neutral HTTP client; auth and retry should be added by feature code or app-specific plugins.
+- `src/app/http/createHttpClient.ts` provides a neutral HTTP transport factory; auth and retry should be added by feature code or app-specific plugins.
 - `src/shared/ui` holds reusable UI such as `Button`, `NotFound`, and `PageErrorFallback`.
 - `src/features/home` and `src/features/example-counter` demonstrate how page-level and demo capabilities should be isolated from app wiring.
 
@@ -63,5 +62,6 @@ Key boundaries:
 - Use explicit imports for React, router, and app utilities.
 - Keep business logic out of `app/`; add product behavior under feature modules as the project grows.
 - Keep reusable UI under `shared/ui` and pure utilities under `shared/lib`.
+- Do not reintroduce generic `components/` or `utils/` top-level folders; add code to `shared` or `features` instead.
 - Do not hand-edit generated router output in `src/routeTree.gen.ts`.
 - Run `pnpm check` before opening a PR.

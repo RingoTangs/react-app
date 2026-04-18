@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-Application code lives in `src/`. Route files are under `src/routes`, shared UI is in `src/components`, and small helpers such as `env`, `http`, and date utilities live in `src/utils`. Static assets belong in `src/assets` or `public/` depending on whether they are imported by code. Generated router output is committed as `src/routeTree.gen.ts`; avoid manual edits. TypeScript config is split across `tsconfig*.json`, and repo-level tooling lives in `vite.config.ts`, `eslint.config.mjs`, and `.prettierrc`.
+Application code lives in `src/`. App wiring and infrastructure live in `src/app`, route files are under `src/routes`, reusable UI belongs in `src/shared/ui`, and pure helpers belong in `src/shared/lib`. Business or demo capabilities should be grouped under `src/features`. Generated router output is committed as `src/routeTree.gen.ts`; avoid manual edits. TypeScript config is split across `tsconfig*.json`, and repo-level tooling lives in `vite.config.ts`, `eslint.config.mjs`, and `.prettierrc`.
 
 ## Build, Test, and Development Commands
 
@@ -14,7 +14,7 @@ Use `pnpm` with Node `>=22`.
 - `pnpm test` runs Vitest in watch mode; `pnpm test:run` is the non-interactive CI-style run.
 - `pnpm lint` checks ESLint rules, `pnpm lint:fix` applies safe fixes.
 - `pnpm format:check` verifies formatting, and `pnpm format` rewrites files.
-- `pnpm check` is the main pre-PR gate: lint, Prettier, and typecheck together.
+- `pnpm check` is the main pre-PR gate: lint, Prettier, typecheck, and tests together.
 
 ## Coding Style & Naming Conventions
 
@@ -22,7 +22,7 @@ This repo uses TypeScript, React 19, and Vite with 2-space indentation, single q
 
 ## Testing Guidelines
 
-Vitest runs in the `happy-dom` environment with shared setup from `src/setupTests.ts`. Write component tests with Testing Library and keep them close to the source file, for example `src/components/builtin/Counter.spec.tsx`. Cover new UI states, user interactions, and error boundaries when behavior changes. Run `pnpm test:run` before opening a PR.
+Vitest runs in the `happy-dom` environment with shared setup from `src/setupTests.ts`. Write component tests with Testing Library and keep them close to the source file, for example `src/features/example-counter/ui/Counter.spec.tsx`. Cover new UI states, user interactions, and error boundaries when behavior changes. Run `pnpm test:run` before opening a PR.
 
 ## Commit & Pull Request Guidelines
 

@@ -35,7 +35,7 @@ pnpm check        # lint + format + typecheck + test
 
 ```text
 src/
-  app/          # app config, providers, router wiring, monitoring, HTTP factory
+  app/          # app config, providers, router wiring, and monitoring
   shared/       # reusable UI, pure helpers, and shared assets
   features/     # business or demo capabilities grouped by domain
   routes/       # TanStack file routes and page composition
@@ -46,7 +46,6 @@ Key boundaries:
 - `src/app/config/env.ts` is the single entry for environment-derived config.
 - `src/app/providers` owns app-level providers.
 - `src/app/monitoring/reportError.ts` is the integration point for Sentry or another logger.
-- `src/app/http/createHttpClient.ts` provides a neutral HTTP transport factory; auth and retry should be added by feature code or app-specific plugins.
 - `src/shared/ui` holds reusable UI such as `Button`, `NotFound`, and `PageErrorFallback`.
 - `src/features/home` and `src/features/example-counter` demonstrate how page-level and demo capabilities should be isolated from app wiring.
 
@@ -55,6 +54,7 @@ Key boundaries:
 - Router and React Query devtools are enabled only in development.
 - The template uses explicit imports throughout; helper APIs such as `tv()` should be imported where used.
 - React Query uses conservative defaults: `staleTime: 30s`, `retry: 1`, `refetchOnWindowFocus: false`.
+- No HTTP client is preselected; add `fetch`, Axios, ky, OpenAPI, or another transport when a real API integration needs it.
 - Error boundaries recover through `QueryErrorResetBoundary` and report through a single adapter.
 
 ## Development Rules

@@ -1,13 +1,7 @@
-import { RouterProvider } from '@tanstack/react-router'
-import { QueryProvider } from '@/app/providers/QueryProvider'
-import { router } from '@/app/router/router'
+import { AppProviders } from '@/app/providers/AppProviders'
 
 const App: React.FC = () => {
-  return (
-    <QueryProvider>
-      <RouterProvider router={router} />
-    </QueryProvider>
-  )
+  return <AppProviders />
 }
 
 export default App

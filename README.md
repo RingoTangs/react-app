@@ -44,7 +44,7 @@ src/
 Key boundaries:
 
 - `src/app/config/env.ts` is the single entry for environment-derived config.
-- `src/app/providers` owns app-level providers.
+- `src/app/providers/AppProviders.tsx` owns app-level provider composition.
 - `src/app/monitoring/reportError.ts` is the integration point for Sentry or another logger.
 - `src/shared/ui` holds reusable UI such as `Button`, `NotFound`, and `PageErrorFallback`.
 - `src/features/home` and `src/features/example-counter` demonstrate how page-level and demo capabilities should be isolated from app wiring.

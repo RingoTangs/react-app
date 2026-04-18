@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-Application code lives in `src/`. App infrastructure lives in `src/app`: providers, router setup, runtime config, devtools, and monitoring. TanStack file routes live in `src/routes` and should stay thin, delegating page implementation to `src/features`. Reusable product-agnostic UI belongs in `src/shared/ui`; pure helpers belong in `src/shared/lib`. Business or demo capabilities should be grouped by domain under `src/features`. Generated router output is committed as `src/routeTree.gen.ts`; avoid manual edits.
+Application code lives in `src/`. App infrastructure lives in `src/app`: providers, router setup, runtime config, devtools, and monitoring. TanStack file routes live in `src/routes` and should stay thin, delegating page implementation to `src/features`. Reusable product-agnostic UI belongs in `src/shared/ui`; pure helpers belong in `src/shared/lib`. Business or demo capabilities should be grouped by domain under `src/features`. Repo-level ambient declarations may be added under `types/` when needed. Generated router output is committed as `src/routeTree.gen.ts`; avoid manual edits.
 
 ## Build, Test, and Development Commands
 

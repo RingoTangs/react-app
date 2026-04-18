@@ -18,7 +18,7 @@ Use `pnpm` with Node `>=22`.
 
 ## Coding Style & Naming Conventions
 
-This repo uses TypeScript, React 19, and Vite with 2-space indentation, single quotes, no semicolons, and trailing commas. Prettier also sorts Tailwind classes via `prettier-plugin-tailwindcss`, including classes built with `tv()`. Use PascalCase for React components (`Counter.tsx`), camelCase for utilities (`sleep.ts`), and colocate test files as `*.spec.tsx` beside the component under test. Prefer the `@/` alias for imports from `src`.
+This repo uses TypeScript, React 19, and Vite with 2-space indentation, single quotes, no semicolons, and trailing commas. Prettier also sorts Tailwind classes via `prettier-plugin-tailwindcss`, including classes built with `tv()`. Use explicit imports, PascalCase for React components (`Counter.tsx`), camelCase for utilities (`sleep.ts`), and colocate test files as `*.spec.tsx` beside the component under test. Prefer the `@/` alias for imports from `src`.
 
 ## Testing Guidelines
 

@@ -9,5 +9,5 @@
     "types": ["node", "vitest/config"],
     "allowImportingTsExtensions": true
   },
-  "include": ["vite.config.ts", "vite.imports.ts"]
+  "include": ["vite.config.ts"]
 }

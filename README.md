@@ -53,7 +53,7 @@ Key boundaries:
 ## Template Defaults
 
 - Router and React Query devtools are enabled only in development.
-- Auto-import is intentionally limited to Tailwind variant helpers (`tv`, `cn`, `cx`).
+- The template uses explicit imports throughout; helper APIs such as `tv()` should be imported where used.
 - React Query uses conservative defaults: `staleTime: 30s`, `retry: 1`, `refetchOnWindowFocus: false`.
 - Error boundaries recover through `QueryErrorResetBoundary` and report through a single adapter.
 

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">React App Template icon</title>
+  <desc id="desc">A dark app shell with an amber layered foundation mark.</desc>
+  <defs>
+    <linearGradient id="shell" x1="32" x2="224" y1="24" y2="232" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1e293b" />
+      <stop offset="0.52" stop-color="#0f172a" />
+      <stop offset="1" stop-color="#1c1917" />
+    </linearGradient>
+    <linearGradient id="core" x1="72" x2="184" y1="54" y2="202" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fde68a" />
+      <stop offset="0.44" stop-color="#f59e0b" />
+      <stop offset="1" stop-color="#b45309" />
+    </linearGradient>
+    <linearGradient id="edge" x1="80" x2="176" y1="82" y2="174" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fff7ed" stop-opacity="0.95" />
+      <stop offset="1" stop-color="#fed7aa" stop-opacity="0.55" />
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" fill="url(#shell)" rx="56" />
+  <path fill="#fff7ed" fill-opacity="0.08" d="M46 62c0-12 10-22 22-22h120c12 0 22 10 22 22v132c0 12-10 22-22 22H68c-12 0-22-10-22-22V62Z" />
+  <path fill="url(#core)" d="M128 48 202 90v84l-74 42-74-42V90l74-42Z" />
+  <path fill="#0f172a" d="m128 80 44 25v50l-44 25-44-25v-50l44-25Z" />
+  <path fill="url(#edge)" d="M128 72 74 164h34l10-20h45l10 20h34L154 72h-26Zm2 46 11-23 11 23h-22Z" />
+  <path fill="#fbbf24" fill-opacity="0.8" d="M83 189h90l-45 25-45-25Z" />
+</svg>

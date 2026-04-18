@@ -3,7 +3,7 @@ import { createRootRoute, Outlet } from '@tanstack/react-router'
 import { ErrorBoundary } from 'react-error-boundary'
 import { reportError } from '@/app/monitoring/reportError'
 import { RouterDevtools } from '@/app/router/RouterDevtools'
-import { PageErrorFallback } from '@/components/builtin'
+import { PageErrorFallback } from '@/shared/ui'
 
 const RootComponent: React.FC = () => {
   return (

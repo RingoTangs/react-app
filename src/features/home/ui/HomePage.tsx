@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router'
 
-const features = [
+const highlights = [
   {
     title: 'Typed Routing',
     description: 'TanStack Router with file-based routes and generated types.',
@@ -21,7 +21,7 @@ const features = [
   },
 ]
 
-export const Welcome: React.FC = () => {
+export const HomePage: React.FC = () => {
   return (
     <div className="min-h-screen bg-linear-to-br from-stone-950 via-slate-900 to-zinc-900">
       <div className="mx-auto max-w-6xl px-6 py-20">
@@ -56,16 +56,16 @@ export const Welcome: React.FC = () => {
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {features.map((feature) => (
+          {highlights.map((highlight) => (
             <div
-              key={feature.title}
+              key={highlight.title}
               className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm transition-all duration-300 hover:border-amber-300/40 hover:bg-white/8"
             >
               <h3 className="mb-3 text-lg font-semibold text-white">
-                {feature.title}
+                {highlight.title}
               </h3>
               <p className="text-sm leading-relaxed text-slate-400">
-                {feature.description}
+                {highlight.description}
               </p>
             </div>
           ))}

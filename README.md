@@ -1,5 +1,7 @@
 # React App Template
 
+English | [简体中文](./README.zh-CN.md)
+
 A team-oriented React starter built on React 19, Vite 8, TanStack Router, TanStack Query, Tailwind CSS v4, and Vitest. The template keeps runtime defaults conservative and pushes app wiring, monitoring, and transport setup into explicit boundaries.
 
 ## Quick Start

@@ -182,13 +182,21 @@ Reusable fallback pages such as generic not-found or error states belong in `sha
 
 If a route loader preloads React Query data, the app router context must expose the shared `queryClient`. The app layer owns that infrastructure wiring; route files still use feature `queryOptions` and do not own API details.
 
+### Error Handling
+
+Route-level render errors, loader errors, and route match errors should be handled with TanStack Router `errorComponent`. The root route provides the default fallback UI and reports caught errors through `reportError`.
+
+React Query errors should still reset through `QueryErrorResetBoundary` inside the route error fallback. This clears query error state when the user retries.
+
+Use `react-error-boundary` only for feature-local failures where a widget can fail while the rest of the page remains usable. Do not wrap the root route `<Outlet />` with a generic `react-error-boundary`; it does not own TanStack Router's route match lifecycle. Errors from event handlers, timers, and unhandled promises must be handled at the call site with `try/catch` or `.catch()`.
+
 ## Template Defaults
 
 - Router and React Query devtools are enabled only in development.
 - The template uses explicit imports throughout; helper APIs such as `tv()` should be imported where used.
 - React Query uses conservative defaults: `staleTime: 30s`, `gcTime: 5m`, query `retry: 1`, mutation `retry: 0`, `refetchOnWindowFocus: false`, `refetchOnReconnect: true`.
 - The template does not preselect a shared HTTP client; the example feature uses native `fetch` inside its own `api` file.
-- Error boundaries recover through `QueryErrorResetBoundary` and report through a single adapter.
+- Route errors use TanStack Router `errorComponent`; query error retries are reset through `QueryErrorResetBoundary`, and reporting goes through a single adapter.
 
 ## Development Rules
 
@@ -197,6 +205,7 @@ If a route loader preloads React Query data, the app router context must expose 
 - Keep reusable UI under `shared/ui` and pure utilities under `shared/lib`.
 - Let features read stable runtime config from `app/config` when needed, but keep them independent from app router, providers, and monitoring wiring.
 - Keep feature-specific requests under the owning feature; introduce shared transport only when real integration requirements justify it.
+- Use TanStack Router `errorComponent` for route-level error fallbacks. Use `react-error-boundary` only for clearly local feature widgets.
 - Use barrel exports only at stable public boundaries such as `shared/ui` and `shared/lib`; avoid feature-wide or app-wide barrels by default.
 - Do not reintroduce generic `components/` or `utils/` top-level folders; add code to `shared` or `features` instead.
 - Do not hand-edit generated router output in `src/routeTree.gen.ts`.

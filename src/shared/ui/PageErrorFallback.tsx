@@ -1,8 +1,12 @@
-import type { FallbackProps } from 'react-error-boundary'
 import { useNavigate } from '@tanstack/react-router'
 import { Button } from './Button'
 
-export const PageErrorFallback: React.FC<FallbackProps> = ({
+interface PageErrorFallbackProps {
+  error?: unknown
+  resetErrorBoundary: () => void
+}
+
+export const PageErrorFallback: React.FC<PageErrorFallbackProps> = ({
   resetErrorBoundary,
 }) => {
   const navigate = useNavigate()

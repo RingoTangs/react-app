@@ -182,13 +182,21 @@ export const Route = createFileRoute('/users')({
 
 如果 route loader 要预取 React Query 数据，app router context 必须暴露共享的 `queryClient`。app 层负责这类基础设施装配；route 文件仍然只使用 feature 的 `queryOptions`，不拥有 API 细节。
 
+### 错误兜底
+
+路由级 render error、loader error 和 route match error 应使用 TanStack Router `errorComponent` 处理。根路由提供默认 fallback UI，并通过 `reportError` 统一上报捕获到的错误。
+
+React Query 错误仍应在路由错误 fallback 内通过 `QueryErrorResetBoundary` reset。这样用户重试时，query error 状态会被清理，并允许重新请求。
+
+`react-error-boundary` 只用于 feature 内部局部失败兜底，例如某个 widget 失败但页面其他区域仍可用。不要在 root route 中用通用 `react-error-boundary` 包裹 `<Outlet />`，因为它不拥有 TanStack Router 的 route match 生命周期。事件回调、定时器和未处理 Promise 中的错误不能依赖 ErrorBoundary，必须在调用点使用 `try/catch` 或 `.catch()` 处理。
+
 ## 模板默认规则
 
 - Router 和 React Query devtools 只在开发环境启用。
 - 模板全局使用显式导入；例如 `tv()` 这类 helper 应在使用处显式导入。
 - React Query 使用保守默认值：`staleTime: 30s`、`gcTime: 5m`、query `retry: 1`、mutation `retry: 0`、`refetchOnWindowFocus: false`、`refetchOnReconnect: true`。
 - 模板不预设共享 HTTP client；示例 feature 只在自己的 `api` 文件中使用原生 `fetch`。
-- 错误边界通过 `QueryErrorResetBoundary` 恢复，并通过单一 adapter 上报。
+- 路由错误使用 TanStack Router `errorComponent`；query 错误重试通过 `QueryErrorResetBoundary` reset，并通过单一 adapter 上报。
 
 ## 开发规则
 
@@ -197,6 +205,7 @@ export const Route = createFileRoute('/users')({
 - 可复用 UI 放在 `shared/ui`，纯工具函数放在 `shared/lib`。
 - Feature 必要时可以读取 `app/config` 中的稳定运行时配置，但应避免依赖 app router、providers 和 monitoring 装配。
 - Feature 专属请求放在所属 feature 下；只有真实集成需求能支撑时，才引入共享传输层。
+- 路由级错误兜底使用 TanStack Router `errorComponent`。`react-error-boundary` 只用于明确的 feature 局部组件兜底。
 - Barrel export 只用于 `shared/ui`、`shared/lib` 这类稳定公共边界；默认不要新增 feature 级或 app 级 barrel。
 - 不要重新引入顶层泛目录 `components/` 或 `utils/`；根据归属放到 `shared` 或 `features`。
 - 不要手动编辑生成文件 `src/routeTree.gen.ts`。

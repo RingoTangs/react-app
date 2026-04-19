@@ -26,6 +26,10 @@ Do not place feature query options or endpoint calls in app. App may pass `query
 
 不要在 app 中放 feature 的 query options 或 endpoint 调用。App 可以通过 context 传递 `queryClient`，但数据定义仍由 features 拥有。
 
+Do not add `src/app/index.ts` or subdirectory barrels by default. App infrastructure should be imported explicitly, for example `@/app/providers/AppProviders` or `@/app/router/router`.
+
+默认不要新增 `src/app/index.ts` 或 app 子目录 barrel。App 基础设施应使用显式路径导入，例如 `@/app/providers/AppProviders` 或 `@/app/router/router`。
+
 ## Examples
 
 - `providers/AppProviders.tsx`

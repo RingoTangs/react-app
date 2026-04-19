@@ -1,5 +1,6 @@
 import antfu from '@antfu/eslint-config'
 import prettier from 'eslint-config-prettier'
+import { appBoundaryRules } from './eslint/app-boundaries.mjs'
 
 export default antfu({
   type: 'app',
@@ -22,4 +23,5 @@ export default antfu({
   .overrideRules({
     'react-refresh/only-export-components': 'off',
   })
+  .append(...appBoundaryRules)
   .append(prettier)

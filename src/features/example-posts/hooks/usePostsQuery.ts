@@ -1,10 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import { getPosts } from '../api/getPosts'
-import { postQueryKeys } from '../model/queryKeys'
+import { postsQueryOptions } from '../model/queryOptions'
 
 export const usePostsQuery = () => {
-  return useQuery({
-    queryKey: postQueryKeys.preview(),
-    queryFn: getPosts,
-  })
+  return useQuery(postsQueryOptions())
 }

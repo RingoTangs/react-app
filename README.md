@@ -117,6 +117,12 @@ src/features/<feature-name>/
 
 Do not create empty folders by default. Add a folder only when the feature has code that clearly belongs there. Keep feature-specific requests under the owning feature, and introduce shared request infrastructure only when a real transport layer or generated SDK is needed.
 
+### Exports and Public Features
+
+Use barrel exports only for stable public boundaries. The template keeps `src/shared/ui/index.ts` and `src/shared/lib/index.ts` because those folders expose reusable, product-agnostic APIs. Do not add `src/app/index.ts`, `src/features/index.ts`, route barrels, or feature subfolder barrels just to shorten imports.
+
+Public business capabilities still belong in `src/features/<domain>`, not in `shared`. Examples include `auth`, `current-user`, `permissions`, and `notifications`. Add `src/features/<feature>/index.ts` only when a feature intentionally exposes a stable public API consumed by multiple modules; export only public components, hooks, and types, not private endpoints, tests, or implementation details.
+
 ### Data Fetching
 
 This template does not include a shared HTTP client. Keep endpoint functions inside the owning feature, query keys in `model`, React Query hooks in `hooks`, and loading, error, empty, and success states in feature `ui`.
@@ -161,6 +167,7 @@ Reusable fallback pages such as generic not-found or error states belong in `sha
 - Keep business logic out of `app/`; add product behavior under feature modules as the project grows.
 - Keep reusable UI under `shared/ui` and pure utilities under `shared/lib`.
 - Keep feature-specific requests under the owning feature; introduce shared transport only when real integration requirements justify it.
+- Use barrel exports only at stable public boundaries such as `shared/ui` and `shared/lib`; avoid feature-wide or app-wide barrels by default.
 - Do not reintroduce generic `components/` or `utils/` top-level folders; add code to `shared` or `features` instead.
 - Do not hand-edit generated router output in `src/routeTree.gen.ts`.
 - Run `pnpm check` before opening a PR.

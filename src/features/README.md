@@ -16,11 +16,19 @@ For data fetching, keep endpoint functions in `api`, query key factories in `mod
 
 数据请求场景中，endpoint 请求函数放在 `api`，query key 工厂放在 `model`，React Query 绑定放在 `hooks`，异步 UI 状态放在 `ui`。
 
+Public business capabilities also belong here, for example `auth`, `current-user`, `permissions`, or `notifications`. Add a feature-level `index.ts` only when that feature exposes a stable public API to multiple modules.
+
+公共业务能力也应放在这里，例如 `auth`、`current-user`、`permissions` 或 `notifications`。只有当该 feature 需要向多个模块暴露稳定公共 API 时，才添加 feature 级 `index.ts`。
+
 ## Avoid
 
 Do not create empty folders by default. Do not add a top-level `src/api`; feature-specific requests belong under the owning feature unless a generated SDK or shared transport layer is introduced.
 
 不要默认创建空目录。不要新增顶层 `src/api`；除非引入 generated SDK 或共享传输层，否则 feature 专属请求应放在所属 feature 下。
+
+Do not add `src/features/index.ts` or feature subfolder barrels by default. Do not move business capabilities into `shared` just because they are reused by multiple pages.
+
+默认不要新增 `src/features/index.ts` 或 feature 子目录 barrel。不要因为某个业务能力被多个页面复用，就把它移动到 `shared`。
 
 ## Examples
 
@@ -29,3 +37,5 @@ Do not create empty folders by default. Do not add a top-level `src/api`; featur
 - `example-counter/model/types.ts`
 - `example-posts/api/getPosts.ts`
 - `example-posts/hooks/usePostsQuery.ts`
+- `auth/ui/RequireAuth.tsx`
+- `current-user/hooks/useCurrentUser.ts`

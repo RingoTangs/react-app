@@ -5,6 +5,8 @@ export const appBoundaryRules = [
   // shared is the lowest product-agnostic layer. It must not import app,
   // route, or feature modules, otherwise reusable helpers become coupled
   // to product behavior.
+  // shared 是产品无关的底层复用层，不能反向依赖 app、routes 或
+  // features，否则通用 helper 会被具体产品行为耦合。
   {
     name: 'app-boundaries/shared',
     files: ['src/shared/**/*.{ts,tsx}'],
@@ -26,6 +28,8 @@ export const appBoundaryRules = [
 
   // routes own URL semantics and loading orchestration. Data details should
   // stay in the owning feature so loaders and hooks can share query options.
+  // routes 负责 URL 语义和加载编排。数据细节应留在所属 feature，
+  // 这样 loaders 和 hooks 才能复用同一份 query options。
   {
     name: 'app-boundaries/routes',
     files: ['src/routes/**/*.{ts,tsx}'],
@@ -61,6 +65,8 @@ export const appBoundaryRules = [
   // app wires infrastructure such as providers, router, and runtime config.
   // Feature data definitions should remain in features and be passed through
   // explicit integration points such as router context.
+  // app 负责 providers、router、runtime config 等基础设施装配。
+  // Feature 数据定义应留在 features，并通过 router context 等显式集成点连接。
   {
     name: 'app-boundaries/app',
     files: ['src/app/**/*.{ts,tsx}'],
@@ -83,6 +89,8 @@ export const appBoundaryRules = [
   // Barrel exports are allowed only at stable public boundaries. App, route,
   // and feature internals should keep explicit imports to avoid hiding
   // ownership and dependency direction.
+  // Barrel export 只允许用于稳定公共边界。App、route 和 feature 内部
+  // 应保持显式导入，避免隐藏代码归属和依赖方向。
   {
     name: 'app-boundaries/no-default-barrels',
     files: [

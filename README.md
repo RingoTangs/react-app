@@ -173,7 +173,7 @@ If a route loader preloads React Query data, the app router context must expose 
 
 - Router and React Query devtools are enabled only in development.
 - The template uses explicit imports throughout; helper APIs such as `tv()` should be imported where used.
-- React Query uses conservative defaults: `staleTime: 30s`, `retry: 1`, `refetchOnWindowFocus: false`.
+- React Query uses conservative defaults: `staleTime: 30s`, `gcTime: 5m`, query `retry: 1`, mutation `retry: 0`, `refetchOnWindowFocus: false`, `refetchOnReconnect: true`.
 - The template does not preselect a shared HTTP client; the example feature uses native `fetch` inside its own `api` file.
 - Error boundaries recover through `QueryErrorResetBoundary` and report through a single adapter.
 

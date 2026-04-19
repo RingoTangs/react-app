@@ -20,6 +20,10 @@ If route loaders need React Query preloading, create the shared `QueryClient` in
 
 如果 route loader 需要 React Query 预取，应在 app 基础设施中创建共享的 `QueryClient`，并从这里注入 router context。
 
+Keep `QueryProvider` defaults conservative and product-agnostic. Feature-level cache lifetimes, polling, placeholders, and error behavior should be defined in feature `queryOptions()`.
+
+`QueryProvider` 的默认配置应保持保守、产品无关。Feature 级缓存时间、轮询、placeholder 和错误处理策略应放在 feature 的 `queryOptions()` 中定义。
+
 ## Avoid
 
 Do not place business logic, page implementations, feature-specific API calls, or reusable product UI here. `src/app/router` owns the router instance and defaults, not file-based route definitions.

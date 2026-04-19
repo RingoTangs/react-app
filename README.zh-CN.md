@@ -173,7 +173,7 @@ export const Route = createFileRoute('/users')({
 
 - Router 和 React Query devtools 只在开发环境启用。
 - 模板全局使用显式导入；例如 `tv()` 这类 helper 应在使用处显式导入。
-- React Query 使用保守默认值：`staleTime: 30s`、`retry: 1`、`refetchOnWindowFocus: false`。
+- React Query 使用保守默认值：`staleTime: 30s`、`gcTime: 5m`、query `retry: 1`、mutation `retry: 0`、`refetchOnWindowFocus: false`、`refetchOnReconnect: true`。
 - 模板不预设共享 HTTP client；示例 feature 只在自己的 `api` 文件中使用原生 `fetch`。
 - 错误边界通过 `QueryErrorResetBoundary` 恢复，并通过单一 adapter 上报。
 

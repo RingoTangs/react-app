@@ -64,19 +64,27 @@ src/
 │   ├── home/
 │   │   └── ui/
 │   │       └── HomePage.tsx
-│   └── example-counter/
+│   ├── example-counter/
+│   │   ├── hooks/
+│   │   │   └── useCounter.ts
+│   │   ├── lib/
+│   │   │   └── getNextCount.ts
+│   │   ├── model/
+│   │   │   ├── constants.ts
+│   │   │   └── types.ts
+│   │   └── ui/
+│   │       ├── Counter.tsx
+│   │       └── Counter.spec.tsx
+│   └── example-posts/          # Feature 自有 API + React Query 示例
+│       ├── api/
 │       ├── hooks/
-│       │   └── useCounter.ts
-│       ├── lib/
-│       │   └── getNextCount.ts
 │       ├── model/
-│       │   ├── constants.ts
-│       │   └── types.ts
 │       └── ui/
-│           ├── Counter.tsx
-│           └── Counter.spec.tsx
 │
 └── shared/                     # 产品无关的可复用基础模块
+    ├── api/                    # 共享传输基础能力，不放业务 API
+    │   ├── fetchJson.ts
+    │   └── index.ts
     ├── ui/                     # 共享 UI 组件
     │   ├── Button.tsx
     │   ├── NotFound.tsx
@@ -93,7 +101,7 @@ src/
 - `app` 负责跨应用基础设施：providers、router setup、环境配置、devtools 和监控。
 - `routes` 负责 URL 到页面的映射。路由文件应保持薄层，并将页面实现委托给 `features`。
 - `features` 负责业务或 demo 能力。新增真实产品行为时，优先按业务域放到这里。
-- `shared` 负责可复用 UI 和纯工具。它不应依赖 `app`、`routes` 或 `features`。
+- `shared` 负责可复用 UI、纯工具和产品无关的传输基础能力。它不应依赖 `app`、`routes` 或 `features`。
 - `routeTree.gen.ts` 由 TanStack Router 生成，不要手动编辑。
 
 ### Feature 模块约定
@@ -111,6 +119,21 @@ src/features/<feature-name>/
 ```
 
 不要默认创建空目录。只有当 feature 中确实有对应代码时才新增目录。Feature 专属请求应放在所属 feature 下；只有当项目真正引入通用传输层时，才在 `shared/api` 中添加共享请求基础设施。
+
+### 数据请求
+
+`shared/api` 只放产品无关的传输基础能力，例如 `fetchJson` 和 `HttpError`。接口函数放在所属 feature 的 `api`，query keys 放在 `model`，React Query hooks 放在 `hooks`，loading、error、empty、success 状态由 feature `ui` 处理。
+
+```text
+src/features/example-posts/
+├── api/getPosts.ts             # endpoint 专属请求函数
+├── hooks/usePostsQuery.ts      # React Query 绑定
+├── model/queryKeys.ts          # query key 工厂
+├── model/types.ts              # 领域类型
+└── ui/PostsPreview.tsx         # 异步 UI 状态
+```
+
+不要新增顶层 `src/api`。不要在 React 组件中直接调用 `fetch`。只有当 feature 存在真实写入流程时，才补充 mutation 示例。
 
 ### Routes 与 Feature 页面
 
@@ -132,7 +155,7 @@ export const Route = createFileRoute('/users')({
 - Router 和 React Query devtools 只在开发环境启用。
 - 模板全局使用显式导入；例如 `tv()` 这类 helper 应在使用处显式导入。
 - React Query 使用保守默认值：`staleTime: 30s`、`retry: 1`、`refetchOnWindowFocus: false`。
-- 模板不预设 HTTP client；当真实 API 集成需要时，再添加 `fetch`、Axios、ky、OpenAPI 或其他传输方案。
+- 模板使用原生 `fetch` 和一个很薄的 `shared/api` 传输 helper；除非项目有明确集成需求，否则不要添加 Axios 或其他 client。
 - 错误边界通过 `QueryErrorResetBoundary` 恢复，并通过单一 adapter 上报。
 
 ## 开发规则
@@ -140,6 +163,7 @@ export const Route = createFileRoute('/users')({
 - React、router 和应用工具都使用显式导入。
 - 不要把业务逻辑放进 `app/`；随着项目增长，产品行为应放到 feature 模块中。
 - 可复用 UI 放在 `shared/ui`，纯工具函数放在 `shared/lib`。
+- Feature 专属请求放在所属 feature 下；`shared/api` 只放可复用传输基础能力。
 - 不要重新引入顶层泛目录 `components/` 或 `utils/`；根据归属放到 `shared` 或 `features`。
 - 不要手动编辑生成文件 `src/routeTree.gen.ts`。
 - 提交 PR 前运行 `pnpm check`。

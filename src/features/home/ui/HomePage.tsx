@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import { PostsPreview } from '@/features/example-posts/ui/PostsPreview'
 
 const highlights = [
   {
@@ -69,6 +70,10 @@ export const HomePage: React.FC = () => {
               </p>
             </div>
           ))}
+        </div>
+
+        <div className="mt-20">
+          <PostsPreview />
         </div>
 
         <div className="mt-20 text-center text-slate-500">

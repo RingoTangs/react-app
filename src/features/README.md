@@ -12,6 +12,10 @@ Use `ui/` for feature-owned components, `api/` for feature-specific requests, `m
 
 `ui/` 放 feature 自己拥有的组件，`api/` 放 feature 专属请求，`model/` 放领域类型或 query keys，`hooks/` 放 feature hooks，`lib/` 放只服务当前 feature 的工具函数，`constants/` 放 feature 私有常量。
 
+For data fetching, keep endpoint functions in `api`, query key factories in `model`, React Query bindings in `hooks`, and async UI states in `ui`.
+
+数据请求场景中，endpoint 请求函数放在 `api`，query key 工厂放在 `model`，React Query 绑定放在 `hooks`，异步 UI 状态放在 `ui`。
+
 ## Avoid
 
 Do not create empty folders by default. Do not add a top-level `src/api`; feature-specific requests belong under the owning feature unless a generated SDK or shared transport layer is introduced.
@@ -23,3 +27,5 @@ Do not create empty folders by default. Do not add a top-level `src/api`; featur
 - `home/ui/HomePage.tsx`
 - `example-counter/hooks/useCounter.ts`
 - `example-counter/model/types.ts`
+- `example-posts/api/getPosts.ts`
+- `example-posts/hooks/usePostsQuery.ts`

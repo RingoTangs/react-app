@@ -67,8 +67,9 @@ export const PostsPreview: React.FC = () => {
           Feature-owned API + React Query
         </h2>
         <p className="mt-3 text-sm leading-relaxed text-slate-400">
-          This example keeps transport in shared/api, endpoint calls inside the
-          feature, query keys in model, and async UI state in the feature UI.
+          This example keeps endpoint calls inside the feature, query keys in
+          model, React Query bindings in hooks, and async UI state in the
+          feature UI.
         </p>
       </div>
 

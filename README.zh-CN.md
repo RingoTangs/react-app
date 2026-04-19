@@ -101,6 +101,8 @@ src/
 - `shared` 负责可复用 UI 和纯工具。它不应依赖 `app`、`routes` 或 `features`。
 - `routeTree.gen.ts` 由 TanStack Router 生成，不要手动编辑。
 
+Features 可以读取 `app/config` 中的稳定运行时配置，例如 `appEnv`，但不应依赖 `app/router`、`app/providers` 或 `app/monitoring` 这类 app 装配能力。Shared 代码不能读取 `app/config`；如需环境派生值，应由上层注入。
+
 ### Feature 模块约定
 
 Feature 模块从小开始，按需要增长。使用 `ui/` 放 feature 自己拥有的组件和页面分区，`api/` 放 feature 专属数据访问，`model/` 放领域类型、schema、query keys 或局部状态，`hooks/` 放 feature 专属 React hooks，`lib/` 放只服务当前 feature 的纯工具函数，`constants/` 放 feature 私有常量。
@@ -180,6 +182,7 @@ export const Route = createFileRoute('/users')({
 - React、router 和应用工具都使用显式导入。
 - 不要把业务逻辑放进 `app/`；随着项目增长，产品行为应放到 feature 模块中。
 - 可复用 UI 放在 `shared/ui`，纯工具函数放在 `shared/lib`。
+- Feature 必要时可以读取 `app/config` 中的稳定运行时配置，但应避免依赖 app router、providers 和 monitoring 装配。
 - Feature 专属请求放在所属 feature 下；只有真实集成需求能支撑时，才引入共享传输层。
 - Barrel export 只用于 `shared/ui`、`shared/lib` 这类稳定公共边界；默认不要新增 feature 级或 app 级 barrel。
 - 不要重新引入顶层泛目录 `components/` 或 `utils/`；根据归属放到 `shared` 或 `features`。

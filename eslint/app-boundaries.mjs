@@ -62,6 +62,34 @@ export const appBoundaryRules = [
     },
   },
 
+  // features own product behavior. They may read stable runtime config from
+  // app/config, but must not depend on app wiring such as router, providers,
+  // or monitoring adapters.
+  // features 拥有产品行为。它们可以读取 app/config 中的稳定运行时配置，
+  // 但不能依赖 router、providers 或 monitoring 这类 app 装配能力。
+  {
+    name: 'app-boundaries/features',
+    files: ['src/features/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: [
+                '@/app/router/*',
+                '@/app/providers/*',
+                '@/app/monitoring/*',
+              ],
+              message:
+                'Feature modules may read stable runtime config from app/config, but must not depend on app wiring such as router, providers, or monitoring.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+
   // app wires infrastructure such as providers, router, and runtime config.
   // Feature data definitions should remain in features and be passed through
   // explicit integration points such as router context.

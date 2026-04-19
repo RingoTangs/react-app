@@ -22,6 +22,10 @@ Do not import from `app`, `routes`, or `features`. Do not place feature-specific
 
 不要从 `app`、`routes` 或 `features` 导入。不要在这里放 feature 专属文案、业务流程、API 函数或领域决策。
 
+Do not read `app/config/env` or `import.meta.env` from shared code. If a shared utility needs environment-derived values, accept them as parameters or factory options.
+
+不要在 shared 代码中读取 `app/config/env` 或 `import.meta.env`。如果 shared 工具需要环境派生值，应通过参数或工厂选项传入。
+
 Do not put public business features here. Reused business capabilities such as auth, current user, permissions, or notifications still belong in `features/<domain>`.
 
 不要把公共业务 feature 放在这里。可复用的业务能力，例如鉴权、当前用户、权限或通知，仍然应放在 `features/<domain>`。

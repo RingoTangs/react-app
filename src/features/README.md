@@ -24,6 +24,10 @@ Public business capabilities also belong here, for example `auth`, `current-user
 
 公共业务能力也应放在这里，例如 `auth`、`current-user`、`permissions` 或 `notifications`。只有当该 feature 需要向多个模块暴露稳定公共 API 时，才添加 feature 级 `index.ts`。
 
+Features may read stable runtime config from `app/config`, for example `appEnv`. Do not depend on app wiring such as `app/router`, `app/providers`, or `app/monitoring`.
+
+Features 可以读取 `app/config` 中的稳定运行时配置，例如 `appEnv`。不要依赖 `app/router`、`app/providers` 或 `app/monitoring` 这类 app 装配能力。
+
 ## Avoid
 
 Do not create empty folders by default. Do not add a top-level `src/api`; feature-specific requests belong under the owning feature unless a generated SDK or shared transport layer is introduced.
@@ -33,6 +37,10 @@ Do not create empty folders by default. Do not add a top-level `src/api`; featur
 Do not add `src/features/index.ts` or feature subfolder barrels by default. Do not move business capabilities into `shared` just because they are reused by multiple pages.
 
 默认不要新增 `src/features/index.ts` 或 feature 子目录 barrel。不要因为某个业务能力被多个页面复用，就把它移动到 `shared`。
+
+Allowed: `import { appEnv } from '@/app/config/env'`. Avoid: `import { router } from '@/app/router/router'`.
+
+允许：`import { appEnv } from '@/app/config/env'`。避免：`import { router } from '@/app/router/router'`。
 
 ## Examples
 

@@ -12,6 +12,10 @@ Use this directory for provider composition, router setup, runtime environment c
 
 这里适合放 provider 组合、router setup、运行时环境配置、监控适配器，以及 router devtools 这类仅开发环境使用的工具。
 
+`config/` is the stable runtime configuration entrypoint and may be imported by features when they need app-level environment values.
+
+`config/` 是稳定的运行时配置入口；当 features 需要应用级环境值时，可以导入它。
+
 If route loaders need React Query preloading, create the shared `QueryClient` in app infrastructure and inject it into the router context from here.
 
 如果 route loader 需要 React Query 预取，应在 app 基础设施中创建共享的 `QueryClient`，并从这里注入 router context。
@@ -25,6 +29,10 @@ Do not place business logic, page implementations, feature-specific API calls, o
 Do not place feature query options or endpoint calls in app. App may pass `queryClient` through context, but features still own the data definitions.
 
 不要在 app 中放 feature 的 query options 或 endpoint 调用。App 可以通过 context 传递 `queryClient`，但数据定义仍由 features 拥有。
+
+Do not make features depend on app wiring modules such as `router/`, `providers/`, or `monitoring/`; those are application shell concerns.
+
+不要让 features 依赖 `router/`、`providers/` 或 `monitoring/` 这类 app 装配模块；它们属于应用壳职责。
 
 Do not add `src/app/index.ts` or subdirectory barrels by default. App infrastructure should be imported explicitly, for example `@/app/providers/AppProviders` or `@/app/router/router`.
 

@@ -1,7 +1,7 @@
 {
   "name": "react-app",
   "type": "module",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "packageManager": "pnpm@10.24.0",
   "description": "Team-oriented React application template built with Vite, TanStack Router, TanStack Query, Tailwind CSS, and Vitest.",

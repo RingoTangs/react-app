@@ -12,11 +12,19 @@ Use this directory for provider composition, router setup, runtime environment c
 
 这里适合放 provider 组合、router setup、运行时环境配置、监控适配器，以及 router devtools 这类仅开发环境使用的工具。
 
+If route loaders need React Query preloading, create the shared `QueryClient` in app infrastructure and inject it into the router context from here.
+
+如果 route loader 需要 React Query 预取，应在 app 基础设施中创建共享的 `QueryClient`，并从这里注入 router context。
+
 ## Avoid
 
 Do not place business logic, page implementations, feature-specific API calls, or reusable product UI here. `src/app/router` owns the router instance and defaults, not file-based route definitions.
 
 不要在这里放业务逻辑、页面实现、feature 专属 API 调用或可复用产品 UI。`src/app/router` 负责 router 实例和默认配置，不负责文件路由定义。
+
+Do not place feature query options or endpoint calls in app. App may pass `queryClient` through context, but features still own the data definitions.
+
+不要在 app 中放 feature 的 query options 或 endpoint 调用。App 可以通过 context 传递 `queryClient`，但数据定义仍由 features 拥有。
 
 ## Examples
 

@@ -125,22 +125,34 @@ Public business capabilities still belong in `src/features/<domain>`, not in `sh
 
 ### Data Fetching
 
-This template does not include a shared HTTP client. Keep endpoint functions inside the owning feature, query keys in `model`, React Query hooks in `hooks`, and loading, error, empty, and success states in feature `ui`.
+This template does not include a shared HTTP client. Keep endpoint functions inside the owning feature, query keys and query options in `model`, React Query hooks in `hooks`, and loading, error, empty, and success states in feature `ui`.
 
 ```text
 src/features/example-posts/
 ├── api/getPosts.ts             # endpoint-specific request using native fetch
 ├── hooks/usePostsQuery.ts      # React Query binding
+├── model/queryOptions.ts       # shared query options for hooks and loaders
 ├── model/queryKeys.ts          # query key factory
 ├── model/types.ts              # domain type
 └── ui/PostsPreview.tsx         # async UI states
 ```
 
-Do not add a top-level `src/api`. Do not call `fetch` directly from React components or hooks; keep it in feature `api` files. When a real backend integration needs base URLs, authentication, retries, OpenAPI, ky, Axios, or RPC clients, design that transport layer from the project requirements instead of inheriting one from the template.
+When route loaders need data, they should call feature-owned query options, not feature endpoints directly. This keeps route preloading and component `useQuery` on the same query key and cache entry.
+
+```ts
+export const Route = createFileRoute('/posts')({
+  loader: ({ context }) => {
+    return context.queryClient.ensureQueryData(postsQueryOptions())
+  },
+  component: PostsPage,
+})
+```
+
+Do not add a top-level `src/api`. Do not call `fetch` directly from React components, hooks, or route files; keep it in feature `api` files. When a real backend integration needs base URLs, authentication, retries, OpenAPI, ky, Axios, or RPC clients, design that transport layer from the project requirements instead of inheriting one from the template.
 
 ### Routes vs Feature Pages
 
-Page-level business components belong in `features/<feature-name>/ui`. Route files should stay thin and focus on route semantics: path mapping, route params, search schemas, loaders, guards, and route-level pending or error behavior.
+Page-level business components belong in `features/<feature-name>/ui`. Route files should stay thin and focus on route semantics: path mapping, route params, search schemas, loaders, guards, redirects, and route-level pending or error behavior.
 
 ```tsx
 import { createFileRoute } from '@tanstack/react-router'
@@ -152,6 +164,8 @@ export const Route = createFileRoute('/users')({
 ```
 
 Reusable fallback pages such as generic not-found or error states belong in `shared/ui` when they are not owned by a specific feature.
+
+If a route loader preloads React Query data, the app router context must expose the shared `queryClient`. The app layer owns that infrastructure wiring; route files still use feature `queryOptions` and do not own API details.
 
 ## Template Defaults
 

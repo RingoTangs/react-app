@@ -125,22 +125,34 @@ Barrel export 只用于稳定公共边界。模板保留 `src/shared/ui/index.ts
 
 ### 数据请求
 
-模板不内置共享 HTTP client。接口函数放在所属 feature 的 `api`，query keys 放在 `model`，React Query hooks 放在 `hooks`，loading、error、empty、success 状态由 feature `ui` 处理。
+模板不内置共享 HTTP client。接口函数放在所属 feature 的 `api`，query keys 和 query options 放在 `model`，React Query hooks 放在 `hooks`，loading、error、empty、success 状态由 feature `ui` 处理。
 
 ```text
 src/features/example-posts/
 ├── api/getPosts.ts             # 使用原生 fetch 的 endpoint 专属请求函数
 ├── hooks/usePostsQuery.ts      # React Query 绑定
+├── model/queryOptions.ts       # hooks 和 loaders 复用的 query options
 ├── model/queryKeys.ts          # query key 工厂
 ├── model/types.ts              # 领域类型
 └── ui/PostsPreview.tsx         # 异步 UI 状态
 ```
 
-不要新增顶层 `src/api`。不要在 React 组件或 hooks 中直接调用 `fetch`，应放在 feature 的 `api` 文件中。当真实后端集成需要 baseURL、认证、重试、OpenAPI、ky、Axios 或 RPC client 时，再基于项目需求设计传输层。
+当 route loader 需要数据时，应调用 feature 自己暴露的 query options，而不是直接调用 feature endpoint。这样 route 预取和组件里的 `useQuery` 会使用同一个 query key 和缓存项。
+
+```ts
+export const Route = createFileRoute('/posts')({
+  loader: ({ context }) => {
+    return context.queryClient.ensureQueryData(postsQueryOptions())
+  },
+  component: PostsPage,
+})
+```
+
+不要新增顶层 `src/api`。不要在 React 组件、hooks 或 route 文件中直接调用 `fetch`，应放在 feature 的 `api` 文件中。当真实后端集成需要 baseURL、认证、重试、OpenAPI、ky、Axios 或 RPC client 时，再基于项目需求设计传输层。
 
 ### Routes 与 Feature 页面
 
-页面级业务组件应放在 `features/<feature-name>/ui`。路由文件应保持薄层，并专注于路由语义：路径映射、路由参数、search schema、loader、guard，以及路由级 pending 或 error 行为。
+页面级业务组件应放在 `features/<feature-name>/ui`。路由文件应保持薄层，并专注于路由语义：路径映射、路由参数、search schema、loader、guard、redirect，以及路由级 pending 或 error 行为。
 
 ```tsx
 import { createFileRoute } from '@tanstack/react-router'
@@ -152,6 +164,8 @@ export const Route = createFileRoute('/users')({
 ```
 
 如果 404、通用错误态等 fallback 页面不归属某个具体 feature，并且可跨业务复用，应放在 `shared/ui`。
+
+如果 route loader 要预取 React Query 数据，app router context 必须暴露共享的 `queryClient`。app 层负责这类基础设施装配；route 文件仍然只使用 feature 的 `queryOptions`，不拥有 API 细节。
 
 ## 模板默认规则
 

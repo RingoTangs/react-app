@@ -33,6 +33,19 @@ pnpm format:check # 检查 Prettier 格式
 pnpm check        # lint + format + typecheck + test
 ```
 
+## Docker 部署
+
+构建静态生产镜像，并通过 Nginx 托管：
+
+```bash
+docker build -t react-app:local .
+docker run --rm -p 8080:80 react-app:local
+```
+
+容器访问地址为 `http://localhost:8080`。镜像使用多阶段构建：Node 和 pnpm 负责生成 Vite `dist/` 产物，最终阶段只用 Nginx 托管静态资源。
+
+根目录 `nginx.conf` 已包含 SPA fallback，TanStack Router 路由可以直接刷新。`VITE_*` 环境变量是构建期注入；如果项目需要运行时切换环境，应额外设计 `/config.js` 或 `/env.json` 这类运行时配置机制。
+
 ## 项目结构
 
 ```text

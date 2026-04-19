@@ -33,6 +33,19 @@ pnpm format:check # verify Prettier formatting
 pnpm check        # lint + format + typecheck + test
 ```
 
+## Docker Deployment
+
+Build the static production image and serve it with Nginx:
+
+```bash
+docker build -t react-app:local .
+docker run --rm -p 8080:80 react-app:local
+```
+
+The container serves the app at `http://localhost:8080`. The image is built in multiple stages: Node and pnpm create the Vite `dist/` output, then Nginx serves only the static assets.
+
+The root `nginx.conf` includes an SPA fallback so TanStack Router routes can be refreshed directly. `VITE_*` environment variables are injected at build time; if a project needs runtime environment switching, add a separate runtime config mechanism such as `/config.js` or `/env.json`.
+
 ## Project Layout
 
 ```text

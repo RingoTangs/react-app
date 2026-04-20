@@ -14,7 +14,7 @@ indent_size = 2                    # 2 个空格，和 tabWidth: 2 保持一致
 # Markdown 特殊处理
 [*.{md,mdx}]
 trim_trailing_whitespace = false
-max_line_length = 100              # 很多人喜欢在 Markdown 里看到垂直标尺，和 printWidth 一致
+max_line_length = 100              # Markdown 编辑器参考线；Prettier 仍使用默认 printWidth
 
 # JSON / JSONC / JSON5
 [*.{json,json5,jsonc}]

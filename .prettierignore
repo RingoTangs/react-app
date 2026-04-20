@@ -2,12 +2,16 @@
 **/.svn
 **/.hg
 **/node_modules
+**/.pnpm-store
 **/dist
+**/dist-ssr
 **/build
 **/.output
 **/.data
+**/coverage
 **/pnpm-lock.yaml
 **/*.log
+**/.env
 **/.env.*
 **/.gitignore
 routeTree.gen.ts

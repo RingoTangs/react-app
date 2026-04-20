@@ -5,7 +5,16 @@
   "private": true,
   "packageManager": "pnpm@10.24.0",
   "description": "Team-oriented React application template built with Vite, TanStack Router, TanStack Query, Tailwind CSS, and Vitest.",
-  "license": "UNLICENSED",
+  "author": "RingoTangs",
+  "license": "MIT",
+  "homepage": "https://github.com/RingoTangs/react-app#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/RingoTangs/react-app.git"
+  },
+  "bugs": {
+    "url": "https://github.com/RingoTangs/react-app/issues"
+  },
   "keywords": [
     "react",
     "vite",

@@ -7,10 +7,21 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies and package manager stores
 node_modules
 .pnpm-store
+
+# Build outputs and generated local data
 dist
 dist-ssr
+build
+.output
+.data
+coverage
+
+# Environment files
+.env
+.env.*
 *.local
 
 # Editor directories and files

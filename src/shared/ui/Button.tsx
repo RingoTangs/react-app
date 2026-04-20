@@ -1,7 +1,7 @@
 import type { VariantProps } from 'tailwind-variants'
 import { tv } from 'tailwind-variants'
 
-export const buttonVariants = tv({
+const buttonVariants = tv({
   base: 'inline-flex cursor-pointer items-center justify-center rounded-lg px-6 py-3 text-base font-medium transition-all duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none',
   variants: {
     intent: {

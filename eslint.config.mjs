@@ -12,8 +12,8 @@ export default antfu({
   test: true,
   ignores: ['**/routeTree.gen.ts', '**/pnpm-lock.yaml'],
 })
-  .overrideRules({
-    'react-refresh/only-export-components': 'off',
-  })
+  // .overrideRules({
+  //   'react-refresh/only-export-components': 'off',
+  // })
   .append(...appBoundaryRules)
   .append(prettier)

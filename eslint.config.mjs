@@ -10,7 +10,7 @@ export default antfu({
   formatters: false,
   gitignore: true,
   test: true,
-  ignores: ['**/routeTree.gen.ts', '**/pnpm-lock.yaml', '**/*.md'],
+  ignores: ['**/routeTree.gen.ts', '**/pnpm-lock.yaml'],
 })
   .overrideRules({
     'react-refresh/only-export-components': 'off',

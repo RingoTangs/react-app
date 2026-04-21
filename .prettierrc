@@ -10,5 +10,13 @@
   "trailingComma": "all",
   "arrowParens": "always",
   "plugins": ["prettier-plugin-tailwindcss"],
-  "tailwindFunctions": ["tv"]
+  "tailwindFunctions": ["tv"],
+  "overrides": [
+    {
+      "files": "*.svg",
+      "options": {
+        "parser": "html"
+      }
+    }
+  ]
 }

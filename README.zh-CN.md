@@ -49,6 +49,9 @@ docker run --rm -p 8080:80 react-app:local
 ## 项目结构
 
 ```text
+public/
+└── app-icon.svg                # 固定 URL 访问的公共静态资产
+
 src/
 ├── main.tsx                    # React 应用启动入口
 ├── App.tsx                     # 根组件；将应用级装配委托给 app providers
@@ -78,6 +81,8 @@ src/
 │   │   └── ui/
 │   │       └── HomePage.tsx
 │   ├── example-counter/
+│   │   ├── assets/             # Feature 自有、由 feature 代码 import 的媒体资源
+│   │   │   └── counter-mark.svg
 │   │   ├── hooks/
 │   │   │   └── useCounter.ts
 │   │   ├── lib/
@@ -95,6 +100,8 @@ src/
 │       └── ui/
 │
 └── shared/                     # 产品无关的可复用基础模块
+    ├── assets/                 # 由应用代码 import 的共享媒体资源
+    │   └── README.md
     ├── ui/                     # 共享 UI 组件
     │   ├── Button.tsx
     │   ├── NotFound.tsx
@@ -112,13 +119,14 @@ src/
 - `routes` 负责 URL 到页面的映射。路由文件应保持薄层，并将页面实现委托给 `features`。
 - `features` 负责业务或 demo 能力。新增真实产品行为时，优先按业务域放到这里。
 - `shared` 负责可复用 UI 和纯工具。它不应依赖 `app`、`routes` 或 `features`。
+- `public` 负责不经过 Vite import、需要固定公开 URL 的静态文件。
 - `routeTree.gen.ts` 由 TanStack Router 生成，不要手动编辑。
 
 Features 可以读取 `app/config` 中的稳定运行时配置，例如 `appEnv`，但不应依赖 `app/router`、`app/providers` 或 `app/monitoring` 这类 app 装配能力。Shared 代码不能读取 `app/config`；如需环境派生值，应由上层注入。
 
 ### Feature 模块约定
 
-Feature 模块从小开始，按需要增长。使用 `ui/` 放 feature 自己拥有的组件和页面分区，`api/` 放 feature 专属数据访问，`model/` 放领域类型、schema、query keys 或局部状态，`hooks/` 放 feature 专属 React hooks，`lib/` 放只服务当前 feature 的纯工具函数，`constants/` 放 feature 私有常量。
+Feature 模块从小开始，按需要增长。使用 `ui/` 放 feature 自己拥有的组件和页面分区，`api/` 放 feature 专属数据访问，`model/` 放领域类型、schema、query keys 或局部状态，`hooks/` 放 feature 专属 React hooks，`lib/` 放只服务当前 feature 的纯工具函数，`constants/` 放 feature 私有常量，`assets/` 放由 feature 代码 import 的 feature 自有图片、视频、SVG 或其他媒体资源。
 
 ```text
 src/features/<feature-name>/
@@ -127,10 +135,15 @@ src/features/<feature-name>/
 ├── model/
 ├── hooks/
 ├── lib/
+├── assets/
 └── constants/
 ```
 
 不要默认创建空目录。只有当 feature 中确实有对应代码时才新增目录。Feature 专属请求应放在所属 feature 下；只有当项目真正需要通用传输层或 generated SDK 时，才引入共享请求基础设施。
+
+### 资产放置规则
+
+`public/` 用于 favicon、PWA icon、SEO 图片，以及需要固定公开 URL 的文件。`src/shared/assets/` 用于产品无关、被多个模块 import，并由 Vite 处理的图片、视频、SVG 或其他媒体资源。`src/features/<feature>/assets/` 用于 feature 私有媒体资源。如果某个 SVG 应作为可复用 React 图标组件使用，未来引入图标层时应放到 `src/shared/ui/icons/`。
 
 ### 导出与公共 Feature
 

@@ -1,0 +1,13 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 96 96"
+  role="img"
+  aria-label="Counter example asset"
+>
+  <rect width="96" height="96" rx="24" fill="#0f172a" />
+  <path
+    fill="#38bdf8"
+    d="M28 30a8 8 0 0 1 8-8h24a8 8 0 0 1 8 8v36a8 8 0 0 1-8 8H36a8 8 0 0 1-8-8V30Zm10 4v10h20V34H38Zm0 20v10h8V54h-8Zm13 0v10h8V54h-8Z"
+  />
+  <path fill="#e0f2fe" d="M38 34h20v10H38z" opacity=".9" />
+</svg>

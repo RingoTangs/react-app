@@ -8,9 +8,9 @@
 
 ## Put Here
 
-Use `ui/` for feature-owned components, `api/` for feature-specific requests, `model/` for domain types or query keys, `hooks/` for feature hooks, `lib/` for feature-only helpers, and `constants/` for feature-only constants.
+Use `ui/` for feature-owned components, `api/` for feature-specific requests, `model/` for domain types or query keys, `hooks/` for feature hooks, `lib/` for feature-only helpers, `constants/` for feature-only constants, and `assets/` for feature-private media imported by feature code.
 
-`ui/` 放 feature 自己拥有的组件，`api/` 放 feature 专属请求，`model/` 放领域类型或 query keys，`hooks/` 放 feature hooks，`lib/` 放只服务当前 feature 的工具函数，`constants/` 放 feature 私有常量。
+`ui/` 放 feature 自己拥有的组件，`api/` 放 feature 专属请求，`model/` 放领域类型或 query keys，`hooks/` 放 feature hooks，`lib/` 放只服务当前 feature 的工具函数，`constants/` 放 feature 私有常量，`assets/` 放由 feature 代码 import 的 feature 私有媒体资源。
 
 For data fetching, keep endpoint functions in `api`, query key factories and query options in `model`, React Query bindings in `hooks`, and async UI states in `ui`.
 
@@ -27,6 +27,10 @@ Public business capabilities also belong here, for example `auth`, `current-user
 Features may read stable runtime config from `app/config`, for example `appEnv`. Do not depend on app wiring such as `app/router`, `app/providers`, or `app/monitoring`.
 
 Features 可以读取 `app/config` 中的稳定运行时配置，例如 `appEnv`。不要依赖 `app/router`、`app/providers` 或 `app/monitoring` 这类 app 装配能力。
+
+Feature assets include page illustrations, placeholders, business icons, and local videos that are not reused outside the owning feature.
+
+Feature assets 包括页面插图、占位图、业务图标和局部视频等不被所属 feature 之外复用的资源。
 
 ## Avoid
 
@@ -46,6 +50,7 @@ Allowed: `import { appEnv } from '@/app/config/env'`. Avoid: `import { router } 
 
 - `home/ui/HomePage.tsx`
 - `example-counter/hooks/useCounter.ts`
+- `example-counter/assets/counter-mark.svg`
 - `example-counter/model/types.ts`
 - `example-posts/api/getPosts.ts`
 - `example-posts/hooks/usePostsQuery.ts`

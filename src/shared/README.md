@@ -8,9 +8,9 @@
 
 ## Put Here
 
-Use `ui/` for reusable UI components and fallback states. Use `lib/` for pure helpers and framework-light utilities. Add shared request infrastructure only when real integration requirements justify it.
+Use `ui/` for reusable UI components and fallback states. Use `lib/` for pure helpers and framework-light utilities. Use `assets/` for product-agnostic media imported by application code. Add shared request infrastructure only when real integration requirements justify it.
 
-`ui/` 放可复用 UI 组件和通用 fallback 状态，`lib/` 放纯工具函数和轻框架工具。只有真实集成需求能支撑时，才添加共享请求基础设施。
+`ui/` 放可复用 UI 组件和通用 fallback 状态，`lib/` 放纯工具函数和轻框架工具，`assets/` 放由应用代码 import 的产品无关媒体资源。只有真实集成需求能支撑时，才添加共享请求基础设施。
 
 Use `index.ts` only for stable shared public APIs such as `ui` and `lib`.
 
@@ -30,9 +30,14 @@ Do not put public business features here. Reused business capabilities such as a
 
 不要把公共业务 feature 放在这里。可复用的业务能力，例如鉴权、当前用户、权限或通知，仍然应放在 `features/<domain>`。
 
+Do not place feature-private assets here. Use `src/features/<feature>/assets` unless the media is product-agnostic and reused across features. Files requiring stable public URLs belong in `public`.
+
+不要在这里放 feature 私有资产。除非资源产品无关且跨 feature 复用，否则应放到 `src/features/<feature>/assets`。需要固定公开 URL 的文件应放到 `public`。
+
 ## Examples
 
 - `ui/Button.tsx`
 - `ui/NotFound.tsx`
+- `assets/README.md`
 - `lib/dayjs.ts`
 - `lib/sleep.ts`

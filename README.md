@@ -30,7 +30,7 @@ A team-oriented React starter built on React 19, Vite 8, TanStack Router, TanSta
 - Clear architectural boundaries for `app`, `routes`, `features`, and `shared`.
 - Production-oriented defaults for routing, server state, error handling, formatting, and tests.
 - Team-friendly documentation with dependency direction diagrams and directory-level README files.
-- Minimal runtime assumptions: no preselected Axios client, no hidden auto-import magic, no generic `components/` dumping ground.
+- Minimal runtime assumptions with explicit imports, feature-owned integrations, and no generic `components/` dumping ground.
 
 ## Quick Start
 

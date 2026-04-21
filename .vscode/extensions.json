@@ -3,6 +3,7 @@
     "dbaeumer.vscode-eslint",
     "usernamehw.errorlens",
     "esbenp.prettier-vscode",
-    "bradlc.vscode-tailwindcss"
+    "bradlc.vscode-tailwindcss",
+    "editorconfig.editorconfig"
   ]
 }

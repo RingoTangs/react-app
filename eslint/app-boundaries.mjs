@@ -63,10 +63,14 @@ export const appBoundaryRules = [
   },
 
   // features own product behavior. They may read stable runtime config from
-  // app/config, but must not depend on app wiring such as router, providers,
-  // or monitoring adapters.
+  // app/config, but must not depend on app wiring such as router, provider
+  // composition, or monitoring adapters. Provider-backed capabilities should
+  // be exposed from shared/<capability> or features/<domain>, then composed
+  // by app/providers.
   // features 拥有产品行为。它们可以读取 app/config 中的稳定运行时配置，
-  // 但不能依赖 router、providers 或 monitoring 这类 app 装配能力。
+  // 但不能依赖 router、provider composition 或 monitoring 这类 app 装配能力。
+  // 由 provider 支撑的可消费能力应从 shared/<capability> 或 features/<domain>
+  // 暴露，再由 app/providers 统一装配。
   {
     name: 'app-boundaries/features',
     files: ['src/features/**/*.{ts,tsx}'],
@@ -82,7 +86,7 @@ export const appBoundaryRules = [
                 '@/app/monitoring/*',
               ],
               message:
-                'Feature modules may read stable runtime config from app/config, but must not depend on app wiring such as router, providers, or monitoring.',
+                'Feature modules may read stable runtime config from app/config, but must not depend on app wiring such as router, provider composition, or monitoring. Expose provider-backed capabilities from shared/<capability> or features/<domain> instead.',
             },
           ],
         },

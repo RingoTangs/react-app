@@ -12,6 +12,10 @@ Use this directory for provider composition, router setup, runtime environment c
 
 这里适合放 provider 组合、router setup、运行时环境配置、监控适配器，以及 router devtools 这类仅开发环境使用的工具。
 
+`providers/` should compose global providers for the application shell. It should not be the public import path for feature-consumable context, hooks, or domain providers.
+
+`providers/` 应只负责应用壳的全局 provider 组合，不应作为 feature 消费 context、hook 或领域 provider 的公共导入入口。
+
 `config/` is the stable runtime configuration entrypoint and may be imported by features when they need app-level environment values.
 
 `config/` 是稳定的运行时配置入口；当 features 需要应用级环境值时，可以导入它。
@@ -37,6 +41,10 @@ Do not place feature query options or endpoint calls in app. App may pass `query
 Do not make features depend on app wiring modules such as `router/`, `providers/`, or `monitoring/`; those are application shell concerns.
 
 不要让 features 依赖 `router/`、`providers/` 或 `monitoring/` 这类 app 装配模块；它们属于应用壳职责。
+
+If a provider exposes reusable behavior to features, place that behavior in `shared/<capability>` or `features/<domain>` and import it into `app/providers` for composition.
+
+如果某个 provider 向 feature 暴露可复用能力，应将能力本身放到 `shared/<capability>` 或 `features/<domain>`，再由 `app/providers` 导入并组合。
 
 Do not add `src/app/index.ts` or subdirectory barrels by default. App infrastructure should be imported explicitly, for example `@/app/providers/AppProviders` or `@/app/router/router`.
 

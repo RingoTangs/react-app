@@ -124,6 +124,8 @@ src/
 
 Features 可以读取 `app/config` 中的稳定运行时配置，例如 `appEnv`，但不应依赖 `app/router`、`app/providers` 或 `app/monitoring` 这类 app 装配能力。Shared 代码不能读取 `app/config`；如需环境派生值，应由上层注入。
 
+`app/providers` 是组合层，不是 feature 面向的公共 API。如果某个 provider 暴露 feature 会消费的能力，例如 theme、auth 或 i18n，应将可复用的 provider、hooks 和 types 放到 `shared/<capability>`，业务能力则放到 `features/<domain>`。然后再由 `app/providers` 负责统一装配。
+
 ### Feature 模块约定
 
 Feature 模块从小开始，按需要增长。使用 `ui/` 放 feature 自己拥有的组件和页面分区，`api/` 放 feature 专属数据访问，`model/` 放领域类型、schema、query keys 或局部状态，`hooks/` 放 feature 专属 React hooks，`lib/` 放只服务当前 feature 的纯工具函数，`constants/` 放 feature 私有常量，`assets/` 放由 feature 代码 import 的 feature 自有图片、视频、SVG 或其他媒体资源。
@@ -216,7 +218,8 @@ React Query 错误仍应在路由错误 fallback 内通过 `QueryErrorResetBound
 - React、router 和应用工具都使用显式导入。
 - 不要把业务逻辑放进 `app/`；随着项目增长，产品行为应放到 feature 模块中。
 - 可复用 UI 放在 `shared/ui`，纯工具函数放在 `shared/lib`。
-- Feature 必要时可以读取 `app/config` 中的稳定运行时配置，但应避免依赖 app router、providers 和 monitoring 装配。
+- Feature 必要时可以读取 `app/config` 中的稳定运行时配置，但应避免依赖 app router、provider composition 和 monitoring 装配。
+- Feature 会消费的 provider 能力不要放在 `app/providers` 作为依赖入口；应从 `shared/<capability>` 或公共 feature API 暴露，再由 `app/providers` 装配。
 - Feature 专属请求放在所属 feature 下；只有真实集成需求能支撑时，才引入共享传输层。
 - 路由级错误兜底使用 TanStack Router `errorComponent`。`react-error-boundary` 只用于明确的 feature 局部组件兜底。
 - Barrel export 只用于 `shared/ui`、`shared/lib` 这类稳定公共边界；默认不要新增 feature 级或 app 级 barrel。

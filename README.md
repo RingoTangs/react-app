@@ -124,6 +124,8 @@ src/
 
 Features may read stable runtime configuration from `app/config`, for example `appEnv`, but should not depend on app wiring such as `app/router`, `app/providers`, or `app/monitoring`. Shared code must not read `app/config`; pass environment-derived values into shared utilities instead.
 
+`app/providers` is a composition layer, not a feature-facing API. If a provider exposes behavior that features consume, such as theme, auth, or i18n, put the reusable provider, hooks, and types in `shared/<capability>` for product-agnostic capabilities or `features/<domain>` for business capabilities. Then compose that provider from `app/providers`.
+
 ### Feature Module Convention
 
 Feature modules start small and grow by need. Use `ui/` for feature-owned components and page sections, `api/` for feature-specific data access, `model/` for domain types, schemas, query keys, or local state, `hooks/` for feature-specific React hooks, `lib/` for feature-only pure helpers, `constants/` for feature-only constants, and `assets/` for feature-owned images, videos, SVG files, or other media imported by feature code.
@@ -216,7 +218,8 @@ Use `react-error-boundary` only for feature-local failures where a widget can fa
 - Use explicit imports for React, router, and app utilities.
 - Keep business logic out of `app/`; add product behavior under feature modules as the project grows.
 - Keep reusable UI under `shared/ui` and pure utilities under `shared/lib`.
-- Let features read stable runtime config from `app/config` when needed, but keep them independent from app router, providers, and monitoring wiring.
+- Let features read stable runtime config from `app/config` when needed, but keep them independent from app router, provider composition, and monitoring wiring.
+- Keep feature-consumable provider capabilities outside `app/providers`; expose them from `shared/<capability>` or a public feature API, then compose them in `app/providers`.
 - Keep feature-specific requests under the owning feature; introduce shared transport only when real integration requirements justify it.
 - Use TanStack Router `errorComponent` for route-level error fallbacks. Use `react-error-boundary` only for clearly local feature widgets.
 - Use barrel exports only at stable public boundaries such as `shared/ui` and `shared/lib`; avoid feature-wide or app-wide barrels by default.

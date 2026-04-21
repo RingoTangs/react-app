@@ -28,6 +28,10 @@ Features may read stable runtime config from `app/config`, for example `appEnv`.
 
 Features 可以读取 `app/config` 中的稳定运行时配置，例如 `appEnv`。不要依赖 `app/router`、`app/providers` 或 `app/monitoring` 这类 app 装配能力。
 
+Features may depend on stable public APIs from `shared` or other public features. For provider-backed capabilities such as theme, auth, or i18n, import hooks and types from `shared/<capability>` or `features/<domain>`, not from `app/providers`.
+
+Features 可以依赖 `shared` 或其他公共 feature 暴露的稳定公共 API。对于 theme、auth 或 i18n 这类 provider 支撑的能力，应从 `shared/<capability>` 或 `features/<domain>` 导入 hooks 和 types，不要从 `app/providers` 导入。
+
 Feature assets include page illustrations, placeholders, business icons, and local videos that are not reused outside the owning feature.
 
 Feature assets 包括页面插图、占位图、业务图标和局部视频等不被所属 feature 之外复用的资源。
@@ -42,9 +46,9 @@ Do not add `src/features/index.ts` or feature subfolder barrels by default. Do n
 
 默认不要新增 `src/features/index.ts` 或 feature 子目录 barrel。不要因为某个业务能力被多个页面复用，就把它移动到 `shared`。
 
-Allowed: `import { appEnv } from '@/app/config/env'`. Avoid: `import { router } from '@/app/router/router'`.
+Allowed: `import { appEnv } from '@/app/config/env'`. Avoid: `import { router } from '@/app/router/router'` or `import { useTheme } from '@/app/providers/ThemeProvider'`.
 
-允许：`import { appEnv } from '@/app/config/env'`。避免：`import { router } from '@/app/router/router'`。
+允许：`import { appEnv } from '@/app/config/env'`。避免：`import { router } from '@/app/router/router'` 或 `import { useTheme } from '@/app/providers/ThemeProvider'`。
 
 ## Examples
 

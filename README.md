@@ -1,8 +1,36 @@
 # React App Template
 
-English | [简体中文](./README.zh-CN.md)
+<p align="center">
+  <img src="./public/app-icon.svg" alt="React App Template" width="96" height="96" />
+</p>
+
+<p align="center">
+  <strong>A team-oriented React starter for scalable frontend applications.</strong>
+</p>
+
+<p align="center">
+  <img alt="React" src="https://img.shields.io/badge/React-19-149eca?logo=react&logoColor=white" />
+  <img alt="Vite" src="https://img.shields.io/badge/Vite-8-646cff?logo=vite&logoColor=white" />
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript&logoColor=white" />
+  <img alt="TanStack Router" src="https://img.shields.io/badge/TanStack_Router-file--based-ff4154" />
+  <img alt="TanStack Query" src="https://img.shields.io/badge/TanStack_Query-server_state-ff4154" />
+  <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-v4-06b6d4?logo=tailwindcss&logoColor=white" />
+  <img alt="Vitest" src="https://img.shields.io/badge/Vitest-tested-6e9f18?logo=vitest&logoColor=white" />
+  <img alt="pnpm" src="https://img.shields.io/badge/pnpm-10-f69220?logo=pnpm&logoColor=white" />
+</p>
+
+<p align="center">
+  English | <a href="./README.zh-CN.md">简体中文</a>
+</p>
 
 A team-oriented React starter built on React 19, Vite 8, TanStack Router, TanStack Query, Tailwind CSS v4, and Vitest. The template keeps runtime defaults conservative and pushes app wiring, monitoring, and transport setup into explicit boundaries.
+
+## Why This Template
+
+- Clear architectural boundaries for `app`, `routes`, `features`, and `shared`.
+- Production-oriented defaults for routing, server state, error handling, formatting, and tests.
+- Team-friendly documentation with dependency direction diagrams and directory-level README files.
+- Minimal runtime assumptions: no preselected Axios client, no hidden auto-import magic, no generic `components/` dumping ground.
 
 ## Quick Start
 

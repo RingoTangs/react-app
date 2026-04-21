@@ -2,7 +2,6 @@
   // Use prettier to format code
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
-  "prettier.documentSelectors": ["**/*.svg"],
   "prettier.requireConfig": true,
   // Auto fix
   "editor.codeActionsOnSave": {

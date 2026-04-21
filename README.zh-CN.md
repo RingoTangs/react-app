@@ -52,6 +52,9 @@ docker run --rm -p 8080:80 react-app:local
 public/
 └── app-icon.svg                # 固定 URL 访问的公共静态资产
 
+types/
+└── .gitkeep                    # Repo 级 ambient declarations 的占位目录
+
 src/
 ├── main.tsx                    # React 应用启动入口
 ├── App.tsx                     # 根组件；将应用级装配委托给 app providers
@@ -209,6 +212,7 @@ React Query 错误仍应在路由错误 fallback 内通过 `QueryErrorResetBound
 
 - Router 和 React Query devtools 只在开发环境启用。
 - 模板全局使用显式导入；例如 `tv()` 这类 helper 应在使用处显式导入。
+- SVG 和 XML 文件通过 `@prettier/plugin-xml` 使用 Prettier XML parser 格式化。
 - React Query 使用保守默认值：`staleTime: 30s`、`gcTime: 5m`、query `retry: 1`、mutation `retry: 0`、`refetchOnWindowFocus: false`、`refetchOnReconnect: true`。
 - 模板不预设共享 HTTP client；示例 feature 只在自己的 `api` 文件中使用原生 `fetch`。
 - 路由错误使用 TanStack Router `errorComponent`；query 错误重试通过 `QueryErrorResetBoundary` reset，并通过单一 adapter 上报。

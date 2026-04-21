@@ -52,6 +52,9 @@ The root `nginx.conf` includes an SPA fallback so TanStack Router routes can be 
 public/
 └── app-icon.svg                # Static public asset served from a stable URL
 
+types/
+└── .gitkeep                    # Placeholder for repo-level ambient declarations
+
 src/
 ├── main.tsx                    # React app bootstrap
 ├── App.tsx                     # Root component; delegates app wiring to app providers
@@ -209,6 +212,7 @@ Use `react-error-boundary` only for feature-local failures where a widget can fa
 
 - Router and React Query devtools are enabled only in development.
 - The template uses explicit imports throughout; helper APIs such as `tv()` should be imported where used.
+- SVG and XML files are formatted with `@prettier/plugin-xml` through Prettier's XML parser.
 - React Query uses conservative defaults: `staleTime: 30s`, `gcTime: 5m`, query `retry: 1`, mutation `retry: 0`, `refetchOnWindowFocus: false`, `refetchOnReconnect: true`.
 - The template does not preselect a shared HTTP client; the example feature uses native `fetch` inside its own `api` file.
 - Route errors use TanStack Router `errorComponent`; query error retries are reset through `QueryErrorResetBoundary`, and reporting goes through a single adapter.

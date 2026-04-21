@@ -129,6 +129,38 @@ Features 可以读取 `app/config` 中的稳定运行时配置，例如 `appEnv`
 
 `app/providers` 是组合层，不是 feature 面向的公共 API。如果某个 provider 暴露 feature 会消费的能力，例如 theme、auth 或 i18n，应将可复用的 provider、hooks 和 types 放到 `shared/<capability>`，业务能力则放到 `features/<domain>`。然后再由 `app/providers` 负责统一装配。
 
+### 依赖方向
+
+```mermaid
+flowchart TD
+  App["app<br/>基础设施与装配"]
+  Routes["routes<br/>URL 映射与加载编排"]
+  Features["features<br/>业务能力"]
+  Shared["shared<br/>产品无关基础模块"]
+  AppConfig["app/config<br/>稳定运行时配置"]
+  ProviderCapability["shared/&lt;capability&gt; 或 features/&lt;domain&gt;<br/>provider 支撑的公共能力"]
+
+  App --> Routes
+  App --> Shared
+  App --> ProviderCapability
+  Routes --> Features
+  Routes --> AppConfig
+  Features --> Shared
+  Features --> AppConfig
+  ProviderCapability --> Shared
+
+  Shared -. 禁止 .-> App
+  Shared -. 禁止 .-> Routes
+  Shared -. 禁止 .-> Features
+  Features -. 禁止 .-> App
+```
+
+- `shared` 是最低层，必须独立于 `app`、`routes` 和 `features`。
+- `app` 负责基础设施装配，可以组合 routes、shared 模块和 provider 支撑的公共能力。
+- `routes` 负责编排 URL 行为和加载流程，再把页面实现委托给 `features`。
+- `features` 可以依赖 `shared` 和稳定的 `app/config`，但不能依赖 app wiring 模块。
+- Provider 支撑的公共能力应从 `shared` 或公共 feature API 暴露，再由 `app/providers` 装配。
+
 ### Feature 模块约定
 
 Feature 模块从小开始，按需要增长。使用 `ui/` 放 feature 自己拥有的组件和页面分区，`api/` 放 feature 专属数据访问，`model/` 放领域类型、schema、query keys 或局部状态，`hooks/` 放 feature 专属 React hooks，`lib/` 放只服务当前 feature 的纯工具函数，`constants/` 放 feature 私有常量，`assets/` 放由 feature 代码 import 的 feature 自有图片、视频、SVG 或其他媒体资源。

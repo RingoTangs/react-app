@@ -129,6 +129,38 @@ Features may read stable runtime configuration from `app/config`, for example `a
 
 `app/providers` is a composition layer, not a feature-facing API. If a provider exposes behavior that features consume, such as theme, auth, or i18n, put the reusable provider, hooks, and types in `shared/<capability>` for product-agnostic capabilities or `features/<domain>` for business capabilities. Then compose that provider from `app/providers`.
 
+### Dependency Direction
+
+```mermaid
+flowchart TD
+  App["app<br/>infrastructure & composition"]
+  Routes["routes<br/>URL mapping & loading orchestration"]
+  Features["features<br/>business capabilities"]
+  Shared["shared<br/>product-agnostic building blocks"]
+  AppConfig["app/config<br/>stable runtime config"]
+  ProviderCapability["shared/&lt;capability&gt; or features/&lt;domain&gt;<br/>provider-backed public capability"]
+
+  App --> Routes
+  App --> Shared
+  App --> ProviderCapability
+  Routes --> Features
+  Routes --> AppConfig
+  Features --> Shared
+  Features --> AppConfig
+  ProviderCapability --> Shared
+
+  Shared -. forbidden .-> App
+  Shared -. forbidden .-> Routes
+  Shared -. forbidden .-> Features
+  Features -. forbidden .-> App
+```
+
+- `shared` is the lowest layer and must stay independent from `app`, `routes`, and `features`.
+- `app` wires infrastructure and may compose routes, shared modules, and provider-backed public capabilities.
+- `routes` orchestrates URL behavior and loading, then delegates page implementation to `features`.
+- `features` may depend on `shared` and stable `app/config`, but not app wiring modules.
+- Provider-backed capabilities should be exposed from `shared` or a public feature API, then composed in `app/providers`.
+
 ### Feature Module Convention
 
 Feature modules start small and grow by need. Use `ui/` for feature-owned components and page sections, `api/` for feature-specific data access, `model/` for domain types, schemas, query keys, or local state, `hooks/` for feature-specific React hooks, `lib/` for feature-only pure helpers, `constants/` for feature-only constants, and `assets/` for feature-owned images, videos, SVG files, or other media imported by feature code.

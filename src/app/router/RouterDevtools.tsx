@@ -1,5 +1,5 @@
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
-import { appEnv } from '@/app/config/env'
+import { appEnv } from '@/config/env'
 
 export const RouterDevtools: React.FC = () => {
   if (!appEnv.isDev) {

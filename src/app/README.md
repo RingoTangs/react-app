@@ -8,17 +8,13 @@
 
 ## Put Here
 
-Use this directory for provider composition, router setup, runtime environment config, monitoring adapters, and development-only tooling such as router devtools.
+Use this directory for provider composition, router setup, monitoring adapters, and development-only tooling such as router devtools.
 
-这里适合放 provider 组合、router setup、运行时环境配置、监控适配器，以及 router devtools 这类仅开发环境使用的工具。
+这里适合放 provider 组合、router setup、监控适配器，以及 router devtools 这类仅开发环境使用的工具。
 
 `providers/` should compose global providers for the application shell. It should not be the public import path for feature-consumable context, hooks, or domain providers.
 
 `providers/` 应只负责应用壳的全局 provider 组合，不应作为 feature 消费 context、hook 或领域 provider 的公共导入入口。
-
-`config/` is the stable runtime configuration entrypoint and may be imported by features when they need app-level environment values.
-
-`config/` 是稳定的运行时配置入口；当 features 需要应用级环境值时，可以导入它。
 
 If route loaders need React Query preloading, create the shared `QueryClient` in app infrastructure and inject it into the router context from here.
 
@@ -54,5 +50,4 @@ Do not add `src/app/index.ts` or subdirectory barrels by default. App infrastruc
 
 - `providers/AppProviders.tsx`
 - `router/router.tsx`
-- `config/env.ts`
 - `monitoring/reportError.ts`

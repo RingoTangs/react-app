@@ -24,9 +24,9 @@ Public business capabilities also belong here, for example `auth`, `current-user
 
 公共业务能力也应放在这里，例如 `auth`、`current-user`、`permissions` 或 `notifications`。只有当该 feature 需要向多个模块暴露稳定公共 API 时，才添加 feature 级 `index.ts`。
 
-Features may read stable runtime config from `app/config`, for example `appEnv`. Do not depend on app wiring such as `app/router`, `app/providers`, or `app/monitoring`.
+Features may read stable runtime config from `config`, for example `appEnv`. Do not depend on app wiring such as `app/router`, `app/providers`, or `app/monitoring`.
 
-Features 可以读取 `app/config` 中的稳定运行时配置，例如 `appEnv`。不要依赖 `app/router`、`app/providers` 或 `app/monitoring` 这类 app 装配能力。
+Features 可以读取 `config` 中的稳定运行时配置，例如 `appEnv`。不要依赖 `app/router`、`app/providers` 或 `app/monitoring` 这类 app 装配能力。
 
 Features may depend on stable public APIs from `shared` or other public features. For provider-backed capabilities such as theme, auth, or i18n, import hooks and types from `shared/<capability>` or `features/<domain>`, not from `app/providers`.
 
@@ -46,9 +46,9 @@ Do not add `src/features/index.ts` or feature subfolder barrels by default. Do n
 
 默认不要新增 `src/features/index.ts` 或 feature 子目录 barrel。不要因为某个业务能力被多个页面复用，就把它移动到 `shared`。
 
-Allowed: `import { appEnv } from '@/app/config/env'`. Avoid: `import { router } from '@/app/router/router'` or `import { useTheme } from '@/app/providers/ThemeProvider'`.
+Allowed: `import { appEnv } from '@/config/env'`. Avoid: `import { router } from '@/app/router/router'` or `import { useTheme } from '@/app/providers/ThemeProvider'`.
 
-允许：`import { appEnv } from '@/app/config/env'`。避免：`import { router } from '@/app/router/router'` 或 `import { useTheme } from '@/app/providers/ThemeProvider'`。
+允许：`import { appEnv } from '@/config/env'`。避免：`import { router } from '@/app/router/router'` 或 `import { useTheme } from '@/app/providers/ThemeProvider'`。
 
 ## Examples
 

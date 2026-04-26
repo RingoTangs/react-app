@@ -27,7 +27,7 @@
 
 ## 为什么选择这个模板
 
-- 明确划分 `app`、`routes`、`features`、`shared` 的架构边界。
+- 明确划分 `config`、`app`、`routes`、`features`、`shared` 的架构边界。
 - 内置面向生产的路由、服务端状态、错误兜底、格式化和测试默认规则。
 - 提供团队友好的文档、依赖方向图和目录级 README。
 - 保持克制的运行时假设：显式导入、按 feature 管理集成能力、不使用泛化 `components/` 堆放目录。
@@ -90,9 +90,11 @@ src/
 ├── setupTests.ts               # Vitest 与 Testing Library 测试初始化
 ├── routeTree.gen.ts            # TanStack Router 生成的路由树；不要手动编辑
 │
+├── config/                     # app、routes 和 features 可读取的运行时环境配置
+│   ├── README.md
+│   └── env.ts
+│
 ├── app/                        # 应用级基础设施和装配
-│   ├── config/                 # 运行时环境配置
-│   │   └── env.ts
 │   ├── monitoring/             # 错误上报集成点
 │   │   └── reportError.ts
 │   ├── providers/              # 全局 provider 组合
@@ -146,14 +148,15 @@ src/
 
 ### 目录边界
 
-- `app` 负责跨应用基础设施：providers、router setup、环境配置、devtools 和监控。
+- `config` 负责运行时环境配置，可被 `app`、`routes` 和 `features` 读取。
+- `app` 负责跨应用基础设施：providers、router setup、devtools 和监控。
 - `routes` 负责 URL 到页面的映射。路由文件应保持薄层，并将页面实现委托给 `features`。
 - `features` 负责业务或 demo 能力。新增真实产品行为时，优先按业务域放到这里。
 - `shared` 负责可复用 UI 和纯工具。它不应依赖 `app`、`routes` 或 `features`。
 - `public` 负责不经过 Vite import、需要固定公开 URL 的静态文件。
 - `routeTree.gen.ts` 由 TanStack Router 生成，不要手动编辑。
 
-Features 可以读取 `app/config` 中的稳定运行时配置，例如 `appEnv`，但不应依赖 `app/router`、`app/providers` 或 `app/monitoring` 这类 app 装配能力。Shared 代码不能读取 `app/config`；如需环境派生值，应由上层注入。
+Features 可以读取 `config` 中的稳定运行时配置，例如 `appEnv`，但不应依赖 `app/router`、`app/providers` 或 `app/monitoring` 这类 app 装配能力。Shared 代码不能读取 `config`；如需环境派生值，应由上层注入。
 
 `app/providers` 是组合层，不是 feature 面向的公共 API。如果某个 provider 暴露 feature 会消费的能力，例如 theme、auth 或 i18n，应将可复用的 provider、hooks 和 types 放到 `shared/<capability>`，业务能力则放到 `features/<domain>`。然后再由 `app/providers` 负责统一装配。
 
@@ -165,28 +168,30 @@ flowchart TD
   Routes["routes<br/>URL 映射与加载编排"]
   Features["features<br/>业务能力"]
   Shared["shared<br/>产品无关基础模块"]
-  AppConfig["app/config<br/>稳定运行时配置"]
+  Config["config<br/>稳定运行时配置"]
   ProviderCapability["shared/&lt;capability&gt; 或 features/&lt;domain&gt;<br/>provider 支撑的公共能力"]
 
   App --> Routes
   App --> Shared
+  App --> Config
   App --> ProviderCapability
   Routes --> Features
-  Routes --> AppConfig
+  Routes --> Config
   Features --> Shared
-  Features --> AppConfig
+  Features --> Config
   ProviderCapability --> Shared
 
   Shared -. 禁止 .-> App
   Shared -. 禁止 .-> Routes
   Shared -. 禁止 .-> Features
+  Shared -. 禁止 .-> Config
   Features -. 禁止 .-> App
 ```
 
 - `shared` 是最低层，必须独立于 `app`、`routes` 和 `features`。
 - `app` 负责基础设施装配，可以组合 routes、shared 模块和 provider 支撑的公共能力。
 - `routes` 负责编排 URL 行为和加载流程，再把页面实现委托给 `features`。
-- `features` 可以依赖 `shared` 和稳定的 `app/config`，但不能依赖 app wiring 模块。
+- `features` 可以依赖 `shared` 和稳定的 `config`，但不能依赖 app wiring 模块。
 - Provider 支撑的公共能力应从 `shared` 或公共 feature API 暴露，再由 `app/providers` 装配。
 
 ### Feature 模块约定
@@ -282,7 +287,7 @@ React Query 错误仍应在路由错误 fallback 内通过 `QueryErrorResetBound
 - React、router 和应用工具都使用显式导入。
 - 不要把业务逻辑放进 `app/`；随着项目增长，产品行为应放到 feature 模块中。
 - 可复用 UI 放在 `shared/ui`，纯工具函数放在 `shared/lib`。
-- Feature 必要时可以读取 `app/config` 中的稳定运行时配置，但应避免依赖 app router、provider composition 和 monitoring 装配。
+- Feature 必要时可以读取 `config` 中的稳定运行时配置，但应避免依赖 app router、provider composition 和 monitoring 装配。
 - Feature 会消费的 provider 能力不要放在 `app/providers` 作为依赖入口；应从 `shared/<capability>` 或公共 feature API 暴露，再由 `app/providers` 装配。
 - Feature 专属请求放在所属 feature 下；只有真实集成需求能支撑时，才引入共享传输层。
 - 路由级错误兜底使用 TanStack Router `errorComponent`。`react-error-boundary` 只用于明确的 feature 局部组件兜底。

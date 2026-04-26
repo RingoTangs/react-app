@@ -16,9 +16,9 @@ export const appBoundaryRules = [
         {
           patterns: [
             {
-              group: ['@/app/*', '@/routes/*', '@/features/*'],
+              group: ['@/app/*', '@/config/*', '@/routes/*', '@/features/*'],
               message:
-                'Shared code must stay product-agnostic. Move business logic to features or pass values into shared utilities.',
+                'Shared code must stay product-agnostic. Move business logic to features or pass config-derived values into shared utilities.',
             },
           ],
         },
@@ -63,11 +63,11 @@ export const appBoundaryRules = [
   },
 
   // features own product behavior. They may read stable runtime config from
-  // app/config, but must not depend on app wiring such as router, provider
+  // config, but must not depend on app wiring such as router, provider
   // composition, or monitoring adapters. Provider-backed capabilities should
   // be exposed from shared/<capability> or features/<domain>, then composed
   // by app/providers.
-  // features 拥有产品行为。它们可以读取 app/config 中的稳定运行时配置，
+  // features 拥有产品行为。它们可以读取 config 中的稳定运行时配置，
   // 但不能依赖 router、provider composition 或 monitoring 这类 app 装配能力。
   // 由 provider 支撑的可消费能力应从 shared/<capability> 或 features/<domain>
   // 暴露，再由 app/providers 统一装配。
@@ -86,7 +86,7 @@ export const appBoundaryRules = [
                 '@/app/monitoring/*',
               ],
               message:
-                'Feature modules may read stable runtime config from app/config, but must not depend on app wiring such as router, provider composition, or monitoring. Expose provider-backed capabilities from shared/<capability> or features/<domain> instead.',
+                'Feature modules may read stable runtime config from config, but must not depend on app wiring such as router, provider composition, or monitoring. Expose provider-backed capabilities from shared/<capability> or features/<domain> instead.',
             },
           ],
         },
@@ -94,10 +94,10 @@ export const appBoundaryRules = [
     },
   },
 
-  // app wires infrastructure such as providers, router, and runtime config.
+  // app wires infrastructure such as providers, router, and devtools.
   // Feature data definitions should remain in features and be passed through
   // explicit integration points such as router context.
-  // app 负责 providers、router、runtime config 等基础设施装配。
+  // app 负责 providers、router、devtools 等基础设施装配。
   // Feature 数据定义应留在 features，并通过 router context 等显式集成点连接。
   {
     name: 'app-boundaries/app',
@@ -127,6 +127,7 @@ export const appBoundaryRules = [
     name: 'app-boundaries/no-default-barrels',
     files: [
       'src/app/**/index.ts',
+      'src/config/index.ts',
       'src/features/index.ts',
       'src/features/*/*/index.ts',
       'src/routes/**/index.ts',

@@ -1,7 +1,7 @@
 import type { DefaultOptions } from '@tanstack/react-query'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { appEnv } from '@/app/config/env'
+import { appEnv } from '@/config/env'
 
 const defaultQueryOptions: DefaultOptions = {
   // Keep global defaults conservative and product-agnostic.

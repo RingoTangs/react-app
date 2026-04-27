@@ -126,280 +126,193 @@ describe('root route', () => {
 })
 `
 
-const readmeContent = `# React App Template
+const readmeLayoutBlockEn = `├── routes/                     # TanStack file-based routes
+│   ├── __root.tsx              # Root route layout, outlet, and error boundary
+│   ├── index.tsx               # Route for /
+│   ├── posts.tsx               # Loader + query preloading example route
+│   └── error.tsx               # Demo route for error boundary verification
+│
+├── features/                   # Product or demo capabilities grouped by domain
+│   ├── home/
+│   │   └── ui/
+│   │       └── HomePage.tsx
+│   ├── example-counter/
+│   │   ├── assets/             # Feature-owned media imported by feature code
+│   │   │   └── counter-mark.svg
+│   │   ├── hooks/
+│   │   │   └── useCounter.ts
+│   │   ├── lib/
+│   │   │   └── getNextCount.ts
+│   │   ├── model/
+│   │   │   ├── constants.ts
+│   │   │   └── types.ts
+│   │   └── ui/
+│   │       ├── Counter.tsx
+│   │       └── Counter.spec.tsx
+│   └── example-posts/          # Feature-owned API + React Query example
+│       ├── api/
+│       ├── hooks/
+│       ├── model/
+│       └── ui/
+│
+└── shared/                     # Reusable, product-agnostic building blocks`
 
-<p align="center">
-  <img src="./public/app-icon.svg" alt="React App Template" width="96" height="96" />
-</p>
-
-<p align="center">
-  <strong>A team-oriented React starter for scalable frontend applications.</strong>
-</p>
-
-<p align="center">
-  <img alt="React" src="https://img.shields.io/badge/React-19-149eca?logo=react&logoColor=white" />
-  <img alt="Vite" src="https://img.shields.io/badge/Vite-8-646cff?logo=vite&logoColor=white" />
-  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript&logoColor=white" />
-  <img alt="TanStack Router" src="https://img.shields.io/badge/TanStack_Router-file--based-ff4154" />
-  <img alt="TanStack Query" src="https://img.shields.io/badge/TanStack_Query-server_state-ff4154" />
-  <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-v4-06b6d4?logo=tailwindcss&logoColor=white" />
-  <img alt="Vitest" src="https://img.shields.io/badge/Vitest-tested-6e9f18?logo=vitest&logoColor=white" />
-  <img alt="pnpm" src="https://img.shields.io/badge/pnpm-10-f69220?logo=pnpm&logoColor=white" />
-</p>
-
-<p align="center">
-  English | <a href="./README.zh-CN.md">简体中文</a>
-</p>
-
-A team-oriented React starter built on React 19, Vite 8, TanStack Router, TanStack Query, Tailwind CSS v4, and Vitest. This initialized version keeps only the architectural baseline so product teams can start from a clean app skeleton.
-
-## Quick Start
-
-\`\`\`bash
-pnpm install
-pnpm dev
-\`\`\`
-
-The dev server runs on \`http://localhost:3000\`.
-
-## Scripts
-
-\`\`\`bash
-pnpm dev
-pnpm build
-pnpm preview
-pnpm test
-pnpm test:run
-pnpm lint
-pnpm format:check
-pnpm check
-\`\`\`
-
-## Project Layout
-
-\`\`\`text
-public/
-└── app-icon.svg
-
-types/
-└── .gitkeep
-
-src/
-├── main.tsx
-├── App.tsx
-├── style.css
-├── setupTests.ts
-├── routeTree.gen.ts
-├── config/
-├── app/
-├── routes/
-│   ├── __root.tsx
-│   └── index.tsx
-├── features/
+const readmeLayoutReplacementEn = `├── routes/                     # TanStack file-based routes
+│   ├── __root.tsx              # Root route layout, outlet, and error boundary
+│   └── index.tsx               # Route for /
+│
+├── features/                   # Product or demo capabilities grouped by domain
 │   ├── README.md
 │   └── home/
 │       └── ui/
 │           └── HomePage.tsx
-└── shared/
-\`\`\`
+│
+└── shared/                     # Reusable, product-agnostic building blocks`
 
-## Architecture Rules
+const readmeLayoutBlockZh = `├── routes/                     # TanStack 文件路由
+│   ├── __root.tsx              # 根路由布局、Outlet 和错误边界
+│   ├── index.tsx               # / 路由
+│   ├── posts.tsx               # loader + query 预取示例路由
+│   └── error.tsx               # 错误边界验证用 demo 路由
+│
+├── features/                   # 按业务域组织的产品或 demo 能力
+│   ├── home/
+│   │   └── ui/
+│   │       └── HomePage.tsx
+│   ├── example-counter/
+│   │   ├── assets/             # Feature 自有、由 feature 代码 import 的媒体资源
+│   │   │   └── counter-mark.svg
+│   │   ├── hooks/
+│   │   │   └── useCounter.ts
+│   │   ├── lib/
+│   │   │   └── getNextCount.ts
+│   │   ├── model/
+│   │   │   ├── constants.ts
+│   │   │   └── types.ts
+│   │   └── ui/
+│   │       ├── Counter.tsx
+│   │       └── Counter.spec.tsx
+│   └── example-posts/          # Feature 自有 API + React Query 示例
+│       ├── api/
+│       ├── hooks/
+│       ├── model/
+│       └── ui/
+│
+└── shared/                     # 产品无关的可复用基础模块`
 
-- \`config\` owns stable runtime configuration that may be read by \`app\`, \`routes\`, and \`features\`.
-- \`app\` owns infrastructure wiring such as providers, router setup, devtools, and monitoring.
-- \`routes\` maps URLs to route behavior and delegates page implementation to \`features\`.
-- \`features\` owns product capabilities by domain.
-- \`shared\` owns reusable UI and pure helpers and must stay independent from \`app\`, \`routes\`, and \`features\`.
-
-## Data Fetching
-
-This template does not preselect a shared HTTP client. Put request functions in the owning feature's \`api/\`, query keys and query options in \`model/\`, React Query bindings in \`hooks/\`, and async UI states in feature \`ui/\`.
-
-When route loaders need data, call feature-owned \`queryOptions()\` helpers through \`context.queryClient.ensureQueryData(...)\` so loaders and components reuse the same cache entry.
-
-## Next Steps
-
-- Add your first product feature under \`src/features/<domain>\`
-- Add route files under \`src/routes\`
-- Keep route files thin and move business UI into features
-- Introduce a shared transport layer only when a real backend requires it
-`
-
-const readmeZhContent = `# React App Template
-
-<p align="center">
-  <img src="./public/app-icon.svg" alt="React App Template" width="96" height="96" />
-</p>
-
-<p align="center">
-  <strong>一个面向团队协作、可扩展前端应用的 React 工程模板。</strong>
-</p>
-
-<p align="center">
-  <img alt="React" src="https://img.shields.io/badge/React-19-149eca?logo=react&logoColor=white" />
-  <img alt="Vite" src="https://img.shields.io/badge/Vite-8-646cff?logo=vite&logoColor=white" />
-  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript&logoColor=white" />
-  <img alt="TanStack Router" src="https://img.shields.io/badge/TanStack_Router-file--based-ff4154" />
-  <img alt="TanStack Query" src="https://img.shields.io/badge/TanStack_Query-server_state-ff4154" />
-  <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-v4-06b6d4?logo=tailwindcss&logoColor=white" />
-  <img alt="Vitest" src="https://img.shields.io/badge/Vitest-tested-6e9f18?logo=vitest&logoColor=white" />
-  <img alt="pnpm" src="https://img.shields.io/badge/pnpm-10-f69220?logo=pnpm&logoColor=white" />
-</p>
-
-<p align="center">
-  <a href="./README.md">English</a> | 简体中文
-</p>
-
-这是执行初始化脚本后的精简版模板说明。它保留团队工程的架构基线，让业务项目从更干净的起点开始，而不是继续携带示例 feature 和示例路由。
-
-## 快速开始
-
-\`\`\`bash
-pnpm install
-pnpm dev
-\`\`\`
-
-开发服务器运行在 \`http://localhost:3000\`。
-
-## 常用命令
-
-\`\`\`bash
-pnpm dev
-pnpm build
-pnpm preview
-pnpm test
-pnpm test:run
-pnpm lint
-pnpm format:check
-pnpm check
-\`\`\`
-
-## 目录结构
-
-\`\`\`text
-public/
-└── app-icon.svg
-
-types/
-└── .gitkeep
-
-src/
-├── main.tsx
-├── App.tsx
-├── style.css
-├── setupTests.ts
-├── routeTree.gen.ts
-├── config/
-├── app/
-├── routes/
-│   ├── __root.tsx
-│   └── index.tsx
-├── features/
+const readmeLayoutReplacementZh = `├── routes/                     # TanStack 文件路由
+│   ├── __root.tsx              # 根路由布局、Outlet 和错误边界
+│   └── index.tsx               # / 路由
+│
+├── features/                   # 按业务域组织的产品或 demo 能力
 │   ├── README.md
 │   └── home/
 │       └── ui/
 │           └── HomePage.tsx
-└── shared/
+│
+└── shared/                     # 产品无关的可复用基础模块`
+
+const readmeDataFetchingBlockEn = `\`\`\`text
+src/features/example-posts/
+├── api/getPosts.ts             # feature-owned async request function
+├── hooks/usePostsQuery.ts      # React Query binding
+├── model/queryOptions.ts       # shared query options for hooks and loaders
+├── model/queryKeys.ts          # query key factory
+├── model/types.ts              # domain type
+└── ui/PostsPage.tsx            # route page reusing feature query state
 \`\`\`
 
-## 架构规则
+When route loaders need data, they should call feature-owned query options, not feature endpoints directly. This keeps route preloading and component \`useQuery\` on the same query key and cache entry.
 
-- \`config\` 负责稳定运行时配置，可被 \`app\`、\`routes\`、\`features\` 读取。
-- \`app\` 负责 providers、router、devtools、monitoring 等基础设施装配。
-- \`routes\` 负责 URL 到路由行为的映射，并把页面实现委托给 \`features\`。
-- \`features\` 负责按业务域组织产品能力。
-- \`shared\` 负责可复用 UI 和纯工具函数，必须独立于 \`app\`、\`routes\`、\`features\`。
+\`\`\`ts
+export const Route = createFileRoute('/posts')({
+  loader: ({ context }) => {
+    return context.queryClient.ensureQueryData(postsQueryOptions())
+  },
+  component: PostsPage,
+})
+\`\`\`
 
-## 数据请求
+Do not add a top-level \`src/api\`. Do not call \`fetch\` directly from React components, hooks, or route files; keep network access in feature \`api\` files when a real backend exists. The starter uses local async sample data by default so it works offline and on internal networks. When a real backend integration needs base URLs, authentication, retries, OpenAPI, ky, Axios, or RPC clients, design that transport layer from the project requirements instead of inheriting one from the template.`
 
-模板不预设共享 HTTP client。请求函数放在所属 feature 的 \`api/\`，query key 和 query options 放在 \`model/\`，React Query 绑定放在 \`hooks/\`，异步 UI 状态放在 feature 的 \`ui/\`。
+const readmeDataFetchingReplacementEn = `\`\`\`text
+src/features/orders/
+├── api/getOrders.ts            # feature-owned request function
+├── hooks/useOrdersQuery.ts     # React Query binding
+├── model/queryOptions.ts       # shared query options for hooks and loaders
+├── model/queryKeys.ts          # query key factory
+├── model/types.ts              # domain type
+└── ui/OrdersPage.tsx           # route page reusing feature query state
+\`\`\`
 
-如果 route loader 需要预取数据，应通过 \`context.queryClient.ensureQueryData(...)\` 调用 feature 自己的 \`queryOptions()\`，让 loader 与组件共享同一份缓存。
+When route loaders need data, they should call feature-owned query options, not feature endpoints directly. This keeps route preloading and component \`useQuery\` on the same query key and cache entry.
 
-## 下一步
+\`\`\`ts
+export const Route = createFileRoute('/orders')({
+  loader: ({ context }) => {
+    return context.queryClient.ensureQueryData(ordersQueryOptions())
+  },
+  component: OrdersPage,
+})
+\`\`\`
 
-- 在 \`src/features/<domain>\` 下添加你的第一个业务 feature
-- 在 \`src/routes\` 中增加真实业务路由
-- 保持 route 文件轻量，把页面级业务 UI 放进 feature
-- 只有当真实后端出现共性需求时，再抽共享传输层
-`
+Do not add a top-level \`src/api\`. Do not call \`fetch\` directly from React components, hooks, or route files; keep network access in feature \`api\` files when a real backend exists. When a real backend integration needs base URLs, authentication, retries, OpenAPI, ky, Axios, or RPC clients, design that transport layer from the project requirements instead of inheriting one from the template.`
 
-const featuresReadmeContent = `# Features
+const readmeDataFetchingBlockZh = `\`\`\`text
+src/features/example-posts/
+├── api/getPosts.ts             # feature 自己维护的异步请求函数
+├── hooks/usePostsQuery.ts      # React Query 绑定
+├── model/queryOptions.ts       # hooks 和 loaders 复用的 query options
+├── model/queryKeys.ts          # query key 工厂
+├── model/types.ts              # 领域类型
+└── ui/PostsPage.tsx            # 复用 feature 查询状态的路由页面
+\`\`\`
 
-## Purpose
+当 route loader 需要数据时，应调用 feature 自己暴露的 query options，而不是直接调用 feature endpoint。这样 route 预取和组件里的 \`useQuery\` 会使用同一个 query key 和缓存项。
 
-\`features\` contains product capabilities grouped by domain. A feature owns its business behavior, page-level components, local state, and feature-specific data access.
+\`\`\`ts
+export const Route = createFileRoute('/posts')({
+  loader: ({ context }) => {
+    return context.queryClient.ensureQueryData(postsQueryOptions())
+  },
+  component: PostsPage,
+})
+\`\`\`
 
-\`features\` 用于按业务域组织产品能力。一个 feature 拥有自己的业务行为、页面级组件、局部状态和 feature 专属数据访问。
+不要新增顶层 \`src/api\`。不要在 React 组件、hooks 或 route 文件中直接调用 \`fetch\`；如果有真实后端，再把网络访问放在 feature 的 \`api\` 文件中。模板默认使用本地异步示例数据，因此在离线或内网环境下也能稳定运行。当真实后端集成需要 baseURL、认证、重试、OpenAPI、ky、Axios 或 RPC client 时，再基于项目需求设计传输层。`
 
-## Put Here
+const readmeDataFetchingReplacementZh = `\`\`\`text
+src/features/orders/
+├── api/getOrders.ts            # feature 自己维护的请求函数
+├── hooks/useOrdersQuery.ts     # React Query 绑定
+├── model/queryOptions.ts       # hooks 和 loaders 复用的 query options
+├── model/queryKeys.ts          # query key 工厂
+├── model/types.ts              # 领域类型
+└── ui/OrdersPage.tsx           # 复用 feature 查询状态的路由页面
+\`\`\`
 
-Use \`ui/\` for feature-owned components, \`api/\` for feature-specific requests, \`model/\` for domain types or query keys, \`hooks/\` for feature hooks, \`lib/\` for feature-only helpers, \`constants/\` for feature-only constants, and \`assets/\` for feature-private media imported by feature code.
+当 route loader 需要数据时，应调用 feature 自己暴露的 query options，而不是直接调用 feature endpoint。这样 route 预取和组件里的 \`useQuery\` 会使用同一个 query key 和缓存项。
 
-\`ui/\` 放 feature 自己拥有的组件，\`api/\` 放 feature 专属请求，\`model/\` 放领域类型或 query keys，\`hooks/\` 放 feature hooks，\`lib/\` 放只服务当前 feature 的工具函数，\`constants/\` 放 feature 私有常量，\`assets/\` 放由 feature 代码 import 的 feature 私有媒体资源。
+\`\`\`ts
+export const Route = createFileRoute('/orders')({
+  loader: ({ context }) => {
+    return context.queryClient.ensureQueryData(ordersQueryOptions())
+  },
+  component: OrdersPage,
+})
+\`\`\`
 
-For data fetching, keep request functions in \`api\`, query key factories and query options in \`model\`, React Query bindings in \`hooks\`, and async UI states in \`ui\`.
+不要新增顶层 \`src/api\`。不要在 React 组件、hooks 或 route 文件中直接调用 \`fetch\`；如果有真实后端，再把网络访问放在 feature 的 \`api\` 文件中。当真实后端集成需要 baseURL、认证、重试、OpenAPI、ky、Axios 或 RPC client 时，再基于项目需求设计传输层。`
 
-数据请求场景中，请求函数放在 \`api\`，query key 工厂和 query options 放在 \`model\`，React Query 绑定放在 \`hooks\`，异步 UI 状态放在 \`ui\`。
+const readmeTemplateDefaultsBlockEn =
+  '- The template does not preselect a shared HTTP client; the example feature uses native `fetch` inside its own `api` file.'
+const readmeTemplateDefaultsReplacementEn =
+  '- The template does not preselect a shared HTTP client; feature-owned `api` files may use native `fetch` until a real shared transport layer is justified.'
 
-If both a route loader and a hook need the same data, expose a \`model/queryOptions.ts\` helper and reuse it from both places instead of duplicating query keys or calling endpoints directly from routes.
-
-如果 route loader 和 hook 都需要同一份数据，应提供 \`model/queryOptions.ts\` helper，并在两处复用它；不要重复定义 query key，也不要在 routes 中直接调用请求函数。
-
-## Avoid
-
-Do not create empty folders by default. Do not add a top-level \`src/api\`; feature-specific requests belong under the owning feature unless a generated SDK or shared transport layer is introduced.
-
-不要默认创建空目录。不要新增顶层 \`src/api\`；除非引入 generated SDK 或共享传输层，否则 feature 专属请求应放在所属 feature 下。
-
-Do not add \`src/features/index.ts\` or feature subfolder barrels by default. Do not move business capabilities into \`shared\` just because they are reused by multiple pages.
-
-默认不要新增 \`src/features/index.ts\` 或 feature 子目录 barrel。不要因为某个业务能力被多个页面复用，就把它移动到 \`shared\`。
-
-## Examples
-
-- \`billing/ui/BillingPage.tsx\`
-- \`billing/api/getInvoices.ts\`
-- \`billing/model/queryOptions.ts\`
-- \`current-user/hooks/useCurrentUser.ts\`
-- \`notifications/constants/channels.ts\`
-`
-
-const routesReadmeContent = `# Routes
-
-## Purpose
-
-\`routes\` contains TanStack file-based route definitions. It maps URLs to route behavior and delegates page rendering to features.
-
-\`routes\` 用于 TanStack 文件路由定义。它负责将 URL 映射到路由行为，并把页面渲染委托给 features。
-
-## Put Here
-
-Use route files for path mapping, route params, search schemas, loaders, \`beforeLoad\`, route-level pending states, and route-level error behavior.
-
-路由文件适合放路径映射、路由参数、search schema、loader、\`beforeLoad\`、路由级 pending 状态和路由级错误行为。
-
-When a loader needs data, call the owning feature's \`queryOptions()\` and let \`context.queryClient.ensureQueryData(...)\` handle preloading and cache reuse.
-
-当 loader 需要数据时，调用所属 feature 的 \`queryOptions()\`，并通过 \`context.queryClient.ensureQueryData(...)\` 完成预取和缓存复用。
-
-## Avoid
-
-Do not build full page implementations or business workflows directly in route files. Page-level business components should live in \`features/<feature>/ui\`.
-
-不要直接在 route 文件中实现完整页面或业务流程。页面级业务组件应放在 \`features/<feature>/ui\`。
-
-Do not call \`fetch\`, build endpoint URLs, define query keys, or place API functions in route files. Those details belong to the owning feature.
-
-不要在 route 文件中直接调用 \`fetch\`、拼接 endpoint、定义 query key 或放置 API 函数。这些细节属于所属 feature。
-
-## Examples
-
-- \`__root.tsx\` for the root route layout and outlet
-- \`index.tsx\` for \`/\`
-- \`users.index.tsx\` importing \`features/users/ui/UserListPage\`
-- \`settings.tsx\` loading \`features/settings/model/queryOptions.ts\`
-`
+const readmeTemplateDefaultsBlockZh =
+  '- 模板不预设共享 HTTP client；示例 feature 只在自己的 `api` 文件中使用原生 `fetch`。'
+const readmeTemplateDefaultsReplacementZh =
+  '- 模板不预设共享 HTTP client；在真实共享传输层出现前，feature 自己的 `api` 文件可以先使用原生 `fetch`。'
 
 const filesToDelete = [
   'src/features/example-counter',
@@ -411,11 +324,26 @@ const filesToDelete = [
 const filesToWrite = new Map([
   ['src/features/home/ui/HomePage.tsx', homePageContent],
   ['src/routes/-__root.spec.tsx', rootSpecContent],
-  ['README.md', readmeContent],
-  ['README.zh-CN.md', readmeZhContent],
-  ['src/features/README.md', featuresReadmeContent],
-  ['src/routes/README.md', routesReadmeContent],
 ])
+
+const docsToPatch = [
+  {
+    path: 'README.md',
+    replacements: [
+      [readmeLayoutBlockEn, readmeLayoutReplacementEn],
+      [readmeDataFetchingBlockEn, readmeDataFetchingReplacementEn],
+      [readmeTemplateDefaultsBlockEn, readmeTemplateDefaultsReplacementEn],
+    ],
+  },
+  {
+    path: 'README.zh-CN.md',
+    replacements: [
+      [readmeLayoutBlockZh, readmeLayoutReplacementZh],
+      [readmeDataFetchingBlockZh, readmeDataFetchingReplacementZh],
+      [readmeTemplateDefaultsBlockZh, readmeTemplateDefaultsReplacementZh],
+    ],
+  },
+]
 
 const ensureCleanWorktree = () => {
   const output = execFileSync('git', ['status', '--porcelain'], {
@@ -431,6 +359,14 @@ const ensureCleanWorktree = () => {
   }
 }
 
+const replaceExact = (content, before, after, filePath) => {
+  if (!content.includes(before)) {
+    throw new Error(`Could not find expected content in ${filePath}`)
+  }
+
+  return content.replace(before, after)
+}
+
 const removeTargets = async () => {
   for (const target of filesToDelete) {
     await rm(path.join(rootDir, target), { recursive: true, force: true })
@@ -442,6 +378,19 @@ const writeTargets = async () => {
     const absolutePath = path.join(rootDir, target)
     await mkdir(path.dirname(absolutePath), { recursive: true })
     await writeFile(absolutePath, `${content.trim()}\n`)
+  }
+}
+
+const patchDocs = async () => {
+  for (const doc of docsToPatch) {
+    const absolutePath = path.join(rootDir, doc.path)
+    let content = await readFile(absolutePath, 'utf8')
+
+    for (const [before, after] of doc.replacements) {
+      content = replaceExact(content, before, after, doc.path)
+    }
+
+    await writeFile(absolutePath, content)
   }
 }
 
@@ -470,13 +419,16 @@ const printSummary = async () => {
   for (const target of filesToWrite.keys()) {
     console.log(`- ${target}`)
   }
+  for (const doc of docsToPatch) {
+    console.log(`- ${doc.path}`)
+  }
 
   console.log(`\nRegenerated route tree: ${routeTreeExists ? 'yes' : 'no'}`)
   console.log(
     `README title: ${readmePreview.split('\n')[0].replace(/^# /, '') || 'n/a'}`,
   )
   console.log('\nNext steps:')
-  console.log('- Review the new README and HomePage copy')
+  console.log('- Review the updated README sections and HomePage copy')
   console.log('- Add your first real feature under src/features')
   console.log('- Run pnpm check')
 }
@@ -485,6 +437,7 @@ const main = async () => {
   ensureCleanWorktree()
   await removeTargets()
   await writeTargets()
+  await patchDocs()
   regenerateRouteTree()
   await removeBuildArtifacts()
   await printSummary()

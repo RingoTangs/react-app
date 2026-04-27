@@ -100,13 +100,17 @@ src/
 │   ├── providers/              # 全局 provider 组合
 │   │   ├── AppProviders.tsx
 │   │   └── QueryProvider.tsx
+│   ├── query/                  # 应用级共享 QueryClient 配置
+│   │   └── queryClient.ts
 │   └── router/                 # Router 实例、默认配置和 devtools
+│       ├── context.ts
 │       ├── router.tsx
 │       └── RouterDevtools.tsx
 │
 ├── routes/                     # TanStack 文件路由
 │   ├── __root.tsx              # 根路由布局、Outlet 和错误边界
 │   ├── index.tsx               # / 路由
+│   ├── posts.tsx               # loader + query 预取示例路由
 │   └── error.tsx               # 错误边界验证用 demo 路由
 │
 ├── features/                   # 按业务域组织的产品或 demo 能力
@@ -159,6 +163,8 @@ src/
 Features 可以读取 `config` 中的稳定运行时配置，例如 `appEnv`，但不应依赖 `app/router`、`app/providers` 或 `app/monitoring` 这类 app 装配能力。Shared 代码不能读取 `config`；如需环境派生值，应由上层注入。
 
 `app/providers` 是组合层，不是 feature 面向的公共 API。如果某个 provider 暴露 feature 会消费的能力，例如 theme、auth 或 i18n，应将可复用的 provider、hooks 和 types 放到 `shared/<capability>`，业务能力则放到 `features/<domain>`。然后再由 `app/providers` 负责统一装配。
+
+模板现在会把应用级共享 `QueryClient` 注入 TanStack Router context。route loader 可以通过 `context.queryClient.ensureQueryData(...)` 预取 feature 自己的 `queryOptions()`，组件再通过 feature hook 复用同一份缓存。
 
 ### 依赖方向
 
@@ -217,22 +223,22 @@ src/features/<feature-name>/
 
 ### 导出与公共 Feature
 
-Barrel export 只用于稳定公共边界。模板保留 `src/shared/ui/index.ts` 和 `src/shared/lib/index.ts`，因为这些目录对外提供产品无关的可复用 API。不要为了缩短导入路径而新增 `src/app/index.ts`、`src/features/index.ts`、路由 barrel 或 feature 子目录 barrel。
+Barrel export 只用于稳定公共边界。模板保留 `src/shared/ui/index.ts` 和 `src/shared/lib/index.ts`，因为这些目录对外提供产品无关的可复用 API。不要为了缩短导入路径而新增 `src/app/index.ts`、`src/config/index.ts`、`src/features/index.ts`、路由 barrel 或 feature 子目录 barrel。
 
 公共业务能力仍然放在 `src/features/<domain>`，不要放进 `shared`。典型例子包括 `auth`、`current-user`、`permissions` 和 `notifications`。只有当某个 feature 明确需要向多个模块暴露稳定公共 API 时，才添加 `src/features/<feature>/index.ts`；它只应导出公共组件、hooks 和类型，不导出私有 endpoint、测试或实现细节。
 
 ### 数据请求
 
-模板不内置共享 HTTP client。接口函数放在所属 feature 的 `api`，query keys 和 query options 放在 `model`，React Query hooks 放在 `hooks`，loading、error、empty、success 状态由 feature `ui` 处理。
+模板不内置共享 HTTP client。请求函数放在所属 feature 的 `api`，query keys 和 query options 放在 `model`，React Query hooks 放在 `hooks`，loading、error、empty、success 状态由 feature `ui` 处理。
 
 ```text
 src/features/example-posts/
-├── api/getPosts.ts             # 使用原生 fetch 的 endpoint 专属请求函数
+├── api/getPosts.ts             # feature 自己维护的异步请求函数
 ├── hooks/usePostsQuery.ts      # React Query 绑定
 ├── model/queryOptions.ts       # hooks 和 loaders 复用的 query options
 ├── model/queryKeys.ts          # query key 工厂
 ├── model/types.ts              # 领域类型
-└── ui/PostsPreview.tsx         # 异步 UI 状态
+└── ui/PostsPage.tsx            # 复用 feature 查询状态的路由页面
 ```
 
 当 route loader 需要数据时，应调用 feature 自己暴露的 query options，而不是直接调用 feature endpoint。这样 route 预取和组件里的 `useQuery` 会使用同一个 query key 和缓存项。
@@ -246,7 +252,7 @@ export const Route = createFileRoute('/posts')({
 })
 ```
 
-不要新增顶层 `src/api`。不要在 React 组件、hooks 或 route 文件中直接调用 `fetch`，应放在 feature 的 `api` 文件中。当真实后端集成需要 baseURL、认证、重试、OpenAPI、ky、Axios 或 RPC client 时，再基于项目需求设计传输层。
+不要新增顶层 `src/api`。不要在 React 组件、hooks 或 route 文件中直接调用 `fetch`；如果有真实后端，再把网络访问放在 feature 的 `api` 文件中。模板默认使用本地异步示例数据，因此在离线或内网环境下也能稳定运行。当真实后端集成需要 baseURL、认证、重试、OpenAPI、ky、Axios 或 RPC client 时，再基于项目需求设计传输层。
 
 ### Routes 与 Feature 页面
 

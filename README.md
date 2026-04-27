@@ -100,13 +100,17 @@ src/
 │   ├── providers/              # Global provider composition
 │   │   ├── AppProviders.tsx
 │   │   └── QueryProvider.tsx
+│   ├── query/                  # Shared app-level QueryClient setup
+│   │   └── queryClient.ts
 │   └── router/                 # Router instance, defaults, and devtools
+│       ├── context.ts
 │       ├── router.tsx
 │       └── RouterDevtools.tsx
 │
 ├── routes/                     # TanStack file-based routes
 │   ├── __root.tsx              # Root route layout, outlet, and error boundary
 │   ├── index.tsx               # Route for /
+│   ├── posts.tsx               # Loader + query preloading example route
 │   └── error.tsx               # Demo route for error boundary verification
 │
 ├── features/                   # Product or demo capabilities grouped by domain
@@ -159,6 +163,8 @@ src/
 Features may read stable runtime configuration from `config`, for example `appEnv`, but should not depend on app wiring such as `app/router`, `app/providers`, or `app/monitoring`. Shared code must not read `config`; pass environment-derived values into shared utilities instead.
 
 `app/providers` is a composition layer, not a feature-facing API. If a provider exposes behavior that features consume, such as theme, auth, or i18n, put the reusable provider, hooks, and types in `shared/<capability>` for product-agnostic capabilities or `features/<domain>` for business capabilities. Then compose that provider from `app/providers`.
+
+The template now wires a shared app-level `QueryClient` into TanStack Router context. Route loaders can preload feature-owned `queryOptions()` through `context.queryClient.ensureQueryData(...)`, while components reuse the same cache entry through feature hooks.
 
 ### Dependency Direction
 
@@ -217,22 +223,22 @@ Use `public/` for favicon, PWA icons, SEO images, and files that need stable pub
 
 ### Exports and Public Features
 
-Use barrel exports only for stable public boundaries. The template keeps `src/shared/ui/index.ts` and `src/shared/lib/index.ts` because those folders expose reusable, product-agnostic APIs. Do not add `src/app/index.ts`, `src/features/index.ts`, route barrels, or feature subfolder barrels just to shorten imports.
+Use barrel exports only for stable public boundaries. The template keeps `src/shared/ui/index.ts` and `src/shared/lib/index.ts` because those folders expose reusable, product-agnostic APIs. Do not add `src/app/index.ts`, `src/config/index.ts`, `src/features/index.ts`, route barrels, or feature subfolder barrels just to shorten imports.
 
 Public business capabilities still belong in `src/features/<domain>`, not in `shared`. Examples include `auth`, `current-user`, `permissions`, and `notifications`. Add `src/features/<feature>/index.ts` only when a feature intentionally exposes a stable public API consumed by multiple modules; export only public components, hooks, and types, not private endpoints, tests, or implementation details.
 
 ### Data Fetching
 
-This template does not include a shared HTTP client. Keep endpoint functions inside the owning feature, query keys and query options in `model`, React Query hooks in `hooks`, and loading, error, empty, and success states in feature `ui`.
+This template does not include a shared HTTP client. Keep request functions inside the owning feature, query keys and query options in `model`, React Query hooks in `hooks`, and loading, error, empty, and success states in feature `ui`.
 
 ```text
 src/features/example-posts/
-├── api/getPosts.ts             # endpoint-specific request using native fetch
+├── api/getPosts.ts             # feature-owned async request function
 ├── hooks/usePostsQuery.ts      # React Query binding
 ├── model/queryOptions.ts       # shared query options for hooks and loaders
 ├── model/queryKeys.ts          # query key factory
 ├── model/types.ts              # domain type
-└── ui/PostsPreview.tsx         # async UI states
+└── ui/PostsPage.tsx            # route page reusing feature query state
 ```
 
 When route loaders need data, they should call feature-owned query options, not feature endpoints directly. This keeps route preloading and component `useQuery` on the same query key and cache entry.
@@ -246,7 +252,7 @@ export const Route = createFileRoute('/posts')({
 })
 ```
 
-Do not add a top-level `src/api`. Do not call `fetch` directly from React components, hooks, or route files; keep it in feature `api` files. When a real backend integration needs base URLs, authentication, retries, OpenAPI, ky, Axios, or RPC clients, design that transport layer from the project requirements instead of inheriting one from the template.
+Do not add a top-level `src/api`. Do not call `fetch` directly from React components, hooks, or route files; keep network access in feature `api` files when a real backend exists. The starter uses local async sample data by default so it works offline and on internal networks. When a real backend integration needs base URLs, authentication, retries, OpenAPI, ky, Axios, or RPC clients, design that transport layer from the project requirements instead of inheriting one from the template.
 
 ### Routes vs Feature Pages
 

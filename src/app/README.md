@@ -8,9 +8,9 @@
 
 ## Put Here
 
-Use this directory for provider composition, router setup, monitoring adapters, and development-only tooling such as router devtools.
+Use this directory for provider composition, router setup, shared app-level query client infrastructure, monitoring adapters, and development-only tooling such as router devtools.
 
-这里适合放 provider 组合、router setup、监控适配器，以及 router devtools 这类仅开发环境使用的工具。
+这里适合放 provider 组合、router setup、应用级共享 query client 基础设施、监控适配器，以及 router devtools 这类仅开发环境使用的工具。
 
 `providers/` should compose global providers for the application shell. It should not be the public import path for feature-consumable context, hooks, or domain providers.
 
@@ -49,5 +49,6 @@ Do not add `src/app/index.ts` or subdirectory barrels by default. App infrastruc
 ## Examples
 
 - `providers/AppProviders.tsx`
+- `query/queryClient.ts`
 - `router/router.tsx`
 - `monitoring/reportError.ts`

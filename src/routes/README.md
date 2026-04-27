@@ -31,4 +31,4 @@ Do not call `fetch`, build endpoint URLs, define query keys, or place API functi
 - `__root.tsx` for the root route layout and outlet
 - `index.tsx` for `/`
 - `users.index.tsx` importing `features/users/ui/UserListPage`
-- `posts.tsx` using `features/posts/model/queryOptions.ts` in a loader
+- `posts.tsx` using `features/example-posts/model/queryOptions.ts` in a loader

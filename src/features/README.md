@@ -12,13 +12,13 @@ Use `ui/` for feature-owned components, `api/` for feature-specific requests, `m
 
 `ui/` 放 feature 自己拥有的组件，`api/` 放 feature 专属请求，`model/` 放领域类型或 query keys，`hooks/` 放 feature hooks，`lib/` 放只服务当前 feature 的工具函数，`constants/` 放 feature 私有常量，`assets/` 放由 feature 代码 import 的 feature 私有媒体资源。
 
-For data fetching, keep endpoint functions in `api`, query key factories and query options in `model`, React Query bindings in `hooks`, and async UI states in `ui`.
+For data fetching, keep request functions in `api`, query key factories and query options in `model`, React Query bindings in `hooks`, and async UI states in `ui`.
 
-数据请求场景中，endpoint 请求函数放在 `api`，query key 工厂和 query options 放在 `model`，React Query 绑定放在 `hooks`，异步 UI 状态放在 `ui`。
+数据请求场景中，请求函数放在 `api`，query key 工厂和 query options 放在 `model`，React Query 绑定放在 `hooks`，异步 UI 状态放在 `ui`。
 
 If both a route loader and a hook need the same data, expose a `model/queryOptions.ts` helper and reuse it from both places instead of duplicating query keys or calling endpoints directly from routes.
 
-如果 route loader 和 hook 都需要同一份数据，应提供 `model/queryOptions.ts` helper，并在两处复用它；不要重复定义 query key，也不要在 routes 中直接调用 endpoint。
+如果 route loader 和 hook 都需要同一份数据，应提供 `model/queryOptions.ts` helper，并在两处复用它；不要重复定义 query key，也不要在 routes 中直接调用请求函数。
 
 Public business capabilities also belong here, for example `auth`, `current-user`, `permissions`, or `notifications`. Add a feature-level `index.ts` only when that feature exposes a stable public API to multiple modules.
 
@@ -58,6 +58,6 @@ Allowed: `import { appEnv } from '@/config/env'`. Avoid: `import { router } from
 - `example-counter/model/types.ts`
 - `example-posts/api/getPosts.ts`
 - `example-posts/hooks/usePostsQuery.ts`
-- `posts/model/queryOptions.ts`
+- `example-posts/model/queryOptions.ts`
 - `auth/ui/RequireAuth.tsx`
 - `current-user/hooks/useCurrentUser.ts`

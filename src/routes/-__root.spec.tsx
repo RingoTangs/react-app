@@ -1,23 +1,16 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import {
-  createMemoryHistory,
-  createRouter,
-  RouterProvider,
-} from '@tanstack/react-router'
+import { createMemoryHistory, RouterProvider } from '@tanstack/react-router'
 import { act, cleanup, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { afterEach, describe, expect, it, vi } from 'vitest'
-import { routeTree } from '@/routeTree.gen'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { createAppRouter } from '@/app/router/router'
+import { usePostsQuery } from '@/features/example-posts/hooks/usePostsQuery'
 
 vi.mock('@/features/example-posts/hooks/usePostsQuery', () => ({
-  usePostsQuery: () => ({
-    data: [],
-    error: null,
-    isError: false,
-    isPending: false,
-    isSuccess: true,
-  }),
+  usePostsQuery: vi.fn(),
 }))
+
+const mockedUsePostsQuery = vi.mocked(usePostsQuery)
 
 const renderWithRouter = (initialEntries: Array<string>) => {
   const queryClient = new QueryClient({
@@ -28,8 +21,7 @@ const renderWithRouter = (initialEntries: Array<string>) => {
     },
   })
   const history = createMemoryHistory({ initialEntries })
-  const router = createRouter({
-    routeTree,
+  const router = createAppRouter(queryClient, {
     history,
   })
 
@@ -41,6 +33,16 @@ const renderWithRouter = (initialEntries: Array<string>) => {
 
   return { history, queryClient, router }
 }
+
+beforeEach(() => {
+  mockedUsePostsQuery.mockReturnValue({
+    data: [],
+    error: null,
+    isError: false,
+    isPending: false,
+    isSuccess: true,
+  } as unknown as ReturnType<typeof usePostsQuery>)
+})
 
 afterEach(() => {
   cleanup()
@@ -79,5 +81,33 @@ describe('root route error boundary', () => {
     expect(
       screen.queryByText('Oops! Something went wrong'),
     ).not.toBeInTheDocument()
+  })
+
+  it('preloads feature data through router context loaders', async () => {
+    mockedUsePostsQuery.mockReturnValue({
+      data: [
+        {
+          id: 1,
+          userId: 1,
+          title: 'Architecture boundaries stay explicit',
+          body: 'Feature-owned query options stay reusable across routes.',
+        },
+      ],
+      error: null,
+      isError: false,
+      isPending: false,
+      isSuccess: true,
+    } as unknown as ReturnType<typeof usePostsQuery>)
+
+    const { router } = renderWithRouter(['/posts'])
+
+    expect(router.state.location.pathname).toBe('/posts')
+
+    expect(
+      await screen.findByText('Posts Route + Feature Query Options'),
+    ).toBeInTheDocument()
+    expect(
+      await screen.findByText('Architecture boundaries stay explicit'),
+    ).toBeInTheDocument()
   })
 })

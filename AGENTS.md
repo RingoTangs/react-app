@@ -18,14 +18,15 @@ Use `pnpm@10.24.0` with Node `>=22.0.0`. `.npmrc` enables `engine-strict=true`, 
 - `pnpm check:ci` is the stable CI entrypoint and delegates to `pnpm check`.
 - `pnpm check:fix` applies local lint fixes and Prettier formatting.
 - `pnpm lint-staged` runs the staged-file checks used by the pre-commit hook.
+- `pnpm init:template` removes demo features, rewrites starter docs, and regenerates the route tree for a clean baseline.
 
 ## Coding Style & Naming Conventions
 
-This repo uses TypeScript, React 19, and Vite with 2-space indentation, single quotes, no semicolons, and trailing commas. Prettier sorts Tailwind classes via `prettier-plugin-tailwindcss`, including classes built with `tv()`, and formats SVG/XML through `@prettier/plugin-xml`. Use explicit imports, PascalCase for React components (`Counter.tsx`), camelCase for utilities (`sleep.ts`), and colocate test files as `*.spec.tsx` beside the component under test. Prefer the `@/` alias for imports from `src`.
+This repo uses TypeScript, React 19, and Vite with 2-space indentation, single quotes, no semicolons, and trailing commas. Prettier sorts Tailwind classes via `prettier-plugin-tailwindcss`, including classes built with `tv()`, and formats SVG/XML through `@prettier/plugin-xml`. Use explicit imports, PascalCase for React components (`FeatureCard.tsx`), camelCase for utilities (`formatDate.ts`), and colocate test files as `*.spec.tsx` beside the component under test. Prefer the `@/` alias for imports from `src`.
 
 ## Testing Guidelines
 
-Vitest runs in the `happy-dom` environment with shared setup from `src/setupTests.ts`. Test-only types are managed in `tsconfig.test.json`; production app code should not rely on Vitest globals. Write component tests with Testing Library and keep them close to the source file, for example `src/features/example-counter/ui/Counter.spec.tsx`. Cover new UI states, user interactions, and error boundaries when behavior changes. Run `pnpm test:run` before opening a PR.
+Vitest runs in the `happy-dom` environment with shared setup from `src/setupTests.ts`. Test-only types are managed in `tsconfig.test.json`; production app code should not rely on Vitest globals. Write component tests with Testing Library and keep them close to the source file, for example `src/features/billing/ui/BillingPage.spec.tsx`. Cover new UI states, user interactions, and error boundaries when behavior changes. Run `pnpm test:run` before opening a PR.
 
 ## Commit & Pull Request Guidelines
 

@@ -36,6 +36,7 @@
     "format:check": "prettier --check .",
     "format": "prettier --write .",
     "typecheck": "tsc -b",
+    "init:template": "node scripts/init-template.mjs",
     "check": "pnpm lint && pnpm format:check && pnpm typecheck && pnpm test:run",
     "check:ci": "pnpm check",
     "check:fix": "pnpm lint:fix && pnpm format",

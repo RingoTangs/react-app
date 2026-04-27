@@ -48,6 +48,16 @@ pnpm dev
 
 The dev server runs on `http://localhost:3000`.
 
+### Remove template examples
+
+If you want a clean project baseline after cloning the template, run:
+
+```bash
+pnpm init:template
+```
+
+The initializer removes demo features and example routes, rewrites the starter docs, regenerates `src/routeTree.gen.ts`, and leaves the repository ready for product code.
+
 ## Scripts
 
 ```bash
@@ -58,6 +68,7 @@ pnpm test         # run Vitest in watch mode
 pnpm test:run     # run tests once
 pnpm lint         # run ESLint
 pnpm format:check # verify Prettier formatting
+pnpm init:template # remove template demos and rewrite starter docs
 pnpm check        # lint + format + typecheck + test
 ```
 

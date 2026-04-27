@@ -52,12 +52,11 @@ Allowed: `import { appEnv } from '@/config/env'`. Avoid: `import { router } from
 
 ## Examples
 
-- `home/ui/HomePage.tsx`
-- `example-counter/hooks/useCounter.ts`
-- `example-counter/assets/counter-mark.svg`
-- `example-counter/model/types.ts`
-- `example-posts/api/getPosts.ts`
-- `example-posts/hooks/usePostsQuery.ts`
-- `example-posts/model/queryOptions.ts`
-- `auth/ui/RequireAuth.tsx`
+- `billing/ui/BillingPage.tsx`
+- `billing/api/getInvoices.ts`
+- `billing/model/queryOptions.ts`
 - `current-user/hooks/useCurrentUser.ts`
+- `notifications/constants/channels.ts`
+- `orders/assets/order-empty-state.svg`
+- `orders/lib/formatOrderCurrency.ts`
+- `settings/ui/PreferencesPage.tsx`

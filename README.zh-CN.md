@@ -48,6 +48,16 @@ pnpm dev
 
 开发服务器运行在 `http://localhost:3000`。
 
+### 清理模板示例
+
+如果你希望 clone 模板后立刻得到更干净的业务起点，可以执行：
+
+```bash
+pnpm init:template
+```
+
+初始化脚本会移除 demo feature 和示例路由，重写 starter 文档，重新生成 `src/routeTree.gen.ts`，并把仓库收敛到适合继续开发业务代码的基线状态。
+
 ## 脚本
 
 ```bash
@@ -58,6 +68,7 @@ pnpm test         # 以 watch 模式运行 Vitest
 pnpm test:run     # 单次运行测试，适合 CI
 pnpm lint         # 运行 ESLint
 pnpm format:check # 检查 Prettier 格式
+pnpm init:template # 移除模板示例并重写 starter 文档
 pnpm check        # lint + format + typecheck + test
 ```
 

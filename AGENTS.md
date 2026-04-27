@@ -25,7 +25,7 @@ This repo uses TypeScript, React 19, and Vite with 2-space indentation, single q
 
 ## Testing Guidelines
 
-Vitest runs in the `happy-dom` environment with shared setup from `src/setupTests.ts`. Write component tests with Testing Library and keep them close to the source file, for example `src/features/example-counter/ui/Counter.spec.tsx`. Cover new UI states, user interactions, and error boundaries when behavior changes. Run `pnpm test:run` before opening a PR.
+Vitest runs in the `happy-dom` environment with shared setup from `src/setupTests.ts`. Test-only types are managed in `tsconfig.test.json`; production app code should not rely on Vitest globals. Write component tests with Testing Library and keep them close to the source file, for example `src/features/example-counter/ui/Counter.spec.tsx`. Cover new UI states, user interactions, and error boundaries when behavior changes. Run `pnpm test:run` before opening a PR.
 
 ## Commit & Pull Request Guidelines
 

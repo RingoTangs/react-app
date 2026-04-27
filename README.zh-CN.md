@@ -48,7 +48,7 @@ pnpm dev
 
 开发服务器运行在 `http://localhost:3000`。
 
-### 清理模板示例
+### 可选初始化
 
 如果你希望 clone 模板后立刻得到更干净的业务起点，可以执行：
 
@@ -56,7 +56,7 @@ pnpm dev
 pnpm init:template
 ```
 
-初始化脚本会移除 demo feature 和示例路由，重写 starter 文档，重新生成 `src/routeTree.gen.ts`，并把仓库收敛到适合继续开发业务代码的基线状态。
+这个一次性初始化器会移除 demo feature 和 demo 路由，更新 starter 文件，重新生成 `src/routeTree.gen.ts`，然后删除自己的命令入口和脚本文件。
 
 ## 脚本
 
@@ -68,7 +68,7 @@ pnpm test         # 以 watch 模式运行 Vitest
 pnpm test:run     # 单次运行测试，适合 CI
 pnpm lint         # 运行 ESLint
 pnpm format:check # 检查 Prettier 格式
-pnpm init:template # 移除模板示例并重写 starter 文档
+pnpm init:template # 一次性清理 demo feature 和路由，然后自删除
 pnpm check        # lint + format + typecheck + test
 ```
 
@@ -121,27 +121,13 @@ src/
 ├── routes/                     # TanStack 文件路由
 │   ├── __root.tsx              # 根路由布局、Outlet 和错误边界
 │   ├── index.tsx               # / 路由
-│   ├── posts.tsx               # loader + query 预取示例路由
-│   └── error.tsx               # 错误边界验证用 demo 路由
+│   └── users.tsx               # 示例：保持薄层的业务路由
 │
 ├── features/                   # 按业务域组织的产品或 demo 能力
 │   ├── home/
 │   │   └── ui/
 │   │       └── HomePage.tsx
-│   ├── example-counter/
-│   │   ├── assets/             # Feature 自有、由 feature 代码 import 的媒体资源
-│   │   │   └── counter-mark.svg
-│   │   ├── hooks/
-│   │   │   └── useCounter.ts
-│   │   ├── lib/
-│   │   │   └── getNextCount.ts
-│   │   ├── model/
-│   │   │   ├── constants.ts
-│   │   │   └── types.ts
-│   │   └── ui/
-│   │       ├── Counter.tsx
-│   │       └── Counter.spec.tsx
-│   └── example-posts/          # Feature 自有 API + React Query 示例
+│   └── orders/                 # 示例 feature 结构
 │       ├── api/
 │       ├── hooks/
 │       ├── model/
@@ -243,27 +229,27 @@ Barrel export 只用于稳定公共边界。模板保留 `src/shared/ui/index.ts
 模板不内置共享 HTTP client。请求函数放在所属 feature 的 `api`，query keys 和 query options 放在 `model`，React Query hooks 放在 `hooks`，loading、error、empty、success 状态由 feature `ui` 处理。
 
 ```text
-src/features/example-posts/
-├── api/getPosts.ts             # feature 自己维护的异步请求函数
-├── hooks/usePostsQuery.ts      # React Query 绑定
+src/features/orders/
+├── api/getOrders.ts            # feature 自己维护的请求函数
+├── hooks/useOrdersQuery.ts     # React Query 绑定
 ├── model/queryOptions.ts       # hooks 和 loaders 复用的 query options
 ├── model/queryKeys.ts          # query key 工厂
 ├── model/types.ts              # 领域类型
-└── ui/PostsPage.tsx            # 复用 feature 查询状态的路由页面
+└── ui/OrdersPage.tsx           # 复用 feature 查询状态的路由页面
 ```
 
 当 route loader 需要数据时，应调用 feature 自己暴露的 query options，而不是直接调用 feature endpoint。这样 route 预取和组件里的 `useQuery` 会使用同一个 query key 和缓存项。
 
 ```ts
-export const Route = createFileRoute('/posts')({
+export const Route = createFileRoute('/orders')({
   loader: ({ context }) => {
-    return context.queryClient.ensureQueryData(postsQueryOptions())
+    return context.queryClient.ensureQueryData(ordersQueryOptions())
   },
-  component: PostsPage,
+  component: OrdersPage,
 })
 ```
 
-不要新增顶层 `src/api`。不要在 React 组件、hooks 或 route 文件中直接调用 `fetch`；如果有真实后端，再把网络访问放在 feature 的 `api` 文件中。模板默认使用本地异步示例数据，因此在离线或内网环境下也能稳定运行。当真实后端集成需要 baseURL、认证、重试、OpenAPI、ky、Axios 或 RPC client 时，再基于项目需求设计传输层。
+不要新增顶层 `src/api`。不要在 React 组件、hooks 或 route 文件中直接调用 `fetch`；如果有真实后端，再把网络访问放在 feature 的 `api` 文件中。当真实后端集成需要 baseURL、认证、重试、OpenAPI、ky、Axios 或 RPC client 时，再基于项目需求设计传输层。
 
 ### Routes 与 Feature 页面
 
@@ -296,7 +282,7 @@ React Query 错误仍应在路由错误 fallback 内通过 `QueryErrorResetBound
 - 模板全局使用显式导入；例如 `tv()` 这类 helper 应在使用处显式导入。
 - SVG 和 XML 文件通过 `@prettier/plugin-xml` 使用 Prettier XML parser 格式化。
 - React Query 使用保守默认值：`staleTime: 30s`、`gcTime: 5m`、query `retry: 1`、mutation `retry: 0`、`refetchOnWindowFocus: false`、`refetchOnReconnect: true`。
-- 模板不预设共享 HTTP client；示例 feature 只在自己的 `api` 文件中使用原生 `fetch`。
+- 模板不预设共享 HTTP client；在真实共享传输层出现前，feature 自己的 `api` 文件可以先使用原生 `fetch`。
 - 路由错误使用 TanStack Router `errorComponent`；query 错误重试通过 `QueryErrorResetBoundary` reset，并通过单一 adapter 上报。
 
 ## 开发规则

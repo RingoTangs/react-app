@@ -18,7 +18,7 @@ Use `pnpm@10.24.0` with Node `>=22.0.0`. `.npmrc` enables `engine-strict=true`, 
 - `pnpm check:ci` is the stable CI entrypoint and delegates to `pnpm check`.
 - `pnpm check:fix` applies local lint fixes and Prettier formatting.
 - `pnpm lint-staged` runs the staged-file checks used by the pre-commit hook.
-- `pnpm init:template` removes demo features, rewrites starter docs, and regenerates the route tree for a clean baseline.
+- `pnpm init:template` is a one-time initializer that removes demo features and routes, updates starter files, regenerates the route tree, then deletes its own command entry and script file.
 
 ## Coding Style & Naming Conventions
 

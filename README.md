@@ -48,7 +48,7 @@ pnpm dev
 
 The dev server runs on `http://localhost:3000`.
 
-### Remove template examples
+### Optional initialization
 
 If you want a clean project baseline after cloning the template, run:
 
@@ -56,7 +56,7 @@ If you want a clean project baseline after cloning the template, run:
 pnpm init:template
 ```
 
-The initializer removes demo features and example routes, rewrites the starter docs, regenerates `src/routeTree.gen.ts`, and leaves the repository ready for product code.
+The one-time initializer removes demo features and demo routes, updates starter files, regenerates `src/routeTree.gen.ts`, and then deletes its own command entry and script file.
 
 ## Scripts
 
@@ -68,7 +68,7 @@ pnpm test         # run Vitest in watch mode
 pnpm test:run     # run tests once
 pnpm lint         # run ESLint
 pnpm format:check # verify Prettier formatting
-pnpm init:template # remove template demos and rewrite starter docs
+pnpm init:template # one-time cleanup of demo features and routes, then self-remove
 pnpm check        # lint + format + typecheck + test
 ```
 
@@ -121,27 +121,13 @@ src/
 ├── routes/                     # TanStack file-based routes
 │   ├── __root.tsx              # Root route layout, outlet, and error boundary
 │   ├── index.tsx               # Route for /
-│   ├── posts.tsx               # Loader + query preloading example route
-│   └── error.tsx               # Demo route for error boundary verification
+│   └── users.tsx               # Example thin route delegating to a feature page
 │
 ├── features/                   # Product or demo capabilities grouped by domain
 │   ├── home/
 │   │   └── ui/
 │   │       └── HomePage.tsx
-│   ├── example-counter/
-│   │   ├── assets/             # Feature-owned media imported by feature code
-│   │   │   └── counter-mark.svg
-│   │   ├── hooks/
-│   │   │   └── useCounter.ts
-│   │   ├── lib/
-│   │   │   └── getNextCount.ts
-│   │   ├── model/
-│   │   │   ├── constants.ts
-│   │   │   └── types.ts
-│   │   └── ui/
-│   │       ├── Counter.tsx
-│   │       └── Counter.spec.tsx
-│   └── example-posts/          # Feature-owned API + React Query example
+│   └── orders/                 # Example feature shape
 │       ├── api/
 │       ├── hooks/
 │       ├── model/
@@ -243,27 +229,27 @@ Public business capabilities still belong in `src/features/<domain>`, not in `sh
 This template does not include a shared HTTP client. Keep request functions inside the owning feature, query keys and query options in `model`, React Query hooks in `hooks`, and loading, error, empty, and success states in feature `ui`.
 
 ```text
-src/features/example-posts/
-├── api/getPosts.ts             # feature-owned async request function
-├── hooks/usePostsQuery.ts      # React Query binding
+src/features/orders/
+├── api/getOrders.ts            # feature-owned request function
+├── hooks/useOrdersQuery.ts     # React Query binding
 ├── model/queryOptions.ts       # shared query options for hooks and loaders
 ├── model/queryKeys.ts          # query key factory
 ├── model/types.ts              # domain type
-└── ui/PostsPage.tsx            # route page reusing feature query state
+└── ui/OrdersPage.tsx           # route page reusing feature query state
 ```
 
 When route loaders need data, they should call feature-owned query options, not feature endpoints directly. This keeps route preloading and component `useQuery` on the same query key and cache entry.
 
 ```ts
-export const Route = createFileRoute('/posts')({
+export const Route = createFileRoute('/orders')({
   loader: ({ context }) => {
-    return context.queryClient.ensureQueryData(postsQueryOptions())
+    return context.queryClient.ensureQueryData(ordersQueryOptions())
   },
-  component: PostsPage,
+  component: OrdersPage,
 })
 ```
 
-Do not add a top-level `src/api`. Do not call `fetch` directly from React components, hooks, or route files; keep network access in feature `api` files when a real backend exists. The starter uses local async sample data by default so it works offline and on internal networks. When a real backend integration needs base URLs, authentication, retries, OpenAPI, ky, Axios, or RPC clients, design that transport layer from the project requirements instead of inheriting one from the template.
+Do not add a top-level `src/api`. Do not call `fetch` directly from React components, hooks, or route files; keep network access in feature `api` files when a real backend exists. When a real backend integration needs base URLs, authentication, retries, OpenAPI, ky, Axios, or RPC clients, design that transport layer from the project requirements instead of inheriting one from the template.
 
 ### Routes vs Feature Pages
 
@@ -296,7 +282,7 @@ Use `react-error-boundary` only for feature-local failures where a widget can fa
 - The template uses explicit imports throughout; helper APIs such as `tv()` should be imported where used.
 - SVG and XML files are formatted with `@prettier/plugin-xml` through Prettier's XML parser.
 - React Query uses conservative defaults: `staleTime: 30s`, `gcTime: 5m`, query `retry: 1`, mutation `retry: 0`, `refetchOnWindowFocus: false`, `refetchOnReconnect: true`.
-- The template does not preselect a shared HTTP client; the example feature uses native `fetch` inside its own `api` file.
+- The template does not preselect a shared HTTP client; feature-owned `api` files may use native `fetch` until a real shared transport layer is justified.
 - Route errors use TanStack Router `errorComponent`; query error retries are reset through `QueryErrorResetBoundary`, and reporting goes through a single adapter.
 
 ## Development Rules

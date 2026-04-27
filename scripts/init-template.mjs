@@ -1,6 +1,6 @@
 import { execFileSync } from 'node:child_process'
 import { existsSync } from 'node:fs'
-import { mkdir, readFile, rm, writeFile } from 'node:fs/promises'
+import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
@@ -24,16 +24,6 @@ const homePageContent = `export const HomePage: React.FC = () => {
             The template keeps runtime defaults conservative and leaves room for
             your own features, routes, providers, and transport decisions.
           </p>
-          <div className="mt-10 flex justify-center gap-4">
-            <a
-              href="https://github.com/RingoTangs/react-app"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-full border border-slate-600 bg-slate-800/50 px-8 py-3 font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:border-slate-400 hover:bg-slate-700/50"
-            >
-              Open Repository
-            </a>
-          </div>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -126,193 +116,41 @@ describe('root route', () => {
 })
 `
 
-const readmeLayoutBlockEn = `├── routes/                     # TanStack file-based routes
-│   ├── __root.tsx              # Root route layout, outlet, and error boundary
-│   ├── index.tsx               # Route for /
-│   ├── posts.tsx               # Loader + query preloading example route
-│   └── error.tsx               # Demo route for error boundary verification
-│
-├── features/                   # Product or demo capabilities grouped by domain
-│   ├── home/
-│   │   └── ui/
-│   │       └── HomePage.tsx
-│   ├── example-counter/
-│   │   ├── assets/             # Feature-owned media imported by feature code
-│   │   │   └── counter-mark.svg
-│   │   ├── hooks/
-│   │   │   └── useCounter.ts
-│   │   ├── lib/
-│   │   │   └── getNextCount.ts
-│   │   ├── model/
-│   │   │   ├── constants.ts
-│   │   │   └── types.ts
-│   │   └── ui/
-│   │       ├── Counter.tsx
-│   │       └── Counter.spec.tsx
-│   └── example-posts/          # Feature-owned API + React Query example
-│       ├── api/
-│       ├── hooks/
-│       ├── model/
-│       └── ui/
-│
-└── shared/                     # Reusable, product-agnostic building blocks`
+const packageInitLine =
+  '    "init:template": "node scripts/init-template.mjs",\n'
 
-const readmeLayoutReplacementEn = `├── routes/                     # TanStack file-based routes
-│   ├── __root.tsx              # Root route layout, outlet, and error boundary
-│   └── index.tsx               # Route for /
-│
-├── features/                   # Product or demo capabilities grouped by domain
-│   ├── README.md
-│   └── home/
-│       └── ui/
-│           └── HomePage.tsx
-│
-└── shared/                     # Reusable, product-agnostic building blocks`
+const readmeInitSectionEn = `### Optional initialization
 
-const readmeLayoutBlockZh = `├── routes/                     # TanStack 文件路由
-│   ├── __root.tsx              # 根路由布局、Outlet 和错误边界
-│   ├── index.tsx               # / 路由
-│   ├── posts.tsx               # loader + query 预取示例路由
-│   └── error.tsx               # 错误边界验证用 demo 路由
-│
-├── features/                   # 按业务域组织的产品或 demo 能力
-│   ├── home/
-│   │   └── ui/
-│   │       └── HomePage.tsx
-│   ├── example-counter/
-│   │   ├── assets/             # Feature 自有、由 feature 代码 import 的媒体资源
-│   │   │   └── counter-mark.svg
-│   │   ├── hooks/
-│   │   │   └── useCounter.ts
-│   │   ├── lib/
-│   │   │   └── getNextCount.ts
-│   │   ├── model/
-│   │   │   ├── constants.ts
-│   │   │   └── types.ts
-│   │   └── ui/
-│   │       ├── Counter.tsx
-│   │       └── Counter.spec.tsx
-│   └── example-posts/          # Feature 自有 API + React Query 示例
-│       ├── api/
-│       ├── hooks/
-│       ├── model/
-│       └── ui/
-│
-└── shared/                     # 产品无关的可复用基础模块`
+If you want a clean project baseline after cloning the template, run:
 
-const readmeLayoutReplacementZh = `├── routes/                     # TanStack 文件路由
-│   ├── __root.tsx              # 根路由布局、Outlet 和错误边界
-│   └── index.tsx               # / 路由
-│
-├── features/                   # 按业务域组织的产品或 demo 能力
-│   ├── README.md
-│   └── home/
-│       └── ui/
-│           └── HomePage.tsx
-│
-└── shared/                     # 产品无关的可复用基础模块`
-
-const readmeDataFetchingBlockEn = `\`\`\`text
-src/features/example-posts/
-├── api/getPosts.ts             # feature-owned async request function
-├── hooks/usePostsQuery.ts      # React Query binding
-├── model/queryOptions.ts       # shared query options for hooks and loaders
-├── model/queryKeys.ts          # query key factory
-├── model/types.ts              # domain type
-└── ui/PostsPage.tsx            # route page reusing feature query state
+\`\`\`bash
+pnpm init:template
 \`\`\`
 
-When route loaders need data, they should call feature-owned query options, not feature endpoints directly. This keeps route preloading and component \`useQuery\` on the same query key and cache entry.
+The one-time initializer removes demo features and demo routes, updates starter files, regenerates \`src/routeTree.gen.ts\`, and then deletes its own command entry and script file.
 
-\`\`\`ts
-export const Route = createFileRoute('/posts')({
-  loader: ({ context }) => {
-    return context.queryClient.ensureQueryData(postsQueryOptions())
-  },
-  component: PostsPage,
-})
+`
+
+const readmeInitSectionZh = `### 可选初始化
+
+如果你希望 clone 模板后立刻得到更干净的业务起点，可以执行：
+
+\`\`\`bash
+pnpm init:template
 \`\`\`
 
-Do not add a top-level \`src/api\`. Do not call \`fetch\` directly from React components, hooks, or route files; keep network access in feature \`api\` files when a real backend exists. The starter uses local async sample data by default so it works offline and on internal networks. When a real backend integration needs base URLs, authentication, retries, OpenAPI, ky, Axios, or RPC clients, design that transport layer from the project requirements instead of inheriting one from the template.`
+这个一次性初始化器会移除 demo feature 和 demo 路由，更新 starter 文件，重新生成 \`src/routeTree.gen.ts\`，然后删除自己的命令入口和脚本文件。
 
-const readmeDataFetchingReplacementEn = `\`\`\`text
-src/features/orders/
-├── api/getOrders.ts            # feature-owned request function
-├── hooks/useOrdersQuery.ts     # React Query binding
-├── model/queryOptions.ts       # shared query options for hooks and loaders
-├── model/queryKeys.ts          # query key factory
-├── model/types.ts              # domain type
-└── ui/OrdersPage.tsx           # route page reusing feature query state
-\`\`\`
+`
 
-When route loaders need data, they should call feature-owned query options, not feature endpoints directly. This keeps route preloading and component \`useQuery\` on the same query key and cache entry.
+const readmeInitCommandEn =
+  'pnpm init:template # one-time cleanup of demo features and routes, then self-remove\n'
 
-\`\`\`ts
-export const Route = createFileRoute('/orders')({
-  loader: ({ context }) => {
-    return context.queryClient.ensureQueryData(ordersQueryOptions())
-  },
-  component: OrdersPage,
-})
-\`\`\`
+const readmeInitCommandZh =
+  'pnpm init:template # 一次性清理 demo feature 和路由，然后自删除\n'
 
-Do not add a top-level \`src/api\`. Do not call \`fetch\` directly from React components, hooks, or route files; keep network access in feature \`api\` files when a real backend exists. When a real backend integration needs base URLs, authentication, retries, OpenAPI, ky, Axios, or RPC clients, design that transport layer from the project requirements instead of inheriting one from the template.`
-
-const readmeDataFetchingBlockZh = `\`\`\`text
-src/features/example-posts/
-├── api/getPosts.ts             # feature 自己维护的异步请求函数
-├── hooks/usePostsQuery.ts      # React Query 绑定
-├── model/queryOptions.ts       # hooks 和 loaders 复用的 query options
-├── model/queryKeys.ts          # query key 工厂
-├── model/types.ts              # 领域类型
-└── ui/PostsPage.tsx            # 复用 feature 查询状态的路由页面
-\`\`\`
-
-当 route loader 需要数据时，应调用 feature 自己暴露的 query options，而不是直接调用 feature endpoint。这样 route 预取和组件里的 \`useQuery\` 会使用同一个 query key 和缓存项。
-
-\`\`\`ts
-export const Route = createFileRoute('/posts')({
-  loader: ({ context }) => {
-    return context.queryClient.ensureQueryData(postsQueryOptions())
-  },
-  component: PostsPage,
-})
-\`\`\`
-
-不要新增顶层 \`src/api\`。不要在 React 组件、hooks 或 route 文件中直接调用 \`fetch\`；如果有真实后端，再把网络访问放在 feature 的 \`api\` 文件中。模板默认使用本地异步示例数据，因此在离线或内网环境下也能稳定运行。当真实后端集成需要 baseURL、认证、重试、OpenAPI、ky、Axios 或 RPC client 时，再基于项目需求设计传输层。`
-
-const readmeDataFetchingReplacementZh = `\`\`\`text
-src/features/orders/
-├── api/getOrders.ts            # feature 自己维护的请求函数
-├── hooks/useOrdersQuery.ts     # React Query 绑定
-├── model/queryOptions.ts       # hooks 和 loaders 复用的 query options
-├── model/queryKeys.ts          # query key 工厂
-├── model/types.ts              # 领域类型
-└── ui/OrdersPage.tsx           # 复用 feature 查询状态的路由页面
-\`\`\`
-
-当 route loader 需要数据时，应调用 feature 自己暴露的 query options，而不是直接调用 feature endpoint。这样 route 预取和组件里的 \`useQuery\` 会使用同一个 query key 和缓存项。
-
-\`\`\`ts
-export const Route = createFileRoute('/orders')({
-  loader: ({ context }) => {
-    return context.queryClient.ensureQueryData(ordersQueryOptions())
-  },
-  component: OrdersPage,
-})
-\`\`\`
-
-不要新增顶层 \`src/api\`。不要在 React 组件、hooks 或 route 文件中直接调用 \`fetch\`；如果有真实后端，再把网络访问放在 feature 的 \`api\` 文件中。当真实后端集成需要 baseURL、认证、重试、OpenAPI、ky、Axios 或 RPC client 时，再基于项目需求设计传输层。`
-
-const readmeTemplateDefaultsBlockEn =
-  '- The template does not preselect a shared HTTP client; the example feature uses native `fetch` inside its own `api` file.'
-const readmeTemplateDefaultsReplacementEn =
-  '- The template does not preselect a shared HTTP client; feature-owned `api` files may use native `fetch` until a real shared transport layer is justified.'
-
-const readmeTemplateDefaultsBlockZh =
-  '- 模板不预设共享 HTTP client；示例 feature 只在自己的 `api` 文件中使用原生 `fetch`。'
-const readmeTemplateDefaultsReplacementZh =
-  '- 模板不预设共享 HTTP client；在真实共享传输层出现前，feature 自己的 `api` 文件可以先使用原生 `fetch`。'
+const agentsInitLine =
+  '- `pnpm init:template` is a one-time initializer that removes demo features and routes, updates starter files, regenerates the route tree, then deletes its own command entry and script file.\n'
 
 const filesToDelete = [
   'src/features/example-counter',
@@ -325,25 +163,6 @@ const filesToWrite = new Map([
   ['src/features/home/ui/HomePage.tsx', homePageContent],
   ['src/routes/-__root.spec.tsx', rootSpecContent],
 ])
-
-const docsToPatch = [
-  {
-    path: 'README.md',
-    replacements: [
-      [readmeLayoutBlockEn, readmeLayoutReplacementEn],
-      [readmeDataFetchingBlockEn, readmeDataFetchingReplacementEn],
-      [readmeTemplateDefaultsBlockEn, readmeTemplateDefaultsReplacementEn],
-    ],
-  },
-  {
-    path: 'README.zh-CN.md',
-    replacements: [
-      [readmeLayoutBlockZh, readmeLayoutReplacementZh],
-      [readmeDataFetchingBlockZh, readmeDataFetchingReplacementZh],
-      [readmeTemplateDefaultsBlockZh, readmeTemplateDefaultsReplacementZh],
-    ],
-  },
-]
 
 const ensureCleanWorktree = () => {
   const output = execFileSync('git', ['status', '--porcelain'], {
@@ -381,21 +200,30 @@ const writeTargets = async () => {
   }
 }
 
-const patchDocs = async () => {
-  for (const doc of docsToPatch) {
-    const absolutePath = path.join(rootDir, doc.path)
-    let content = await readFile(absolutePath, 'utf8')
+const patchTextFile = async (relativePath, replacements) => {
+  const absolutePath = path.join(rootDir, relativePath)
+  let content = await readFile(absolutePath, 'utf8')
 
-    for (const [before, after] of doc.replacements) {
-      content = replaceExact(content, before, after, doc.path)
-    }
-
-    await writeFile(absolutePath, content)
+  for (const [before, after] of replacements) {
+    content = replaceExact(content, before, after, relativePath)
   }
+
+  await writeFile(absolutePath, content)
 }
 
-const removeBuildArtifacts = async () => {
-  await rm(path.join(rootDir, 'dist'), { recursive: true, force: true })
+const patchDocsAndConfigs = async () => {
+  await patchTextFile('README.md', [
+    [readmeInitSectionEn, ''],
+    [readmeInitCommandEn, ''],
+  ])
+
+  await patchTextFile('README.zh-CN.md', [
+    [readmeInitSectionZh, ''],
+    [readmeInitCommandZh, ''],
+  ])
+
+  await patchTextFile('AGENTS.md', [[agentsInitLine, '']])
+  await patchTextFile('package.json', [[packageInitLine, '']])
 }
 
 const regenerateRouteTree = () => {
@@ -405,9 +233,29 @@ const regenerateRouteTree = () => {
   })
 }
 
+const removeBuildArtifacts = async () => {
+  await rm(path.join(rootDir, 'dist'), { recursive: true, force: true })
+}
+
+const removeInitializer = async () => {
+  await rm(__filename, { force: true })
+
+  const scriptsDir = path.join(rootDir, 'scripts')
+  const entries = await readdir(scriptsDir).catch(() => [])
+
+  if (entries.length === 0) {
+    await rm(scriptsDir, { recursive: true, force: true })
+  }
+}
+
 const printSummary = async () => {
   const routeTreeExists = existsSync(path.join(rootDir, 'src/routeTree.gen.ts'))
+  const packageContent = await readFile(
+    path.join(rootDir, 'package.json'),
+    'utf8',
+  )
   const readmePreview = await readFile(path.join(rootDir, 'README.md'), 'utf8')
+  const hasInitCommand = packageContent.includes('init:template')
 
   console.log('\nTemplate initialization complete.\n')
   console.log('Removed demo content:')
@@ -419,16 +267,18 @@ const printSummary = async () => {
   for (const target of filesToWrite.keys()) {
     console.log(`- ${target}`)
   }
-  for (const doc of docsToPatch) {
-    console.log(`- ${doc.path}`)
-  }
+  console.log('- README.md')
+  console.log('- README.zh-CN.md')
+  console.log('- AGENTS.md')
+  console.log('- package.json')
 
   console.log(`\nRegenerated route tree: ${routeTreeExists ? 'yes' : 'no'}`)
+  console.log(`Initializer command removed: ${hasInitCommand ? 'no' : 'yes'}`)
   console.log(
     `README title: ${readmePreview.split('\n')[0].replace(/^# /, '') || 'n/a'}`,
   )
   console.log('\nNext steps:')
-  console.log('- Review the updated README sections and HomePage copy')
+  console.log('- Review the updated HomePage copy and remaining documentation')
   console.log('- Add your first real feature under src/features')
   console.log('- Run pnpm check')
 }
@@ -437,9 +287,10 @@ const main = async () => {
   ensureCleanWorktree()
   await removeTargets()
   await writeTargets()
-  await patchDocs()
+  await patchDocsAndConfigs()
   regenerateRouteTree()
   await removeBuildArtifacts()
+  await removeInitializer()
   await printSummary()
 }
 

@@ -26,6 +26,6 @@ export default defineConfig({
   test: {
     environment: 'happy-dom',
     setupFiles: './src/setupTests.ts',
-    globals: true, // enable global import vitest api
+    // globals: true, // enable global import vitest api
   },
 })

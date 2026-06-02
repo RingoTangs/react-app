@@ -13,12 +13,7 @@
     "types": ["vite/client"],
     "allowImportingTsExtensions": true
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.d.ts",
-    "types/**/*.d.ts"
-  ],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "types/**/*.d.ts"],
   "exclude": [
     "src/**/*.spec.ts",
     "src/**/*.spec.tsx",

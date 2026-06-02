@@ -159,6 +159,7 @@ src/
 - `features` 负责业务或 demo 能力。新增真实产品行为时，优先按业务域放到这里。
 - `shared` 负责可复用 UI 和纯工具。它不应依赖 `app`、`routes` 或 `features`。
 - `public` 负责不经过 Vite import、需要固定公开 URL 的静态文件。
+- `types` 负责 repo 级 ambient declarations。不要在 `src` 下散落全局 `.d.ts` 文件。
 - `routeTree.gen.ts` 由 TanStack Router 生成，不要手动编辑。
 
 Features 可以读取 `config` 中的稳定运行时配置，例如 `appEnv`，但不应依赖 `app/router`、`app/providers` 或 `app/monitoring` 这类 app 装配能力。Shared 代码不能读取 `config`；如需环境派生值，应由上层注入。

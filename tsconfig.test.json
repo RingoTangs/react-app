@@ -1,5 +1,4 @@
 {
-  "$schema": "./schemas/tsconfig.schema.json",
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.test.tsbuildinfo",

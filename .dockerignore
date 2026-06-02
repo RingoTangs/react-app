@@ -3,17 +3,20 @@
 .hg
 
 node_modules
+.pnpm-store
+
 dist
+dist-ssr
 build
 .output
 .data
-.pnpm-store
 coverage
 
 *.log
 .env
 .env.*
 
+.husky
 .vscode
 .idea
 .DS_Store

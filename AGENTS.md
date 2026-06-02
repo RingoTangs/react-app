@@ -13,10 +13,9 @@ Use `pnpm@10.24.0` with Node `>=22.0.0`. `.npmrc` enables `engine-strict=true`, 
 - `pnpm preview` serves the built app locally.
 - `pnpm test` runs Vitest in watch mode; `pnpm test:run` is the non-interactive CI-style run.
 - `pnpm lint` checks ESLint rules, `pnpm lint:fix` applies safe fixes.
-- `pnpm format:check` verifies formatting, and `pnpm format` rewrites files.
+- `pnpm format` verifies Prettier formatting, and `pnpm format:fix` rewrites files.
 - `pnpm check` is the main pre-PR gate: lint, Prettier, typecheck, and tests together.
-- `pnpm check:ci` is the stable CI entrypoint and delegates to `pnpm check`.
-- `pnpm check:fix` applies local lint fixes and Prettier formatting.
+- `pnpm check:fix` applies local lint fixes and Prettier formatting fixes.
 - `pnpm lint-staged` runs the staged-file checks used by the pre-commit hook.
 - `pnpm init:template` is a one-time initializer that removes demo features and routes, updates starter files, regenerates the route tree, then deletes its own command entry and script file.
 

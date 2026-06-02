@@ -67,9 +67,13 @@ pnpm preview      # preview the built app locally
 pnpm test         # run Vitest in watch mode
 pnpm test:run     # run tests once
 pnpm lint         # run ESLint
-pnpm format:check # verify Prettier formatting
+pnpm lint:fix     # apply ESLint fixes
+pnpm format       # verify Prettier formatting
+pnpm format:fix   # rewrite files with Prettier
+pnpm typecheck    # run TypeScript project checks
 pnpm init:template # one-time cleanup of demo features and routes, then self-remove
 pnpm check        # lint + format + typecheck + test
+pnpm check:fix    # apply local lint and format fixes
 ```
 
 ## Docker Deployment

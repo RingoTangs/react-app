@@ -67,9 +67,13 @@ pnpm preview      # 本地预览生产构建
 pnpm test         # 以 watch 模式运行 Vitest
 pnpm test:run     # 单次运行测试，适合 CI
 pnpm lint         # 运行 ESLint
-pnpm format:check # 检查 Prettier 格式
+pnpm lint:fix     # 应用 ESLint 自动修复
+pnpm format       # 检查 Prettier 格式
+pnpm format:fix   # 使用 Prettier 重写文件
+pnpm typecheck    # 运行 TypeScript 项目检查
 pnpm init:template # 一次性清理 demo feature 和路由，然后自删除
 pnpm check        # lint + format + typecheck + test
+pnpm check:fix    # 应用本地 lint 和格式化修复
 ```
 
 ## Docker 部署

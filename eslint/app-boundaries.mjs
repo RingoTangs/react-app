@@ -1,6 +1,12 @@
 const restrictedBarrelMessage =
   'Do not add barrel exports here. Import app, route, and feature internals explicitly unless a feature intentionally exposes a stable public API.'
 
+const restrictedSourceDeclarationMessage =
+  'Do not add global .d.ts files under src. Put repo-level ambient declarations in types/ instead.'
+
+const restrictedGenericSourceDirMessage =
+  'Do not add generic top-level source directories. Put code under the owning feature or shared boundary.'
+
 export const appBoundaryRules = [
   // shared is the lowest product-agnostic layer. It must not import app,
   // route, or feature modules, otherwise reusable helpers become coupled
@@ -142,6 +148,48 @@ export const appBoundaryRules = [
         {
           selector: 'ExportNamedDeclaration',
           message: restrictedBarrelMessage,
+        },
+      ],
+    },
+  },
+
+  // Repo-level ambient declarations live in types/. Keeping global .d.ts
+  // files out of src prevents hidden coupling between feature code and
+  // application-wide declarations.
+  // Repo 级 ambient declarations 统一放在 types/。禁止在 src 下散落
+  // 全局 .d.ts，避免 feature 代码和应用级声明产生隐式耦合。
+  {
+    name: 'app-boundaries/source-declarations',
+    files: ['src/**/*.d.ts'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'Program',
+          message: restrictedSourceDeclarationMessage,
+        },
+      ],
+    },
+  },
+
+  // Generic top-level source directories hide ownership. New code should be
+  // placed in features/<domain> or shared/<area> based on who owns it.
+  // 顶层泛化源码目录会隐藏 ownership。新增代码应根据归属放到
+  // features/<domain> 或 shared/<area>。
+  {
+    name: 'app-boundaries/no-generic-source-dirs',
+    files: [
+      'src/api/**/*.{ts,tsx}',
+      'src/assets/**/*.{ts,tsx}',
+      'src/components/**/*.{ts,tsx}',
+      'src/utils/**/*.{ts,tsx}',
+    ],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'Program',
+          message: restrictedGenericSourceDirMessage,
         },
       ],
     },

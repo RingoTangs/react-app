@@ -139,7 +139,7 @@ types/
 
 src/
 ├── main.tsx                    # React app bootstrap
-├── App.tsx                     # Root component; delegates app wiring to app providers
+├── App.tsx                     # Root composition component for providers and router
 ├── style.css                   # Global styles and Tailwind CSS entry
 ├── setupTests.ts               # Vitest and Testing Library setup
 ├── routeTree.gen.ts            # Generated TanStack Router route tree; do not edit manually
@@ -183,7 +183,7 @@ types/
 
 src/
 ├── main.tsx                    # React 应用启动入口
-├── App.tsx                     # 根组件；将应用级装配委托给 app providers
+├── App.tsx                     # 根组合组件，负责 providers 与 router 装配
 ├── style.css                   # 全局样式和 Tailwind CSS 入口
 ├── setupTests.ts               # Vitest 与 Testing Library 测试初始化
 ├── routeTree.gen.ts            # TanStack Router 生成的路由树；不要手动编辑

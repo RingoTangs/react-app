@@ -42,13 +42,13 @@ If a provider exposes reusable behavior to features, place that behavior in `sha
 
 如果某个 provider 向 feature 暴露可复用能力，应将能力本身放到 `shared/<capability>` 或 `features/<domain>`，再由 `app/providers` 导入并组合。
 
-Do not add `src/app/index.ts` or subdirectory barrels by default. App infrastructure should be imported explicitly, for example `@/app/providers/AppProviders` or `@/app/router/router`.
+Do not add `src/app/index.ts` or subdirectory barrels by default. App infrastructure should be imported explicitly, for example `@/app/providers/QueryProvider` or `@/app/router/router`.
 
-默认不要新增 `src/app/index.ts` 或 app 子目录 barrel。App 基础设施应使用显式路径导入，例如 `@/app/providers/AppProviders` 或 `@/app/router/router`。
+默认不要新增 `src/app/index.ts` 或 app 子目录 barrel。App 基础设施应使用显式路径导入，例如 `@/app/providers/QueryProvider` 或 `@/app/router/router`。
 
 ## Examples
 
-- `providers/AppProviders.tsx`
+- `providers/QueryProvider.tsx`
 - `query/queryClient.ts`
 - `router/router.tsx`
 - `monitoring/reportError.ts`

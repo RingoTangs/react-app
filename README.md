@@ -100,7 +100,7 @@ types/
 
 src/
 ├── main.tsx                    # React app bootstrap
-├── App.tsx                     # Root component; delegates app wiring to app providers
+├── App.tsx                     # Root composition component for providers and router
 ├── style.css                   # Global styles and Tailwind CSS entry
 ├── setupTests.ts               # Vitest and Testing Library setup
 ├── routeTree.gen.ts            # Generated TanStack Router route tree; do not edit manually
@@ -113,7 +113,6 @@ src/
 │   ├── monitoring/             # Error reporting integration point
 │   │   └── reportError.ts
 │   ├── providers/              # Global provider composition
-│   │   ├── AppProviders.tsx
 │   │   └── QueryProvider.tsx
 │   ├── query/                  # Shared app-level QueryClient setup
 │   │   └── queryClient.ts

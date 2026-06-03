@@ -100,7 +100,7 @@ types/
 
 src/
 ├── main.tsx                    # React 应用启动入口
-├── App.tsx                     # 根组件；将应用级装配委托给 app providers
+├── App.tsx                     # 根组合组件，负责 providers 与 router 装配
 ├── style.css                   # 全局样式和 Tailwind CSS 入口
 ├── setupTests.ts               # Vitest 与 Testing Library 测试初始化
 ├── routeTree.gen.ts            # TanStack Router 生成的路由树；不要手动编辑
@@ -113,7 +113,6 @@ src/
 │   ├── monitoring/             # 错误上报集成点
 │   │   └── reportError.ts
 │   ├── providers/              # 全局 provider 组合
-│   │   ├── AppProviders.tsx
 │   │   └── QueryProvider.tsx
 │   ├── query/                  # 应用级共享 QueryClient 配置
 │   │   └── queryClient.ts

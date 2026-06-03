@@ -123,19 +123,27 @@ src/
 │       └── RouterDevtools.tsx
 │
 ├── routes/                     # TanStack 文件路由
+│   ├── -__root.spec.tsx        # 根路由行为测试
 │   ├── __root.tsx              # 根路由布局、Outlet 和错误边界
+│   ├── error.tsx               # demo error 路由
 │   ├── index.tsx               # / 路由
-│   └── users.tsx               # 示例：保持薄层的业务路由
+│   └── posts.tsx               # demo 数据路由，委托给 feature 页面
 │
 ├── features/                   # 按业务域组织的产品或 demo 能力
+│   ├── example-counter/        # demo 本地状态 feature
+│   │   ├── assets/
+│   │   ├── hooks/
+│   │   ├── lib/
+│   │   ├── model/
+│   │   └── ui/
+│   ├── example-posts/          # demo server-state feature
+│   │   ├── api/
+│   │   ├── hooks/
+│   │   ├── model/
+│   │   └── ui/
 │   ├── home/
 │   │   └── ui/
 │   │       └── HomePage.tsx
-│   └── orders/                 # 示例 feature 结构
-│       ├── api/
-│       ├── hooks/
-│       ├── model/
-│       └── ui/
 │
 └── shared/                     # 产品无关的可复用基础模块
     ├── assets/                 # 由应用代码 import 的共享媒体资源
@@ -234,23 +242,23 @@ Barrel export 只用于稳定公共边界。模板保留 `src/shared/ui/index.ts
 模板不内置共享 HTTP client。请求函数放在所属 feature 的 `api`，query keys 和 query options 放在 `model`，React Query hooks 放在 `hooks`，loading、error、empty、success 状态由 feature `ui` 处理。
 
 ```text
-src/features/orders/
-├── api/getOrders.ts            # feature 自己维护的请求函数
-├── hooks/useOrdersQuery.ts     # React Query 绑定
+src/features/example-posts/
+├── api/getPosts.ts             # feature 自己维护的请求函数
+├── hooks/usePostsQuery.ts      # React Query 绑定
 ├── model/queryOptions.ts       # hooks 和 loaders 复用的 query options
 ├── model/queryKeys.ts          # query key 工厂
 ├── model/types.ts              # 领域类型
-└── ui/OrdersPage.tsx           # 复用 feature 查询状态的路由页面
+└── ui/PostsPage.tsx            # 复用 feature 查询状态的路由页面
 ```
 
 当 route loader 需要数据时，应调用 feature 自己暴露的 query options，而不是直接调用 feature endpoint。这样 route 预取和组件里的 `useQuery` 会使用同一个 query key 和缓存项。
 
 ```ts
-export const Route = createFileRoute('/orders')({
+export const Route = createFileRoute('/posts')({
   loader: ({ context }) => {
-    return context.queryClient.ensureQueryData(ordersQueryOptions())
+    return context.queryClient.ensureQueryData(postsQueryOptions())
   },
-  component: OrdersPage,
+  component: PostsPage,
 })
 ```
 

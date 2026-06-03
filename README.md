@@ -123,19 +123,27 @@ src/
 │       └── RouterDevtools.tsx
 │
 ├── routes/                     # TanStack file-based routes
+│   ├── -__root.spec.tsx        # Root route behavior tests
 │   ├── __root.tsx              # Root route layout, outlet, and error boundary
+│   ├── error.tsx               # Demo error route
 │   ├── index.tsx               # Route for /
-│   └── users.tsx               # Example thin route delegating to a feature page
+│   └── posts.tsx               # Demo data route delegating to a feature page
 │
 ├── features/                   # Product or demo capabilities grouped by domain
+│   ├── example-counter/        # Demo local state feature
+│   │   ├── assets/
+│   │   ├── hooks/
+│   │   ├── lib/
+│   │   ├── model/
+│   │   └── ui/
+│   ├── example-posts/          # Demo server-state feature
+│   │   ├── api/
+│   │   ├── hooks/
+│   │   ├── model/
+│   │   └── ui/
 │   ├── home/
 │   │   └── ui/
 │   │       └── HomePage.tsx
-│   └── orders/                 # Example feature shape
-│       ├── api/
-│       ├── hooks/
-│       ├── model/
-│       └── ui/
 │
 └── shared/                     # Reusable, product-agnostic building blocks
     ├── assets/                 # Shared media imported by application code
@@ -234,23 +242,23 @@ Public business capabilities still belong in `src/features/<domain>`, not in `sh
 This template does not include a shared HTTP client. Keep request functions inside the owning feature, query keys and query options in `model`, React Query hooks in `hooks`, and loading, error, empty, and success states in feature `ui`.
 
 ```text
-src/features/orders/
-├── api/getOrders.ts            # feature-owned request function
-├── hooks/useOrdersQuery.ts     # React Query binding
+src/features/example-posts/
+├── api/getPosts.ts             # feature-owned request function
+├── hooks/usePostsQuery.ts      # React Query binding
 ├── model/queryOptions.ts       # shared query options for hooks and loaders
 ├── model/queryKeys.ts          # query key factory
 ├── model/types.ts              # domain type
-└── ui/OrdersPage.tsx           # route page reusing feature query state
+└── ui/PostsPage.tsx            # route page reusing feature query state
 ```
 
 When route loaders need data, they should call feature-owned query options, not feature endpoints directly. This keeps route preloading and component `useQuery` on the same query key and cache entry.
 
 ```ts
-export const Route = createFileRoute('/orders')({
+export const Route = createFileRoute('/posts')({
   loader: ({ context }) => {
-    return context.queryClient.ensureQueryData(ordersQueryOptions())
+    return context.queryClient.ensureQueryData(postsQueryOptions())
   },
-  component: OrdersPage,
+  component: PostsPage,
 })
 ```
 

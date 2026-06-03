@@ -46,7 +46,7 @@ const homePageContent = `export const HomePage: React.FC = () => {
             {
               title: 'App Boundaries',
               description:
-                'Providers, monitoring, and runtime config stay outside features.',
+                'Providers, monitoring, and app wiring stay outside features.',
             },
           ].map((highlight) => (
             <div
@@ -119,30 +119,6 @@ describe('root route', () => {
 const packageInitLine =
   '    "init:template": "node scripts/init-template.mjs",\n'
 
-const readmeInitSectionEn = `### Optional initialization
-
-If you want a clean project baseline after cloning the template, run:
-
-\`\`\`bash
-pnpm init:template
-\`\`\`
-
-The one-time initializer removes demo features and demo routes, updates starter files, regenerates \`src/routeTree.gen.ts\`, and then deletes its own command entry and script file.
-
-`
-
-const readmeInitSectionZh = `### 可选初始化
-
-如果你希望 clone 模板后立刻得到更干净的业务起点，可以执行：
-
-\`\`\`bash
-pnpm init:template
-\`\`\`
-
-这个一次性初始化器会移除 demo feature 和 demo 路由，更新 starter 文件，重新生成 \`src/routeTree.gen.ts\`，然后删除自己的命令入口和脚本文件。
-
-`
-
 const readmeInitCommandEn =
   'pnpm init:template # one-time cleanup of demo features and routes, then self-remove\n'
 
@@ -151,6 +127,140 @@ const readmeInitCommandZh =
 
 const agentsInitLine =
   '- `pnpm init:template` is a one-time initializer that removes demo features and routes, updates starter files, regenerates the route tree, then deletes its own command entry and script file.\n'
+
+const cleanProjectLayoutEn = `## Project Layout
+
+\`\`\`text
+public/
+└── app-icon.svg                # Static public asset served from a stable URL
+
+types/
+└── .gitkeep                    # Placeholder for repo-level ambient declarations
+
+src/
+├── main.tsx                    # React app bootstrap
+├── App.tsx                     # Root component; delegates app wiring to app providers
+├── style.css                   # Global styles and Tailwind CSS entry
+├── setupTests.ts               # Vitest and Testing Library setup
+├── routeTree.gen.ts            # Generated TanStack Router route tree; do not edit manually
+│
+├── config/                     # Runtime environment config shared by app, routes, and features
+│   ├── README.md
+│   └── env.ts
+│
+├── app/                        # App-level infrastructure and wiring
+│   ├── monitoring/             # Error reporting integration point
+│   ├── providers/              # Global provider composition
+│   ├── query/                  # Shared app-level QueryClient setup
+│   └── router/                 # Router instance, defaults, and devtools
+│
+├── routes/                     # TanStack file-based routes
+│   ├── -__root.spec.tsx        # Root route behavior tests
+│   ├── __root.tsx              # Root route layout, outlet, and error boundary
+│   └── index.tsx               # Route for /
+│
+├── features/                   # Product capabilities grouped by domain
+│   └── home/
+│       └── ui/
+│           └── HomePage.tsx
+│
+└── shared/                     # Reusable, product-agnostic building blocks
+    ├── assets/                 # Shared media imported by application code
+    ├── ui/                     # Shared UI components
+    └── lib/                    # Pure helpers and framework-light utilities
+\`\`\`
+
+`
+
+const cleanProjectLayoutZh = `## 项目结构
+
+\`\`\`text
+public/
+└── app-icon.svg                # 固定 URL 访问的公共静态资产
+
+types/
+└── .gitkeep                    # Repo 级 ambient declarations 的占位目录
+
+src/
+├── main.tsx                    # React 应用启动入口
+├── App.tsx                     # 根组件；将应用级装配委托给 app providers
+├── style.css                   # 全局样式和 Tailwind CSS 入口
+├── setupTests.ts               # Vitest 与 Testing Library 测试初始化
+├── routeTree.gen.ts            # TanStack Router 生成的路由树；不要手动编辑
+│
+├── config/                     # app、routes 和 features 可读取的运行时环境配置
+│   ├── README.md
+│   └── env.ts
+│
+├── app/                        # 应用级基础设施和装配
+│   ├── monitoring/             # 错误上报集成点
+│   ├── providers/              # 全局 provider 组合
+│   ├── query/                  # 应用级共享 QueryClient 配置
+│   └── router/                 # Router 实例、默认配置和 devtools
+│
+├── routes/                     # TanStack 文件路由
+│   ├── -__root.spec.tsx        # 根路由行为测试
+│   ├── __root.tsx              # 根路由布局、Outlet 和错误边界
+│   └── index.tsx               # / 路由
+│
+├── features/                   # 按业务域组织的产品能力
+│   └── home/
+│       └── ui/
+│           └── HomePage.tsx
+│
+└── shared/                     # 产品无关的可复用基础模块
+    ├── assets/                 # 由应用代码 import 的共享媒体资源
+    ├── ui/                     # 共享 UI 组件
+    └── lib/                    # 纯工具函数和轻框架工具
+\`\`\`
+
+`
+
+const cleanDataFetchingEn = `### Data Fetching
+
+This template does not include a shared HTTP client. Keep request functions inside the owning feature, query keys and query options in \`model\`, React Query hooks in \`hooks\`, and loading, error, empty, and success states in feature \`ui\`.
+
+When route loaders need data, they should call feature-owned query options, not feature endpoints directly. This keeps route preloading and component \`useQuery\` on the same query key and cache entry.
+
+\`\`\`tsx
+import { createFileRoute } from '@tanstack/react-router'
+import { usersQueryOptions } from '@/features/users/model/queryOptions'
+import { UsersPage } from '@/features/users/ui/UsersPage'
+
+export const Route = createFileRoute('/users')({
+  loader: ({ context }) => {
+    return context.queryClient.ensureQueryData(usersQueryOptions())
+  },
+  component: UsersPage,
+})
+\`\`\`
+
+Do not add a top-level \`src/api\`. Do not call \`fetch\` directly from React components, hooks, or route files; keep network access in feature \`api\` files when a real backend exists. When a real backend integration needs base URLs, authentication, retries, OpenAPI, ky, Axios, or RPC clients, design that transport layer from the project requirements instead of inheriting one from the template.
+
+`
+
+const cleanDataFetchingZh = `### 数据请求
+
+模板不内置共享 HTTP client。请求函数放在所属 feature 的 \`api\`，query keys 和 query options 放在 \`model\`，React Query hooks 放在 \`hooks\`，loading、error、empty、success 状态由 feature \`ui\` 处理。
+
+当 route loader 需要数据时，应调用 feature 自己暴露的 query options，而不是直接调用 feature endpoint。这样 route 预取和组件里的 \`useQuery\` 会使用同一个 query key 和缓存项。
+
+\`\`\`tsx
+import { createFileRoute } from '@tanstack/react-router'
+import { usersQueryOptions } from '@/features/users/model/queryOptions'
+import { UsersPage } from '@/features/users/ui/UsersPage'
+
+export const Route = createFileRoute('/users')({
+  loader: ({ context }) => {
+    return context.queryClient.ensureQueryData(usersQueryOptions())
+  },
+  component: UsersPage,
+})
+\`\`\`
+
+不要新增顶层 \`src/api\`。不要在 React 组件、hooks 或 route 文件中直接调用 \`fetch\`；如果有真实后端，再把网络访问放在 feature 的 \`api\` 文件中。当真实后端集成需要 baseURL、认证、重试、OpenAPI、ky、Axios 或 RPC client 时，再基于项目需求设计传输层。
+
+`
 
 const filesToDelete = [
   'src/features/example-counter',
@@ -186,6 +296,42 @@ const replaceExact = (content, before, after, filePath) => {
   return content.replace(before, after)
 }
 
+const replaceSection = (
+  content,
+  startHeading,
+  endHeading,
+  replacement,
+  filePath,
+) => {
+  const startIndex = content.indexOf(startHeading)
+  const endIndex = content.indexOf(endHeading, startIndex)
+
+  if (startIndex === -1 || endIndex === -1 || endIndex <= startIndex) {
+    throw new Error(
+      `Could not find expected section in ${filePath}: ${startHeading}`,
+    )
+  }
+
+  return `${content.slice(0, startIndex)}${replacement}${content.slice(endIndex)}`
+}
+
+const patchMarkdownSections = async (relativePath, sections) => {
+  const absolutePath = path.join(rootDir, relativePath)
+  let content = await readFile(absolutePath, 'utf8')
+
+  for (const [startHeading, endHeading, replacement] of sections) {
+    content = replaceSection(
+      content,
+      startHeading,
+      endHeading,
+      replacement,
+      relativePath,
+    )
+  }
+
+  await writeFile(absolutePath, content)
+}
+
 const removeTargets = async () => {
   for (const target of filesToDelete) {
     await rm(path.join(rootDir, target), { recursive: true, force: true })
@@ -212,15 +358,23 @@ const patchTextFile = async (relativePath, replacements) => {
 }
 
 const patchDocsAndConfigs = async () => {
-  await patchTextFile('README.md', [
-    [readmeInitSectionEn, ''],
-    [readmeInitCommandEn, ''],
+  await patchMarkdownSections('README.md', [
+    ['### Optional initialization\n', '## Scripts\n', ''],
+    ['## Project Layout\n', '### Directory Boundaries\n', cleanProjectLayoutEn],
+    [
+      '### Data Fetching\n',
+      '### Routes vs Feature Pages\n',
+      cleanDataFetchingEn,
+    ],
   ])
+  await patchTextFile('README.md', [[readmeInitCommandEn, '']])
 
-  await patchTextFile('README.zh-CN.md', [
-    [readmeInitSectionZh, ''],
-    [readmeInitCommandZh, ''],
+  await patchMarkdownSections('README.zh-CN.md', [
+    ['### 可选初始化\n', '## 脚本\n', ''],
+    ['## 项目结构\n', '### 目录边界\n', cleanProjectLayoutZh],
+    ['### 数据请求\n', '### Routes 与 Feature 页面\n', cleanDataFetchingZh],
   ])
+  await patchTextFile('README.zh-CN.md', [[readmeInitCommandZh, '']])
 
   await patchTextFile('AGENTS.md', [[agentsInitLine, '']])
   await patchTextFile('package.json', [[packageInitLine, '']])

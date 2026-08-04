@@ -18,9 +18,9 @@ If route loaders need React Query preloading, create the shared `QueryClient` he
 
 ## Avoid
 
-Do not place business logic, page implementations, feature-specific API calls, or reusable product UI here. `src/app/router.ts` owns the router context, instance, and defaults, not file-based route definitions.
+Do not place business logic, page implementations, feature-specific API calls, or reusable product UI here. `src/app/router.ts` owns the router instance and defaults, while the root route declares the context contract.
 
-不要在这里放业务逻辑、页面实现、feature 专属 API 调用或可复用产品 UI。`src/app/router.ts` 负责 router context、实例和默认配置，不负责文件路由定义。
+不要在这里放业务逻辑、页面实现、feature 专属 API 调用或可复用产品 UI。`src/app/router.ts` 负责 router 实例和默认配置，根路由负责声明 context contract。
 
 Do not place feature query options or endpoint calls in app. App may pass `queryClient` through context, but features still own the data definitions.
 

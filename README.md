@@ -101,11 +101,11 @@ src/
 ├── app/                        # App-level infrastructure and wiring
 │   ├── queryClient.ts          # Shared app-level QueryClient setup
 │   ├── reportError.ts          # Error reporting integration point
-│   └── router.ts               # Router context, instance, and defaults
+│   └── router.ts               # Router instance and defaults
 │
 ├── routes/                     # TanStack file-based routes
 │   ├── -__root.spec.tsx        # Root route behavior tests
-│   ├── __root.tsx              # Root route layout, outlet, and error boundary
+│   ├── __root.tsx              # Root context, layout, and error boundary
 │   ├── error.tsx               # Demo error route
 │   ├── index.tsx               # Route for /
 │   └── posts.tsx               # Demo data route delegating to a feature page

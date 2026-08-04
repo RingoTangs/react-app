@@ -1,5 +1,5 @@
+import type { QueryClient } from '@tanstack/react-query'
 import type { ErrorComponentProps } from '@tanstack/react-router'
-import type { AppRouterContext } from '@/app/router'
 import { QueryErrorResetBoundary } from '@tanstack/react-query'
 import { createRootRouteWithContext, Outlet } from '@tanstack/react-router'
 import { reportError } from '@/app/reportError'
@@ -24,7 +24,9 @@ const RootErrorComponent: React.FC<ErrorComponentProps> = ({
   )
 }
 
-export const Route = createRootRouteWithContext<AppRouterContext>()({
+export const Route = createRootRouteWithContext<{
+  queryClient: QueryClient
+}>()({
   component: Outlet,
   errorComponent: RootErrorComponent,
   onCatch: (error) => {

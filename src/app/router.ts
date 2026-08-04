@@ -1,9 +1,13 @@
+import type { QueryClient } from '@tanstack/react-query'
 import type { RouterHistory } from '@tanstack/react-router'
-import type { AppRouterContext } from './context'
 import { createRouter } from '@tanstack/react-router'
 import { appQueryClient } from '@/app/queryClient'
 import { routeTree } from '@/routeTree.gen'
 import { NotFound } from '@/shared/ui'
+
+export interface AppRouterContext {
+  queryClient: QueryClient
+}
 
 interface CreateAppRouterOptions {
   history?: RouterHistory

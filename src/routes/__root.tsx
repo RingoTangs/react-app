@@ -1,19 +1,9 @@
 import type { ErrorComponentProps } from '@tanstack/react-router'
-import type { AppRouterContext } from '@/app/router/context'
+import type { AppRouterContext } from '@/app/router'
 import { QueryErrorResetBoundary } from '@tanstack/react-query'
 import { createRootRouteWithContext, Outlet } from '@tanstack/react-router'
 import { reportError } from '@/app/reportError'
-import { RouterDevtools } from '@/app/router/RouterDevtools'
 import { PageErrorFallback } from '@/shared/ui'
-
-const RootComponent: React.FC = () => {
-  return (
-    <>
-      <Outlet />
-      <RouterDevtools />
-    </>
-  )
-}
 
 const RootErrorComponent: React.FC<ErrorComponentProps> = ({
   error,
@@ -35,7 +25,7 @@ const RootErrorComponent: React.FC<ErrorComponentProps> = ({
 }
 
 export const Route = createRootRouteWithContext<AppRouterContext>()({
-  component: RootComponent,
+  component: Outlet,
   errorComponent: RootErrorComponent,
   onCatch: (error) => {
     reportError(error)

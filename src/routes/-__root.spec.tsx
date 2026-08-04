@@ -3,7 +3,7 @@ import { createMemoryHistory, RouterProvider } from '@tanstack/react-router'
 import { act, cleanup, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { createAppRouter } from '@/app/router/router'
+import { createAppRouter } from '@/app/router'
 import { usePostsQuery } from '@/features/example-posts/hooks/usePostsQuery'
 
 vi.mock('@/features/example-posts/hooks/usePostsQuery', () => ({

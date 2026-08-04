@@ -101,10 +101,7 @@ src/
 ├── app/                        # 应用级基础设施和装配
 │   ├── queryClient.ts          # 应用级共享 QueryClient 配置
 │   ├── reportError.ts          # 错误上报集成点
-│   └── router/                 # Router 实例、默认配置和 devtools
-│       ├── context.ts
-│       ├── router.tsx
-│       └── RouterDevtools.tsx
+│   └── router.ts               # Router context、实例和默认配置
 │
 ├── routes/                     # TanStack 文件路由
 │   ├── -__root.spec.tsx        # 根路由行为测试

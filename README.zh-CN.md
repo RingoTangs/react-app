@@ -48,16 +48,6 @@ pnpm dev
 
 开发服务器运行在 `http://localhost:3000`。
 
-### 可选初始化
-
-如果你希望 clone 模板后立刻得到更干净的业务起点，可以执行：
-
-```bash
-pnpm init:template
-```
-
-这个一次性初始化器会移除 demo feature 和 demo 路由，更新 starter 文件，重新生成 `src/routeTree.gen.ts`，然后删除自己的命令入口和脚本文件。
-
 ## 脚本
 
 ```bash
@@ -71,7 +61,6 @@ pnpm lint:fix     # 应用 ESLint 自动修复
 pnpm format       # 检查 Prettier 格式
 pnpm format:fix   # 使用 Prettier 重写文件
 pnpm typecheck    # 运行 TypeScript 项目检查
-pnpm init:template # 一次性清理 demo feature 和路由，然后自删除
 pnpm check        # lint + format + typecheck + test
 pnpm check:fix    # 应用本地 lint 和格式化修复
 ```

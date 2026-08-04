@@ -48,16 +48,6 @@ pnpm dev
 
 The dev server runs on `http://localhost:3000`.
 
-### Optional initialization
-
-If you want a clean project baseline after cloning the template, run:
-
-```bash
-pnpm init:template
-```
-
-The one-time initializer removes demo features and demo routes, updates starter files, regenerates `src/routeTree.gen.ts`, and then deletes its own command entry and script file.
-
 ## Scripts
 
 ```bash
@@ -71,7 +61,6 @@ pnpm lint:fix     # apply ESLint fixes
 pnpm format       # verify Prettier formatting
 pnpm format:fix   # rewrite files with Prettier
 pnpm typecheck    # run TypeScript project checks
-pnpm init:template # one-time cleanup of demo features and routes, then self-remove
 pnpm check        # lint + format + typecheck + test
 pnpm check:fix    # apply local lint and format fixes
 ```

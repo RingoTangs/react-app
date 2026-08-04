@@ -1,6 +1,5 @@
 import antfu from '@antfu/eslint-config'
 import prettier from 'eslint-config-prettier'
-import { appBoundaryRules } from './eslint/app-boundaries.mjs'
 
 export default antfu({
   type: 'app',
@@ -11,6 +10,4 @@ export default antfu({
   gitignore: true,
   test: true,
   ignores: ['**/routeTree.gen.ts', '**/pnpm-lock.yaml'],
-})
-  .append(...appBoundaryRules)
-  .append(prettier)
+}).append(prettier)

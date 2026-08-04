@@ -138,8 +138,7 @@ types/
 └── .gitkeep                    # Placeholder for repo-level ambient declarations
 
 src/
-├── main.tsx                    # React app bootstrap
-├── App.tsx                     # Root composition component for providers and router
+├── main.tsx                    # React bootstrap, providers, and router composition
 ├── style.css                   # Global styles and Tailwind CSS entry
 ├── setupTests.ts               # Vitest and Testing Library setup
 ├── routeTree.gen.ts            # Generated TanStack Router route tree; do not edit manually
@@ -149,9 +148,8 @@ src/
 │   └── env.ts
 │
 ├── app/                        # App-level infrastructure and wiring
-│   ├── monitoring/             # Error reporting integration point
-│   ├── providers/              # Global provider composition
-│   ├── query/                  # Shared app-level QueryClient setup
+│   ├── queryClient.ts          # Shared app-level QueryClient setup
+│   ├── reportError.ts          # Error reporting integration point
 │   └── router/                 # Router instance, defaults, and devtools
 │
 ├── routes/                     # TanStack file-based routes
@@ -182,8 +180,7 @@ types/
 └── .gitkeep                    # Repo 级 ambient declarations 的占位目录
 
 src/
-├── main.tsx                    # React 应用启动入口
-├── App.tsx                     # 根组合组件，负责 providers 与 router 装配
+├── main.tsx                    # React 启动入口，负责 providers 与 router 装配
 ├── style.css                   # 全局样式和 Tailwind CSS 入口
 ├── setupTests.ts               # Vitest 与 Testing Library 测试初始化
 ├── routeTree.gen.ts            # TanStack Router 生成的路由树；不要手动编辑
@@ -193,9 +190,8 @@ src/
 │   └── env.ts
 │
 ├── app/                        # 应用级基础设施和装配
-│   ├── monitoring/             # 错误上报集成点
-│   ├── providers/              # 全局 provider 组合
-│   ├── query/                  # 应用级共享 QueryClient 配置
+│   ├── queryClient.ts          # 应用级共享 QueryClient 配置
+│   ├── reportError.ts          # 错误上报集成点
 │   └── router/                 # Router 实例、默认配置和 devtools
 │
 ├── routes/                     # TanStack 文件路由

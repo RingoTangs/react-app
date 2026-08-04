@@ -2,7 +2,7 @@ import type { ErrorComponentProps } from '@tanstack/react-router'
 import type { AppRouterContext } from '@/app/router/context'
 import { QueryErrorResetBoundary } from '@tanstack/react-query'
 import { createRootRouteWithContext, Outlet } from '@tanstack/react-router'
-import { reportError } from '@/app/monitoring/reportError'
+import { reportError } from '@/app/reportError'
 import { RouterDevtools } from '@/app/router/RouterDevtools'
 import { PageErrorFallback } from '@/shared/ui'
 

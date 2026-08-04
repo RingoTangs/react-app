@@ -2,27 +2,19 @@
 
 ## Purpose
 
-`app` contains application-level infrastructure and composition. Code here wires the runtime together; it should stay stable and cross-cutting.
+`app` contains application-level infrastructure. The bootstrap in `src/main.tsx` composes providers and the router from these modules.
 
-`app` 用于应用级基础设施和装配。这里的代码负责把运行时能力组合起来，应保持稳定、跨应用、非业务化。
+`app` 用于应用级基础设施。`src/main.tsx` 负责组合这里提供的 providers 和 router。
 
 ## Put Here
 
-Use this directory for provider composition, router setup, shared app-level query client infrastructure, monitoring adapters, and development-only tooling such as router devtools.
+Use this directory for router setup, the shared app-level query client, monitoring adapters, and development-only tooling such as router devtools. Keep a subdirectory only when several related files form a clear boundary, as `router/` does.
 
-这里适合放 provider 组合、router setup、应用级共享 query client 基础设施、监控适配器，以及 router devtools 这类仅开发环境使用的工具。
+这里适合放 router setup、应用级共享 query client、监控适配器，以及 router devtools 这类仅开发环境使用的工具。只有多个相关文件构成明确边界时才使用子目录，例如 `router/`。
 
-`providers/` should compose global providers for the application shell. It should not be the public import path for feature-consumable context, hooks, or domain providers.
+If route loaders need React Query preloading, create the shared `QueryClient` here and inject it into the router context. Keep global query defaults conservative and product-agnostic; feature-level cache lifetimes, polling, placeholders, and error behavior belong in feature `queryOptions()`.
 
-`providers/` 应只负责应用壳的全局 provider 组合，不应作为 feature 消费 context、hook 或领域 provider 的公共导入入口。
-
-If route loaders need React Query preloading, create the shared `QueryClient` in app infrastructure and inject it into the router context from here.
-
-如果 route loader 需要 React Query 预取，应在 app 基础设施中创建共享的 `QueryClient`，并从这里注入 router context。
-
-Keep `QueryProvider` defaults conservative and product-agnostic. Feature-level cache lifetimes, polling, placeholders, and error behavior should be defined in feature `queryOptions()`.
-
-`QueryProvider` 的默认配置应保持保守、产品无关。Feature 级缓存时间、轮询、placeholder 和错误处理策略应放在 feature 的 `queryOptions()` 中定义。
+如果 route loader 需要 React Query 预取，应在这里创建共享的 `QueryClient` 并注入 router context。全局 query 默认配置应保持保守、产品无关；feature 级缓存时间、轮询、placeholder 和错误行为应放在 feature 的 `queryOptions()` 中。
 
 ## Avoid
 
@@ -34,21 +26,18 @@ Do not place feature query options or endpoint calls in app. App may pass `query
 
 不要在 app 中放 feature 的 query options 或 endpoint 调用。App 可以通过 context 传递 `queryClient`，但数据定义仍由 features 拥有。
 
-Do not make features depend on app wiring modules such as `router/`, `providers/`, or `monitoring/`; those are application shell concerns.
+Features should not depend on app infrastructure. If a provider exposes reusable behavior to features, place that behavior in `shared/<capability>` or `features/<domain>`, then compose it in `src/main.tsx`.
 
-不要让 features 依赖 `router/`、`providers/` 或 `monitoring/` 这类 app 装配模块；它们属于应用壳职责。
+Features 不应依赖 app 基础设施。如果某个 provider 向 feature 暴露可复用能力，应将能力本身放到 `shared/<capability>` 或 `features/<domain>`，再由 `src/main.tsx` 组合。
 
-If a provider exposes reusable behavior to features, place that behavior in `shared/<capability>` or `features/<domain>` and import it into `app/providers` for composition.
+Do not add `src/app/index.ts` or subdirectory barrels by default. Import app infrastructure explicitly, for example `@/app/queryClient` or `@/app/router/router`.
 
-如果某个 provider 向 feature 暴露可复用能力，应将能力本身放到 `shared/<capability>` 或 `features/<domain>`，再由 `app/providers` 导入并组合。
-
-Do not add `src/app/index.ts` or subdirectory barrels by default. App infrastructure should be imported explicitly, for example `@/app/providers/QueryProvider` or `@/app/router/router`.
-
-默认不要新增 `src/app/index.ts` 或 app 子目录 barrel。App 基础设施应使用显式路径导入，例如 `@/app/providers/QueryProvider` 或 `@/app/router/router`。
+默认不要新增 `src/app/index.ts` 或 app 子目录 barrel。应用基础设施应使用显式路径导入，例如 `@/app/queryClient` 或 `@/app/router/router`。
 
 ## Examples
 
-- `providers/QueryProvider.tsx`
-- `query/queryClient.ts`
+- `queryClient.ts`
+- `reportError.ts`
+- `router/context.ts`
 - `router/router.tsx`
-- `monitoring/reportError.ts`
+- `router/RouterDevtools.tsx`

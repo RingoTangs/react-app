@@ -1,7 +1,7 @@
 import type { QueryClient } from '@tanstack/react-query'
 import type { RouterHistory } from '@tanstack/react-router'
 import { createRouter } from '@tanstack/react-router'
-import { appQueryClient } from '@/app/queryClient'
+import { queryClient } from '@/app/queryClient'
 import { routeTree } from '@/routeTree.gen'
 import { NotFound } from '@/shared/ui'
 
@@ -29,7 +29,7 @@ export const createAppRouter = (
   })
 }
 
-export const router = createAppRouter(appQueryClient)
+export const router = createAppRouter(queryClient)
 
 declare module '@tanstack/react-router' {
   interface Register {

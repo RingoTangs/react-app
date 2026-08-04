@@ -85,7 +85,7 @@ public/
 └── app-icon.svg                # 固定 URL 访问的公共静态资产
 
 types/
-└── .gitkeep                    # Repo 级 ambient declarations 的占位目录
+└── tanstack-router.d.ts         # TanStack Router 类型注册
 
 src/
 ├── main.tsx                    # React DOM 启动入口

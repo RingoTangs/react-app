@@ -85,7 +85,7 @@ public/
 └── app-icon.svg                # Static public asset served from a stable URL
 
 types/
-└── .gitkeep                    # Placeholder for repo-level ambient declarations
+└── tanstack-router.d.ts         # TanStack Router type registration
 
 src/
 ├── main.tsx                    # React DOM bootstrap

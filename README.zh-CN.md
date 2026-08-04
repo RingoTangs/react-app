@@ -266,7 +266,7 @@ export const Route = createFileRoute('/users')({
 
 路由级 render error、loader error 和 route match error 应使用 TanStack Router `errorComponent` 处理。根路由提供默认 fallback UI，并通过 `reportError` 统一上报捕获到的错误。
 
-React Query 错误仍应在路由错误 fallback 内通过 `QueryErrorResetBoundary` reset。这样用户重试时，query error 状态会被清理，并允许重新请求。
+路由和 loader 失败应通过 `router.invalidate()` 重试，从而重新运行当前 loaders 并重置 route error boundary。如果 query 使用 suspense 或 `throwOnError`，应先通过 `useQueryErrorResetBoundary()` 协调 query 重试，再 invalidate router。
 
 `react-error-boundary` 只用于 feature 内部局部失败兜底，例如某个 widget 失败但页面其他区域仍可用。不要在 root route 中用通用 `react-error-boundary` 包裹 `<Outlet />`，因为它不拥有 TanStack Router 的 route match 生命周期。事件回调、定时器和未处理 Promise 中的错误不能依赖 ErrorBoundary，必须在调用点使用 `try/catch` 或 `.catch()` 处理。
 
@@ -277,7 +277,7 @@ React Query 错误仍应在路由错误 fallback 内通过 `QueryErrorResetBound
 - SVG 和 XML 文件通过 `@prettier/plugin-xml` 使用 Prettier XML parser 格式化。
 - React Query 使用保守默认值：`staleTime: 30s`、`gcTime: 5m`、query `retry: 1`、mutation `retry: 0`、`refetchOnWindowFocus: false`、`refetchOnReconnect: true`。
 - 模板不预设共享 HTTP client；在真实共享传输层出现前，feature 自己的 `api` 文件可以先使用原生 `fetch`。
-- 路由错误使用 TanStack Router `errorComponent`；query 错误重试通过 `QueryErrorResetBoundary` reset，并通过单一 adapter 上报。
+- 路由错误使用 TanStack Router `errorComponent`，重试时 invalidate router，并通过单一 adapter 上报。
 
 ## 开发规则
 

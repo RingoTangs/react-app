@@ -266,7 +266,7 @@ If a route loader preloads React Query data, the app router context must expose 
 
 Route-level render errors, loader errors, and route match errors should be handled with TanStack Router `errorComponent`. The root route provides the default fallback UI and reports caught errors through `reportError`.
 
-React Query errors should still reset through `QueryErrorResetBoundary` inside the route error fallback. This clears query error state when the user retries.
+Retry route and loader failures with `router.invalidate()` so active loaders run again and the route error boundary resets. If a query uses suspense or `throwOnError`, coordinate its retry with `useQueryErrorResetBoundary()` before invalidating the router.
 
 Use `react-error-boundary` only for feature-local failures where a widget can fail while the rest of the page remains usable. Do not wrap the root route `<Outlet />` with a generic `react-error-boundary`; it does not own TanStack Router's route match lifecycle. Errors from event handlers, timers, and unhandled promises must be handled at the call site with `try/catch` or `.catch()`.
 
@@ -277,7 +277,7 @@ Use `react-error-boundary` only for feature-local failures where a widget can fa
 - SVG and XML files are formatted with `@prettier/plugin-xml` through Prettier's XML parser.
 - React Query uses conservative defaults: `staleTime: 30s`, `gcTime: 5m`, query `retry: 1`, mutation `retry: 0`, `refetchOnWindowFocus: false`, `refetchOnReconnect: true`.
 - The template does not preselect a shared HTTP client; feature-owned `api` files may use native `fetch` until a real shared transport layer is justified.
-- Route errors use TanStack Router `errorComponent`; query error retries are reset through `QueryErrorResetBoundary`, and reporting goes through a single adapter.
+- Route errors use TanStack Router `errorComponent`, retries invalidate the router, and reporting goes through a single adapter.
 
 ## Development Rules
 

@@ -1,33 +1,26 @@
 import type { QueryClient } from '@tanstack/react-query'
-import type { ErrorComponentProps } from '@tanstack/react-router'
-import { QueryErrorResetBoundary } from '@tanstack/react-query'
-import { createRootRouteWithContext, Outlet } from '@tanstack/react-router'
+import { createRootRouteWithContext, useRouter } from '@tanstack/react-router'
 import { reportError } from '@/app/reportError'
 import { PageErrorFallback } from '@/shared/ui'
 
-const RootErrorComponent: React.FC<ErrorComponentProps> = ({
-  error,
-  reset,
-}) => {
+const RootErrorComponent: React.FC = () => {
+  const router = useRouter()
+
   return (
-    <QueryErrorResetBoundary>
-      {({ reset: resetQueries }) => (
-        <PageErrorFallback
-          error={error}
-          resetErrorBoundary={() => {
-            resetQueries()
-            reset()
-          }}
-        />
-      )}
-    </QueryErrorResetBoundary>
+    <PageErrorFallback
+      onRetry={() => {
+        router.invalidate().catch(reportError)
+      }}
+      onBackHome={() => {
+        router.navigate({ to: '/' }).catch(reportError)
+      }}
+    />
   )
 }
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
 }>()({
-  component: Outlet,
   errorComponent: RootErrorComponent,
   onCatch: (error) => {
     reportError(error)

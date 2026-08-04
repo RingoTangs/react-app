@@ -1,20 +1,14 @@
-import { useNavigate } from '@tanstack/react-router'
 import { Button } from './Button'
 
 interface PageErrorFallbackProps {
-  error?: unknown
-  resetErrorBoundary: () => void
+  onRetry: () => void
+  onBackHome: () => void
 }
 
 export const PageErrorFallback: React.FC<PageErrorFallbackProps> = ({
-  resetErrorBoundary,
+  onRetry,
+  onBackHome,
 }) => {
-  const navigate = useNavigate()
-
-  const handleBackHome = () => {
-    navigate({ to: '/' }).then(() => resetErrorBoundary())
-  }
-
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-8 text-center font-sans">
       <h1 className="mb-4 text-4xl leading-tight font-bold text-gray-900">
@@ -25,10 +19,10 @@ export const PageErrorFallback: React.FC<PageErrorFallbackProps> = ({
         home page.
       </p>
       <div className="flex flex-wrap justify-center gap-4">
-        <Button type="button" intent="primary" onClick={resetErrorBoundary}>
+        <Button type="button" intent="primary" onClick={onRetry}>
           Try Again
         </Button>
-        <Button type="button" intent="secondary" onClick={handleBackHome}>
+        <Button type="button" intent="secondary" onClick={onBackHome}>
           Back to Home
         </Button>
       </div>

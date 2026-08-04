@@ -7,13 +7,19 @@ import {
 import { act, cleanup, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { getPosts } from '@/features/example-posts/api/getPosts'
 import { usePostsQuery } from '@/features/example-posts/hooks/usePostsQuery'
 import { routeTree } from '@/routeTree.gen'
+
+vi.mock('@/features/example-posts/api/getPosts', () => ({
+  getPosts: vi.fn(),
+}))
 
 vi.mock('@/features/example-posts/hooks/usePostsQuery', () => ({
   usePostsQuery: vi.fn(),
 }))
 
+const mockedGetPosts = vi.mocked(getPosts)
 const mockedUsePostsQuery = vi.mocked(usePostsQuery)
 
 const renderWithRouter = (initialEntries: Array<string>) => {
@@ -43,6 +49,8 @@ const renderWithRouter = (initialEntries: Array<string>) => {
 }
 
 beforeEach(() => {
+  mockedGetPosts.mockReset()
+  mockedGetPosts.mockResolvedValue([])
   mockedUsePostsQuery.mockReturnValue({
     data: [],
     error: null,
@@ -117,5 +125,26 @@ describe('root route error boundary', () => {
     expect(
       await screen.findByText('Architecture boundaries stay explicit'),
     ).toBeInTheDocument()
+  })
+
+  it('retries a failed loader and renders the route after recovery', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    mockedGetPosts
+      .mockRejectedValueOnce(new Error('Posts request failed'))
+      .mockResolvedValueOnce([])
+
+    const user = userEvent.setup()
+    renderWithRouter(['/posts'])
+
+    expect(
+      await screen.findByText('Oops! Something went wrong'),
+    ).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Try Again' }))
+
+    expect(
+      await screen.findByText('Posts Route + Feature Query Options'),
+    ).toBeInTheDocument()
+    expect(mockedGetPosts).toHaveBeenCalledTimes(2)
   })
 })

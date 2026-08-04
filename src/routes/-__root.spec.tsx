@@ -1,10 +1,14 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { createMemoryHistory, RouterProvider } from '@tanstack/react-router'
+import {
+  createMemoryHistory,
+  createRouter,
+  RouterProvider,
+} from '@tanstack/react-router'
 import { act, cleanup, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { createAppRouter } from '@/app/router'
 import { usePostsQuery } from '@/features/example-posts/hooks/usePostsQuery'
+import { routeTree } from '@/routeTree.gen'
 
 vi.mock('@/features/example-posts/hooks/usePostsQuery', () => ({
   usePostsQuery: vi.fn(),
@@ -21,7 +25,11 @@ const renderWithRouter = (initialEntries: Array<string>) => {
     },
   })
   const history = createMemoryHistory({ initialEntries })
-  const router = createAppRouter(queryClient, {
+  const router = createRouter({
+    routeTree,
+    context: {
+      queryClient,
+    },
     history,
   })
 

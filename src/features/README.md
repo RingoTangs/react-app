@@ -24,9 +24,9 @@ Public business capabilities also belong here, for example `auth`, `current-user
 
 公共业务能力也应放在这里，例如 `auth`、`current-user`、`permissions` 或 `notifications`。只有当该 feature 需要向多个模块暴露稳定公共 API 时，才添加 feature 级 `index.ts`。
 
-Features may read stable runtime config from `config`, for example `appEnv`. Do not depend on app infrastructure.
+Features should receive environment-derived values through their public interfaces. Do not import application environment config or other app infrastructure.
 
-Features 可以读取 `config` 中的稳定运行时配置，例如 `appEnv`。不要依赖 app 基础设施。
+Features 应通过自身公共接口接收环境派生值。不要导入应用环境配置或其他 app 基础设施。
 
 Features may depend on stable public APIs from `shared` or other public features. For provider-backed capabilities such as theme, auth, or i18n, import hooks and types from `shared/<capability>` or `features/<domain>`, not from application bootstrap modules.
 
@@ -46,9 +46,9 @@ Do not add `src/features/index.ts` or feature subfolder barrels by default. Do n
 
 默认不要新增 `src/features/index.ts` 或 feature 子目录 barrel。不要因为某个业务能力被多个页面复用，就把它移动到 `shared`。
 
-Allowed: `import { appEnv } from '@/config/env'`. Avoid importing router instances or provider composition from application bootstrap modules.
+Avoid importing `@/app/env`, router instances, or provider composition from application bootstrap modules.
 
-允许：`import { appEnv } from '@/config/env'`。避免从应用启动模块导入 router 实例或 provider 组合。
+避免从应用启动模块导入 `@/app/env`、router 实例或 provider 组合。
 
 ## Examples
 

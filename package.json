@@ -40,9 +40,7 @@
     "check": "pnpm lint && pnpm format && pnpm typecheck && pnpm test:run",
     "check:fix": "pnpm lint:fix && pnpm format:fix",
     "test": "vitest",
-    "test:run": "vitest run",
-    "lint-staged": "lint-staged",
-    "prepare": "husky"
+    "test:run": "vitest run"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.99.0",
@@ -73,22 +71,11 @@
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-react-refresh": "0.4.24",
     "happy-dom": "^20.9.0",
-    "husky": "^9.1.7",
-    "lint-staged": "^16.4.0",
     "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "tailwindcss": "^4.2.2",
     "typescript": "^5.9.3",
     "vite": "^8.0.8",
     "vitest": "^4.1.4"
-  },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx,mjs,cjs,mts,cts}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.{json,jsonc,json5,css,scss,sass,less,html,htm,md,mdx,yml,yaml,svg,xml}": [
-      "prettier --write"
-    ]
   }
 }

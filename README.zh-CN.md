@@ -88,7 +88,8 @@ types/
 └── .gitkeep                    # Repo 级 ambient declarations 的占位目录
 
 src/
-├── main.tsx                    # React 启动入口，负责 providers 与 router 装配
+├── main.tsx                    # React DOM 启动入口
+├── App.tsx                     # 根 providers 与 router 装配
 ├── style.css                   # 全局样式和 Tailwind CSS 入口
 ├── setupTests.ts               # Vitest 与 Testing Library 测试初始化
 ├── routeTree.gen.ts            # TanStack Router 生成的路由树；不要手动编辑
@@ -155,7 +156,7 @@ src/
 
 Features 可以读取 `config` 中的稳定运行时配置，例如 `appEnv`，但不应依赖 app 基础设施。Shared 代码不能读取 `config`；如需环境派生值，应由上层注入。
 
-Provider 在 `main.tsx` 中组合，而不是作为 feature 面向的公共 API。如果某个 provider 暴露 feature 会消费的能力，例如 theme、auth 或 i18n，应将可复用的 provider、hooks 和 types 放到 `shared/<capability>`，业务能力则放到 `features/<domain>`，再由 `main.tsx` 统一装配。
+Provider 在 `App.tsx` 中组合，而不是作为 feature 面向的公共 API。如果某个 provider 暴露 feature 会消费的能力，例如 theme、auth 或 i18n，应将可复用的 provider、hooks 和 types 放到 `shared/<capability>`，业务能力则放到 `features/<domain>`，再由 `App.tsx` 统一装配。
 
 模板现在会把应用级共享 `QueryClient` 注入 TanStack Router context。route loader 可以通过 `context.queryClient.ensureQueryData(...)` 预取 feature 自己的 `queryOptions()`，组件再通过 feature hook 复用同一份缓存。
 
@@ -191,7 +192,7 @@ flowchart TD
 - `app` 负责基础设施装配，可以组合 routes、shared 模块和 provider 支撑的公共能力。
 - `routes` 负责编排 URL 行为和加载流程，再把页面实现委托给 `features`。
 - `features` 可以依赖 `shared` 和稳定的 `config`，但不能依赖 app wiring 模块。
-- Provider 支撑的公共能力应从 `shared` 或公共 feature API 暴露，再由 `main.tsx` 装配。
+- Provider 支撑的公共能力应从 `shared` 或公共 feature API 暴露，再由 `App.tsx` 装配。
 
 ### Feature 模块约定
 
@@ -287,7 +288,7 @@ React Query 错误仍应在路由错误 fallback 内通过 `QueryErrorResetBound
 - 不要把业务逻辑放进 `app/`；随着项目增长，产品行为应放到 feature 模块中。
 - 可复用 UI 放在 `shared/ui`，纯工具函数放在 `shared/lib`。
 - Feature 必要时可以读取 `config` 中的稳定运行时配置，但应避免依赖 app router、provider composition 和 monitoring 装配。
-- Feature 会消费的 provider 能力应从 `shared/<capability>` 或公共 feature API 暴露，再由 `main.tsx` 装配。
+- Feature 会消费的 provider 能力应从 `shared/<capability>` 或公共 feature API 暴露，再由 `App.tsx` 装配。
 - Feature 专属请求放在所属 feature 下；只有真实集成需求能支撑时，才引入共享传输层。
 - 路由级错误兜底使用 TanStack Router `errorComponent`。`react-error-boundary` 只用于明确的 feature 局部组件兜底。
 - Barrel export 只用于 `shared/ui`、`shared/lib` 这类稳定公共边界；默认不要新增 feature 级或 app 级 barrel。

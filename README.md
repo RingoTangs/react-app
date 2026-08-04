@@ -88,7 +88,8 @@ types/
 └── .gitkeep                    # Placeholder for repo-level ambient declarations
 
 src/
-├── main.tsx                    # React bootstrap, providers, and router composition
+├── main.tsx                    # React DOM bootstrap
+├── App.tsx                     # Root providers and router composition
 ├── style.css                   # Global styles and Tailwind CSS entry
 ├── setupTests.ts               # Vitest and Testing Library setup
 ├── routeTree.gen.ts            # Generated TanStack Router route tree; do not edit manually
@@ -155,7 +156,7 @@ src/
 
 Features may read stable runtime configuration from `config`, for example `appEnv`, but should not depend on app infrastructure. Shared code must not read `config`; pass environment-derived values into shared utilities instead.
 
-Provider composition happens in `main.tsx`, not through a feature-facing API. If a provider exposes behavior that features consume, such as theme, auth, or i18n, put the reusable provider, hooks, and types in `shared/<capability>` for product-agnostic capabilities or `features/<domain>` for business capabilities. Then compose that provider in `main.tsx`.
+Provider composition happens in `App.tsx`, not through a feature-facing API. If a provider exposes behavior that features consume, such as theme, auth, or i18n, put the reusable provider, hooks, and types in `shared/<capability>` for product-agnostic capabilities or `features/<domain>` for business capabilities. Then compose that provider in `App.tsx`.
 
 The template now wires a shared app-level `QueryClient` into TanStack Router context. Route loaders can preload feature-owned `queryOptions()` through `context.queryClient.ensureQueryData(...)`, while components reuse the same cache entry through feature hooks.
 
@@ -191,7 +192,7 @@ flowchart TD
 - `app` wires infrastructure and may compose routes, shared modules, and provider-backed public capabilities.
 - `routes` orchestrates URL behavior and loading, then delegates page implementation to `features`.
 - `features` may depend on `shared` and stable `config`, but not app wiring modules.
-- Provider-backed capabilities should be exposed from `shared` or a public feature API, then composed in `main.tsx`.
+- Provider-backed capabilities should be exposed from `shared` or a public feature API, then composed in `App.tsx`.
 
 ### Feature Module Convention
 
@@ -287,7 +288,7 @@ Use `react-error-boundary` only for feature-local failures where a widget can fa
 - Keep business logic out of `app/`; add product behavior under feature modules as the project grows.
 - Keep reusable UI under `shared/ui` and pure utilities under `shared/lib`.
 - Let features read stable runtime config from `config` when needed, but keep them independent from app router, provider composition, and monitoring wiring.
-- Expose feature-consumable provider capabilities from `shared/<capability>` or a public feature API, then compose them in `main.tsx`.
+- Expose feature-consumable provider capabilities from `shared/<capability>` or a public feature API, then compose them in `App.tsx`.
 - Keep feature-specific requests under the owning feature; introduce shared transport only when real integration requirements justify it.
 - Use TanStack Router `errorComponent` for route-level error fallbacks. Use `react-error-boundary` only for clearly local feature widgets.
 - Use barrel exports only at stable public boundaries such as `shared/ui` and `shared/lib`; avoid feature-wide or app-wide barrels by default.

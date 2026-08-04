@@ -2,9 +2,9 @@
 
 ## Purpose
 
-`app` contains application-level infrastructure. The bootstrap in `src/main.tsx` composes providers and the router from these modules.
+`app` contains application-level infrastructure. The root component in `src/App.tsx` composes providers and the router from these modules.
 
-`app` 用于应用级基础设施。`src/main.tsx` 负责组合这里提供的 providers 和 router。
+`app` 用于应用级基础设施。`src/App.tsx` 负责组合这里提供的 providers 和 router。
 
 ## Put Here
 
@@ -26,9 +26,9 @@ Do not place feature query options or endpoint calls in app. App may pass `query
 
 不要在 app 中放 feature 的 query options 或 endpoint 调用。App 可以通过 context 传递 `queryClient`，但数据定义仍由 features 拥有。
 
-Features should not depend on app infrastructure. If a provider exposes reusable behavior to features, place that behavior in `shared/<capability>` or `features/<domain>`, then compose it in `src/main.tsx`.
+Features should not depend on app infrastructure. If a provider exposes reusable behavior to features, place that behavior in `shared/<capability>` or `features/<domain>`, then compose it in `src/App.tsx`.
 
-Features 不应依赖 app 基础设施。如果某个 provider 向 feature 暴露可复用能力，应将能力本身放到 `shared/<capability>` 或 `features/<domain>`，再由 `src/main.tsx` 组合。
+Features 不应依赖 app 基础设施。如果某个 provider 向 feature 暴露可复用能力，应将能力本身放到 `shared/<capability>` 或 `features/<domain>`，再由 `src/App.tsx` 组合。
 
 Do not add `src/app/index.ts` or subdirectory barrels by default. Import app infrastructure explicitly, for example `@/app/queryClient` or `@/app/router/router`.
 

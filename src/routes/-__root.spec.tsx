@@ -7,29 +7,36 @@ import {
 import { act, cleanup, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import * as errorReporting from '@/app/reportError'
 import { getPosts } from '@/features/example-posts/api/getPosts'
-import { usePostsQuery } from '@/features/example-posts/hooks/usePostsQuery'
+import { postQueryKeys } from '@/features/example-posts/model/queryKeys'
 import { routeTree } from '@/routeTree.gen'
 
 vi.mock('@/features/example-posts/api/getPosts', () => ({
   getPosts: vi.fn(),
 }))
 
-vi.mock('@/features/example-posts/hooks/usePostsQuery', () => ({
-  usePostsQuery: vi.fn(),
-}))
-
 const mockedGetPosts = vi.mocked(getPosts)
-const mockedUsePostsQuery = vi.mocked(usePostsQuery)
+const queryClients: QueryClient[] = []
+const posts = [
+  {
+    id: 1,
+    userId: 1,
+    title: 'Architecture boundaries stay explicit',
+    body: 'Feature-owned query options stay reusable across routes.',
+  },
+]
 
 const renderWithRouter = (initialEntries: Array<string>) => {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
         retry: false,
+        staleTime: 30_000,
       },
     },
   })
+  queryClients.push(queryClient)
   const history = createMemoryHistory({ initialEntries })
   const router = createRouter({
     routeTree,
@@ -37,6 +44,7 @@ const renderWithRouter = (initialEntries: Array<string>) => {
       queryClient,
     },
     history,
+    defaultPreloadStaleTime: 0,
   })
 
   render(
@@ -51,23 +59,18 @@ const renderWithRouter = (initialEntries: Array<string>) => {
 beforeEach(() => {
   mockedGetPosts.mockReset()
   mockedGetPosts.mockResolvedValue([])
-  mockedUsePostsQuery.mockReturnValue({
-    data: [],
-    error: null,
-    isError: false,
-    isPending: false,
-    isSuccess: true,
-  } as unknown as ReturnType<typeof usePostsQuery>)
 })
 
 afterEach(() => {
   cleanup()
+  queryClients.splice(0).forEach((client) => client.clear())
   vi.restoreAllMocks()
 })
 
 describe('root route error boundary', () => {
   it('resets the error fallback when browser history goes back to a healthy route', async () => {
     vi.spyOn(console, 'error').mockImplementation(() => {})
+    const reportError = vi.spyOn(errorReporting, 'reportError')
 
     const user = userEvent.setup()
     const { history, router } = renderWithRouter(['/'])
@@ -83,6 +86,10 @@ describe('root route error boundary', () => {
     expect(
       await screen.findByText('Oops! Something went wrong'),
     ).toBeInTheDocument()
+    expect(reportError).toHaveBeenCalledWith(
+      expect.any(Error),
+      expect.objectContaining({ componentStack: expect.any(String) }),
+    )
 
     await act(async () => {
       history.back()
@@ -100,22 +107,9 @@ describe('root route error boundary', () => {
   })
 
   it('preloads feature data through router context loaders', async () => {
-    mockedUsePostsQuery.mockReturnValue({
-      data: [
-        {
-          id: 1,
-          userId: 1,
-          title: 'Architecture boundaries stay explicit',
-          body: 'Feature-owned query options stay reusable across routes.',
-        },
-      ],
-      error: null,
-      isError: false,
-      isPending: false,
-      isSuccess: true,
-    } as unknown as ReturnType<typeof usePostsQuery>)
+    mockedGetPosts.mockResolvedValue(posts)
 
-    const { router } = renderWithRouter(['/posts'])
+    const { router, queryClient } = renderWithRouter(['/posts'])
 
     expect(router.state.location.pathname).toBe('/posts')
 
@@ -125,6 +119,31 @@ describe('root route error boundary', () => {
     expect(
       await screen.findByText('Architecture boundaries stay explicit'),
     ).toBeInTheDocument()
+    expect(queryClient.getQueryData(postQueryKeys.preview())).toEqual(posts)
+    expect(
+      router.state.matches.find((match) => match.routeId === '/posts')
+        ?.loaderData,
+    ).toEqual(posts)
+    expect(mockedGetPosts).toHaveBeenCalledTimes(1)
+  })
+
+  it('reuses preloaded query data when navigating to posts', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    mockedGetPosts.mockResolvedValue(posts)
+    const { router, queryClient } = renderWithRouter(['/error'])
+    await screen.findByText('Oops! Something went wrong')
+
+    await act(async () => {
+      await router.preloadRoute({ to: '/posts' })
+    })
+    expect(queryClient.getQueryData(postQueryKeys.preview())).toEqual(posts)
+    expect(mockedGetPosts).toHaveBeenCalledTimes(1)
+
+    await act(async () => {
+      await router.navigate({ to: '/posts' })
+    })
+    expect(await screen.findByText(posts[0]!.title)).toBeInTheDocument()
+    expect(mockedGetPosts).toHaveBeenCalledTimes(1)
   })
 
   it('retries a failed loader and renders the route after recovery', async () => {

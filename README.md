@@ -36,8 +36,8 @@ A team-oriented React starter built on React 19, Vite 8, TanStack Router, TanSta
 
 ### Requirements
 
-- Node.js `>=22.0.0`
-- pnpm `>=10.24.0`
+- Node.js `>=22.12.0` (`.nvmrc` selects the Node 22 release line)
+- pnpm `10.24.0`
 
 ### Run locally
 
@@ -77,6 +77,8 @@ docker run --rm -p 8080:80 react-app:local
 The container serves the app at `http://localhost:8080`. The image is built in multiple stages: Node and pnpm create the Vite `dist/` output, then Nginx serves only the static assets.
 
 The root `nginx.conf` includes an SPA fallback so TanStack Router routes can be refreshed directly. `VITE_*` environment variables are injected at build time; if a project needs runtime environment switching, add a separate runtime config mechanism such as `/config.js` or `/env.json`.
+
+Nginx caches content-hashed build files under `/assets/` for one year with `immutable`. This path is reserved for Vite output: do not put fixed-name public files in `public/assets/`. HTML and fixed-name public files use `Cache-Control: no-cache` so clients revalidate before reuse. Missing static file paths (including paths with a file extension) return 404 instead of the SPA document; page routes should not use file-like paths. Docker installs dependencies with the same workspace settings and engine checks as local development.
 
 ## Project Layout
 
@@ -152,6 +154,8 @@ Features and shared code must not import application environment config. Pass en
 Provider composition happens in `App.tsx`, not through a feature-facing API. If a provider exposes behavior that features consume, such as theme, auth, or i18n, put the reusable provider, hooks, and types in `shared/<capability>` for product-agnostic capabilities or `features/<domain>` for business capabilities. Then compose that provider in `App.tsx`.
 
 The template now wires a shared app-level `QueryClient` into TanStack Router context. Route loaders can preload feature-owned `queryOptions()` through `context.queryClient.ensureQueryData(...)`, while components reuse the same cache entry through feature hooks.
+
+Router uses `defaultPreloadStaleTime: 0` to pass preload decisions to React Query. The posts example offers retry on initial failure and preserves cached results, including empty lists, when a background refresh fails.
 
 ### Dependency Direction
 
@@ -256,6 +260,8 @@ If a route loader preloads React Query data, the app router context must expose 
 ### Error Handling
 
 Route-level render errors, loader errors, and route match errors should be handled with TanStack Router `errorComponent`. The root route provides the default fallback UI and reports caught errors through `reportError`.
+
+`reportError(error, info?)` is an integration point, not a configured monitoring service. It currently logs only in development and does nothing in production. Connect production reporting in `src/app/reportError.ts`; the root route forwards the available React error context to this adapter.
 
 Retry route and loader failures with `router.invalidate()` so active loaders run again and the route error boundary resets. If a query uses suspense or `throwOnError`, coordinate its retry with `useQueryErrorResetBoundary()` before invalidating the router.
 

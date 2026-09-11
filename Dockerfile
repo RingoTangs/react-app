@@ -4,9 +4,9 @@ WORKDIR /app
 
 RUN corepack enable
 
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 
-RUN HUSKY=0 pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile
 
 FROM node:22-alpine AS build
 

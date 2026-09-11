@@ -36,8 +36,8 @@
 
 ### 环境要求
 
-- Node.js `>=22.0.0`
-- pnpm `>=10.24.0`
+- Node.js `>=22.12.0`（`.nvmrc` 选择 Node 22 系列）
+- pnpm `10.24.0`
 
 ### 本地运行
 
@@ -75,6 +75,8 @@ docker run --rm -p 8080:80 react-app:local
 ```
 
 容器访问地址为 `http://localhost:8080`。镜像使用多阶段构建：Node 和 pnpm 负责生成 Vite `dist/` 产物，最终阶段只用 Nginx 托管静态资源。
+
+Nginx 对 `/assets/` 下带内容哈希的构建文件设置一年 `immutable` 缓存。该路径保留给 Vite 构建产物，不要在 `public/assets/` 放置固定文件名资源。HTML 和固定路径公共文件使用 `Cache-Control: no-cache`，复用前需要重新验证。不存在的静态文件路径（包括带扩展名的路径）返回 404，不回退到 SPA 页面；页面路由不要使用类似文件名的路径。Docker 安装依赖时采用与本地相同的工作区设置和 Node 版本检查。
 
 根目录 `nginx.conf` 已包含 SPA fallback，TanStack Router 路由可以直接刷新。`VITE_*` 环境变量是构建期注入；如果项目需要运行时切换环境，应额外设计 `/config.js` 或 `/env.json` 这类运行时配置机制。
 
@@ -256,6 +258,10 @@ export const Route = createFileRoute('/users')({
 ### 错误兜底
 
 路由级 render error、loader error 和 route match error 应使用 TanStack Router `errorComponent` 处理。根路由提供默认 fallback UI，并通过 `reportError` 统一上报捕获到的错误。
+
+`reportError(error, info?)` 是监控接入点，尚未配置实际监控服务：当前仅在开发环境输出日志，生产环境不执行上报。生产监控应在 `src/app/reportError.ts` 中接入，根路由会将可用的 React 错误上下文一并传给该适配器。
+
+Router 设置 `defaultPreloadStaleTime: 0`，将预加载的数据新鲜度判断交给 React Query。Posts 示例支持首次失败后重试；后台刷新失败时保留缓存结果（包括空列表），并提供错误提示和重试入口。
 
 路由和 loader 失败应通过 `router.invalidate()` 重试，从而重新运行当前 loaders 并重置 route error boundary。如果 query 使用 suspense 或 `throwOnError`，应先通过 `useQueryErrorResetBoundary()` 协调 query 重试，再 invalidate router。
 

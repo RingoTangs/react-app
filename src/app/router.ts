@@ -9,6 +9,7 @@ export const router = createRouter({
     queryClient,
   },
   defaultPreload: 'intent',
+  defaultPreloadStaleTime: 0,
   scrollRestoration: true,
   defaultNotFoundComponent: NotFound,
 })

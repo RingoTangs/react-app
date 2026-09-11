@@ -6,8 +6,31 @@ const getErrorMessage = (error: unknown) => {
 
 export const PostsPreview: React.FC = () => {
   const postsQuery = usePostsQuery()
+  const retryButton = (
+    <button
+      type="button"
+      disabled={postsQuery.isFetching}
+      onClick={() => {
+        // Query owns request errors; refetch resolves with the query result.
+        void postsQuery.refetch({ throwOnError: false })
+      }}
+      className="mt-4 rounded-lg bg-amber-400 px-4 py-2 font-semibold text-stone-950 hover:bg-amber-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-300 disabled:cursor-not-allowed disabled:opacity-50"
+    >
+      {postsQuery.isFetching ? 'Retrying...' : 'Try Again'}
+    </button>
+  )
+  const refreshError = postsQuery.isRefetchError ? (
+    <div
+      role="alert"
+      className="mb-6 rounded-xl border border-red-400/30 bg-red-950/30 p-4 text-red-100"
+    >
+      <p>Unable to refresh posts. Showing previously loaded data.</p>
+      <p className="mt-2 text-sm">{getErrorMessage(postsQuery.error)}</p>
+      {retryButton}
+    </div>
+  ) : null
 
-  if (postsQuery.isPending) {
+  if (postsQuery.isPending && !postsQuery.isFetched) {
     return (
       <section className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm">
         <p className="text-sm font-medium tracking-[0.16em] text-amber-300 uppercase">
@@ -23,7 +46,7 @@ export const PostsPreview: React.FC = () => {
     )
   }
 
-  if (postsQuery.isError) {
+  if (postsQuery.data === undefined) {
     return (
       <section className="rounded-3xl border border-red-400/30 bg-red-950/30 p-8 backdrop-blur-sm">
         <p className="text-sm font-medium tracking-[0.16em] text-red-200 uppercase">
@@ -33,17 +56,19 @@ export const PostsPreview: React.FC = () => {
           Failed to load posts
         </h2>
         <p className="mt-3 text-sm text-red-100">
-          {getErrorMessage(postsQuery.error)}
+          {getErrorMessage(postsQuery.error ?? postsQuery.failureReason)}
         </p>
+        {retryButton}
       </section>
     )
   }
 
-  const posts = postsQuery.data ?? []
+  const posts = postsQuery.data
 
   if (posts.length === 0) {
     return (
       <section className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm">
+        {refreshError}
         <p className="text-sm font-medium tracking-[0.16em] text-amber-300 uppercase">
           Data Fetching
         </p>
@@ -59,6 +84,7 @@ export const PostsPreview: React.FC = () => {
 
   return (
     <section className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm">
+      {refreshError}
       <div className="mb-6 max-w-2xl">
         <p className="text-sm font-medium tracking-[0.16em] text-amber-300 uppercase">
           Data Fetching

@@ -12,7 +12,7 @@ export default antfu({
   ignores: ['**/routeTree.gen.ts', '**/pnpm-lock.yaml'],
 })
   .append({
-    files: ['src/routes/**/*.tsx'],
+    files: ['src/routes/**/*.{ts,tsx}'],
     rules: {
       'react-refresh/only-export-components': 'off',
     },

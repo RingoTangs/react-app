@@ -81,6 +81,9 @@ importers:
       eslint-config-prettier:
         specifier: 10.1.8
         version: 10.1.8(eslint@9.39.5(jiti@2.7.0))
+      eslint-plugin-react-hooks:
+        specifier: ^7.0.0
+        version: 7.1.1(eslint@9.39.5(jiti@2.7.0))
       eslint-plugin-react-refresh:
         specifier: ^0.5.0
         version: 0.5.6(eslint@9.39.5(jiti@2.7.0))
@@ -4366,7 +4369,6 @@ snapshots:
       zod-validation-error: 4.0.2(zod@4.6.2)
     transitivePeerDependencies:
       - supports-color
-    optional: true
 
   eslint-plugin-react-naming-convention@2.13.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3):
     dependencies:
@@ -4706,13 +4708,11 @@ snapshots:
 
   has-flag@4.0.0: {}
 
-  hermes-estree@0.25.1:
-    optional: true
+  hermes-estree@0.25.1: {}
 
   hermes-parser@0.25.1:
     dependencies:
       hermes-estree: 0.25.1
-    optional: true
 
   html-entities@2.6.0: {}
 
@@ -5686,7 +5686,6 @@ snapshots:
   zod-validation-error@4.0.2(zod@4.6.2):
     dependencies:
       zod: 4.6.2
-    optional: true
 
   zod@4.6.2: {}
 

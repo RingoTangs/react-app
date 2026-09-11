@@ -261,7 +261,7 @@ If a route loader preloads React Query data, the app router context must expose 
 
 Route-level render errors, loader errors, and route match errors should be handled with TanStack Router `errorComponent`. The root route provides the default fallback UI and reports caught errors through `reportError`.
 
-`reportError(error, info?)` is an integration point, not a configured monitoring service. It currently logs only in development and does nothing in production. Connect production reporting in `src/app/reportError.ts`; the root route forwards the available React error context to this adapter.
+`reportError(error)` is an integration point, not a configured monitoring service. It currently logs only in development and does nothing in production. Connect production reporting in `src/app/reportError.ts`.
 
 Retry route and loader failures with `router.invalidate()` so active loaders run again and the route error boundary resets. If a query uses suspense or `throwOnError`, coordinate its retry with `useQueryErrorResetBoundary()` before invalidating the router.
 

@@ -1,5 +1,4 @@
 import type { QueryClient } from '@tanstack/react-query'
-import type { ErrorInfo } from 'react'
 import { createRootRouteWithContext, useRouter } from '@tanstack/react-router'
 import { reportError } from '@/app/reportError'
 import { PageErrorFallback } from '@/shared/ui'
@@ -23,7 +22,7 @@ export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
 }>()({
   errorComponent: RootErrorComponent,
-  onCatch: (error, info?: ErrorInfo) => {
-    reportError(error, info)
+  onCatch: (error) => {
+    reportError(error)
   },
 })

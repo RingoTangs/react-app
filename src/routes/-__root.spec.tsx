@@ -86,10 +86,7 @@ describe('root route error boundary', () => {
     expect(
       await screen.findByText('Oops! Something went wrong'),
     ).toBeInTheDocument()
-    expect(reportError).toHaveBeenCalledWith(
-      expect.any(Error),
-      expect.objectContaining({ componentStack: expect.any(String) }),
-    )
+    expect(reportError).toHaveBeenCalledWith(expect.any(Error))
 
     await act(async () => {
       history.back()

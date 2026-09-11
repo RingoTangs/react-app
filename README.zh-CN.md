@@ -259,7 +259,7 @@ export const Route = createFileRoute('/users')({
 
 路由级 render error、loader error 和 route match error 应使用 TanStack Router `errorComponent` 处理。根路由提供默认 fallback UI，并通过 `reportError` 统一上报捕获到的错误。
 
-`reportError(error, info?)` 是监控接入点，尚未配置实际监控服务：当前仅在开发环境输出日志，生产环境不执行上报。生产监控应在 `src/app/reportError.ts` 中接入，根路由会将可用的 React 错误上下文一并传给该适配器。
+`reportError(error)` 是监控接入点，尚未配置实际监控服务：当前仅在开发环境输出日志，生产环境不执行上报。生产监控应在 `src/app/reportError.ts` 中接入。
 
 Router 设置 `defaultPreloadStaleTime: 0`，将预加载的数据新鲜度判断交给 React Query。Posts 示例支持首次失败后重试；后台刷新失败时保留缓存结果（包括空列表），并提供错误提示和重试入口。
 

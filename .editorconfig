@@ -1,6 +1,5 @@
 root = true
 
-# Base rules
 [*]
 charset = utf-8
 end_of_line = lf
@@ -9,27 +8,8 @@ trim_trailing_whitespace = true
 indent_style = space
 indent_size = 2
 
-# Markdown
 [*.{md,mdx}]
 trim_trailing_whitespace = false
 
-# Data files
-[*.{json,json5,jsonc,yml,yaml}]
-indent_size = 2
-
-# Frontend and Node files
-[*.{js,jsx,ts,tsx,mjs,cjs,mts,cts,html,css,scss,sass,less}]
-indent_size = 2
-
-# Dockerfile
-[{Dockerfile,*.dockerfile}]
-indent_size = 2
-
-# Shell
-[*.sh]
-end_of_line = lf
-indent_size = 2
-
-# Makefile
 [Makefile]
 indent_style = tab

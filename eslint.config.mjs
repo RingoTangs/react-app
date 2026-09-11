@@ -10,4 +10,11 @@ export default antfu({
   gitignore: true,
   test: true,
   ignores: ['**/routeTree.gen.ts', '**/pnpm-lock.yaml'],
-}).append(prettier)
+})
+  .append({
+    files: ['src/routes/**/*.tsx'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
+    },
+  })
+  .append(prettier)

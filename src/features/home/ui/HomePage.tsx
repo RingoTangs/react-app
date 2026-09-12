@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { PostsPreview } from '@/features/example-posts/ui/PostsPreview'
+import { PostsPreview } from '@/features/example-posts'
 
 const highlights = [
   {

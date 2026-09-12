@@ -1,6 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { postsQueryOptions } from '@/features/example-posts/model/queryOptions'
-import { PostsPage } from '@/features/example-posts/ui/PostsPage'
+import { PostsPage, postsQueryOptions } from '@/features/example-posts'
 
 export const Route = createFileRoute('/posts')({
   loader: ({ context }) => {

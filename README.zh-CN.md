@@ -113,10 +113,9 @@ src/
 │   ├── example-counter/        # demo 本地状态 feature
 │   │   ├── assets/
 │   │   ├── hooks/
-│   │   ├── lib/
-│   │   ├── model/
 │   │   └── ui/
 │   ├── example-posts/          # demo server-state feature
+│   │   ├── index.ts            # 公共组件和 query options
 │   │   ├── api/
 │   │   ├── hooks/
 │   │   ├── model/
@@ -201,6 +200,8 @@ src/features/<feature-name>/
 
 不要默认创建空目录。只有当 feature 中确实有对应代码时才新增目录。Feature 专属请求应放在所属 feature 下；只有当项目真正需要通用传输层或 generated SDK 时，才引入共享请求基础设施。
 
+`example-counter` 展示最小模块：仅保留资源、状态 hook、UI 及其就近测试，初始值和加减运算直接放在 hook 内。`example-posts` 展示更完整的数据模块结构，按 feature 的实际复杂度增加目录即可。
+
 ### 资产放置规则
 
 `public/` 用于 favicon、PWA icon、SEO 图片，以及需要固定公开 URL 的文件。`src/shared/assets/` 用于产品无关、被多个模块 import，并由 Vite 处理的图片、视频、SVG 或其他媒体资源。`src/features/<feature>/assets/` 用于 feature 私有媒体资源。如果某个 SVG 应作为可复用 React 图标组件使用，未来引入图标层时应放到 `src/shared/ui/icons/`。
@@ -209,7 +210,11 @@ src/features/<feature-name>/
 
 Barrel export 只用于稳定公共边界。模板保留 `src/shared/ui/index.ts` 和 `src/shared/lib/index.ts`，因为这些目录对外提供产品无关的可复用 API。不要为了缩短导入路径而新增 `src/app/index.ts`、`src/features/index.ts`、路由 barrel 或 feature 子目录 barrel。
 
-公共业务能力仍然放在 `src/features/<domain>`，不要放进 `shared`。典型例子包括 `auth`、`current-user`、`permissions` 和 `notifications`。只有当某个 feature 明确需要向多个模块暴露稳定公共 API 时，才添加 `src/features/<feature>/index.ts`；它只应导出公共组件、hooks 和类型，不导出私有 endpoint、测试或实现细节。
+公共业务能力仍然放在 `src/features/<domain>`，不要放进 `shared`。典型例子包括 `auth`、`current-user`、`permissions` 和 `notifications`。只有当某个 feature 明确需要向多个模块暴露稳定公共 API 时，才添加 `src/features/<feature>/index.ts`；它只应导出公共组件、hooks、类型和共享 query options，不导出私有 endpoint、测试或实现细节。
+
+`example-posts` 的公共入口仅导出 `PostsPage`、`PostsPreview` 和 `postsQueryOptions`。其他 feature 和路由从 `@/features/example-posts` 导入，模块内部继续使用相对路径。路由集成测试可直接模拟内部请求函数，但通过公共 query options 获取查询 key，不为测试扩大公共 API。
+
+公共 `PostsPage` 导出采用懒加载，导入预览组件或 query options 不会加载页面实现。路由提供所需的 Suspense 边界；非路由调用方需要自行提供。
 
 ### 数据请求
 

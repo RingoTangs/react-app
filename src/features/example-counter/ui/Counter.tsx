@@ -1,8 +1,7 @@
-import type { CounterValue } from '../model/types'
 import counterMarkUrl from '../assets/counter-mark.svg'
 import { useCounter } from '../hooks/useCounter'
 
-export const Counter: React.FC<{ initial?: CounterValue }> = ({ initial }) => {
+export const Counter: React.FC<{ initial?: number }> = ({ initial }) => {
   const { count, decrement, increment, reset } = useCounter(initial)
 
   return (

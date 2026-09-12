@@ -8,8 +8,8 @@ import { act, cleanup, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import * as errorReporting from '@/app/reportError'
+import { postsQueryOptions } from '@/features/example-posts'
 import { getPosts } from '@/features/example-posts/api/getPosts'
-import { postQueryKeys } from '@/features/example-posts/model/queryKeys'
 import { routeTree } from '@/routeTree.gen'
 
 vi.mock('@/features/example-posts/api/getPosts', () => ({
@@ -116,7 +116,9 @@ describe('root route error boundary', () => {
     expect(
       await screen.findByText('Architecture boundaries stay explicit'),
     ).toBeInTheDocument()
-    expect(queryClient.getQueryData(postQueryKeys.preview())).toEqual(posts)
+    expect(queryClient.getQueryData(postsQueryOptions().queryKey)).toEqual(
+      posts,
+    )
     expect(
       router.state.matches.find((match) => match.routeId === '/posts')
         ?.loaderData,
@@ -133,7 +135,9 @@ describe('root route error boundary', () => {
     await act(async () => {
       await router.preloadRoute({ to: '/posts' })
     })
-    expect(queryClient.getQueryData(postQueryKeys.preview())).toEqual(posts)
+    expect(queryClient.getQueryData(postsQueryOptions().queryKey)).toEqual(
+      posts,
+    )
     expect(mockedGetPosts).toHaveBeenCalledTimes(1)
 
     await act(async () => {

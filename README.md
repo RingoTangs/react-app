@@ -113,10 +113,9 @@ src/
 │   ├── example-counter/        # Demo local state feature
 │   │   ├── assets/
 │   │   ├── hooks/
-│   │   ├── lib/
-│   │   ├── model/
 │   │   └── ui/
 │   ├── example-posts/          # Demo server-state feature
+│   │   ├── index.ts            # Public components and query options
 │   │   ├── api/
 │   │   ├── hooks/
 │   │   ├── model/
@@ -203,6 +202,8 @@ src/features/<feature-name>/
 
 Do not create empty folders by default. Add a folder only when the feature has code that clearly belongs there. Keep feature-specific requests under the owning feature, and introduce shared request infrastructure only when a real transport layer or generated SDK is needed.
 
+`example-counter` demonstrates a small feature with only assets, a state hook, and UI with colocated tests. Its initial value and arithmetic stay in the hook. `example-posts` demonstrates a fuller data module; add this structure only as the feature needs it.
+
 ### Asset Placement
 
 Use `public/` for favicon, PWA icons, SEO images, and files that need stable public URLs. Use `src/shared/assets/` for product-agnostic images, videos, SVG files, or other media imported by multiple modules and processed by Vite. Use `src/features/<feature>/assets/` for feature-private media. If an SVG should be consumed as a reusable React icon component, place it under `src/shared/ui/icons/` when that icon layer is introduced.
@@ -211,7 +212,11 @@ Use `public/` for favicon, PWA icons, SEO images, and files that need stable pub
 
 Use barrel exports only for stable public boundaries. The template keeps `src/shared/ui/index.ts` and `src/shared/lib/index.ts` because those folders expose reusable, product-agnostic APIs. Do not add `src/app/index.ts`, `src/features/index.ts`, route barrels, or feature subfolder barrels just to shorten imports.
 
-Public business capabilities still belong in `src/features/<domain>`, not in `shared`. Examples include `auth`, `current-user`, `permissions`, and `notifications`. Add `src/features/<feature>/index.ts` only when a feature intentionally exposes a stable public API consumed by multiple modules; export only public components, hooks, and types, not private endpoints, tests, or implementation details.
+Public business capabilities still belong in `src/features/<domain>`, not in `shared`. Examples include `auth`, `current-user`, `permissions`, and `notifications`. Add `src/features/<feature>/index.ts` only when a feature intentionally exposes a stable public API consumed by multiple modules; export only public components, hooks, types, and shared query options, not private endpoints, tests, or implementation details.
+
+`example-posts` exposes only `PostsPage`, `PostsPreview`, and `postsQueryOptions` through its public entry. Other features and routes import from `@/features/example-posts`; internal files keep relative imports. Route integration tests may mock the internal request function directly, but obtain query keys through the public query options instead of expanding the feature API for tests.
+
+The public `PostsPage` export is lazy-loaded so importing the preview or query options does not load the page implementation. Routes provide its Suspense boundary; a non-route consumer must provide one itself.
 
 ### Data Fetching
 

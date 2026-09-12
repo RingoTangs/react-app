@@ -29,7 +29,7 @@
 
 - 明确划分 `app`、`routes`、`features`、`shared` 的架构边界。
 - 内置面向生产的路由、服务端状态、错误兜底、格式化和测试默认规则。
-- 提供团队友好的文档、依赖方向图和目录级 README。
+- 集中维护项目文档，说明目录约定和依赖方向。
 - 保持克制的运行时假设：显式导入、按 feature 管理集成能力、不使用泛化 `components/` 堆放目录。
 
 ## 快速开始
@@ -123,7 +123,6 @@ src/
 │
 └── shared/                     # 产品无关的可复用基础模块
     ├── assets/                 # 由应用代码 import 的共享媒体资源
-    │   └── README.md
     ├── ui/                     # 共享 UI 组件
     │   ├── Button.tsx
     │   ├── NotFound.tsx
@@ -177,7 +176,7 @@ flowchart TD
 - `shared` 是最低层，必须独立于 `app`、`routes` 和 `features`。
 - `app` 负责基础设施装配，可以组合 routes、shared 模块和 provider 支撑的公共能力。
 - `routes` 负责编排 URL 行为和加载流程、组合 feature，也可实现简单静态页面。
-- `features` 可以依赖 `shared` 和稳定的 `config`，但不能依赖 app wiring 模块。
+- `features` 可以依赖 `shared` 和其他 feature 的公共 API，但不能依赖 app 装配模块或应用环境配置。
 - Provider 支撑的公共能力应从 `shared` 或公共 feature API 暴露，再由 `App.tsx` 装配。
 
 ### Feature 模块约定

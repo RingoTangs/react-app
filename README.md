@@ -29,7 +29,7 @@ A team-oriented React starter built on React 19, Vite 8, TanStack Router, TanSta
 
 - Clear architectural boundaries for `app`, `routes`, `features`, and `shared`.
 - Production-oriented defaults for routing, server state, error handling, formatting, and tests.
-- Team-friendly documentation with dependency direction diagrams and directory-level README files.
+- Centralized project documentation with directory conventions and dependency direction diagrams.
 - Minimal runtime assumptions with explicit imports, feature-owned integrations, and no generic `components/` dumping ground.
 
 ## Quick Start
@@ -123,7 +123,6 @@ src/
 │
 └── shared/                     # Reusable, product-agnostic building blocks
     ├── assets/                 # Shared media imported by application code
-    │   └── README.md
     ├── ui/                     # Shared UI components
     │   ├── Button.tsx
     │   ├── NotFound.tsx
@@ -179,7 +178,7 @@ flowchart TD
 - `shared` is the lowest layer and must stay independent from `app`, `routes`, and `features`.
 - `app` wires infrastructure and may compose routes, shared modules, and provider-backed public capabilities.
 - `routes` orchestrates URL behavior and loading, composes features, and may implement simple static pages.
-- `features` may depend on `shared`, but not app wiring or application environment config.
+- `features` may depend on `shared` and other features' public APIs, but not app wiring or application environment config.
 - Provider-backed capabilities should be exposed from `shared` or a public feature API, then composed in `App.tsx`.
 
 ### Feature Module Convention

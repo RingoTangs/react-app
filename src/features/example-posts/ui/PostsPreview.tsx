@@ -11,7 +11,7 @@ export const PostsPreview: React.FC = () => {
       type="button"
       disabled={postsQuery.isFetching}
       onClick={() => {
-        // Query owns request errors; refetch resolves with the query result.
+        // 请求错误由 Query 管理；refetch 返回包含查询结果的 Promise。
         void postsQuery.refetch({ throwOnError: false })
       }}
       className="mt-4 rounded-lg bg-amber-400 px-4 py-2 font-semibold text-stone-950 hover:bg-amber-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-300 disabled:cursor-not-allowed disabled:opacity-50"

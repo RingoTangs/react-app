@@ -6,12 +6,12 @@ $_dayjs.extend(utc)
 $_dayjs.extend(timezone)
 
 /**
- * Dayjs instance
+ * 已配置 UTC 和时区插件的 Day.js 实例。
  */
 export const dayjs = $_dayjs
 
 /**
- * date patterns
+ * 常用日期格式。
  */
 export const dayPatterns = {
   date: 'YYYY-MM-DD',

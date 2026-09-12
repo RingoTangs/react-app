@@ -2,22 +2,22 @@ import { QueryClient } from '@tanstack/react-query'
 
 export const queryClient = new QueryClient({
   defaultOptions: {
-    // Keep global defaults conservative and product-agnostic.
-    // Feature-level policies should be set in feature queryOptions().
+    // 全局默认配置保持保守，不包含业务策略。
+    // 各功能模块的查询策略放在自身的 queryOptions() 中。
     queries: {
-      // Treat data as fresh briefly to reduce duplicate fetches across remounts.
+      // 短时间内复用新鲜数据，减少组件重新挂载时的重复请求。
       staleTime: 30_000,
-      // Match TanStack Query's default inactive cache lifetime explicitly.
+      // 无订阅的缓存保留 5 分钟，与 TanStack Query 默认值一致。
       gcTime: 5 * 60 * 1000,
-      // Retry read requests once without amplifying backend failures too much.
+      // 读取失败后重试一次，避免过多重试增加后端负担。
       retry: 1,
-      // Avoid noisy refetches while switching between tabs and devtools.
+      // 切换浏览器标签页或开发工具时，不自动重新请求。
       refetchOnWindowFocus: false,
-      // Let stale data self-heal when the network connection comes back.
+      // 网络恢复连接后，自动刷新过期数据。
       refetchOnReconnect: true,
     },
     mutations: {
-      // Do not retry writes by default to avoid duplicate submissions.
+      // 写入操作默认不重试，避免重复提交。
       retry: 0,
     },
   },

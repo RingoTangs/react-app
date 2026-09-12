@@ -21,6 +21,8 @@ Use `pnpm@10.24.0` with Node `>=22.12.0`. `.npmrc` enables `engine-strict=true`,
 
 This repo uses TypeScript, React 19, and Vite with 2-space indentation, single quotes, no semicolons, and trailing commas. Prettier sorts Tailwind classes via `prettier-plugin-tailwindcss`, including classes built with `tv()`, and formats SVG/XML through `@prettier/plugin-xml`. Use explicit imports, PascalCase for React components (`FeatureCard.tsx`), camelCase for utilities (`formatDate.ts`), and colocate test files as `*.spec.tsx` beside the component under test. Prefer the `@/` alias for imports from `src`.
 
+Write explanatory comments in hand-written `src` code in Simplified Chinese. Preserve API names, tool directives, reference URLs, and generator-owned comments; do not hand-edit generated files to translate their comments.
+
 ## Testing Guidelines
 
 Vitest runs in the `happy-dom` environment with shared setup from `src/setupTests.ts`. Test-only types are managed in `tsconfig.test.json`; production app code should not rely on Vitest globals. Write component tests with Testing Library and keep them close to the source file, for example `src/features/billing/ui/BillingPage.spec.tsx`. Cover new UI states, user interactions, and error boundaries when behavior changes. Run `pnpm test:run` before opening a PR.

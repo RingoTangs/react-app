@@ -152,7 +152,7 @@ Features 和 shared 代码不能导入应用环境配置；如需环境派生值
 
 Provider 在 `App.tsx` 中组合，而不是作为 feature 面向的公共 API。如果某个 provider 暴露 feature 会消费的能力，例如 theme、auth 或 i18n，应将可复用的 provider、hooks 和 types 放到 `shared/<capability>`，业务能力则放到 `features/<domain>`，再由 `App.tsx` 统一装配。
 
-模板现在会把应用级共享 `QueryClient` 注入 TanStack Router context。route loader 可以通过 `context.queryClient.ensureQueryData(...)` 预取 feature 自己的 `queryOptions()`，组件再通过 feature hook 复用同一份缓存。
+模板现在会把应用级共享 `QueryClient` 注入 TanStack Router context。route loader 通过 `context.queryClient.query({ ...postsQueryOptions(), staleTime: 'static' })` 优先返回已有缓存，没有缓存时才请求。该覆盖仅作用于 loader；feature hook 保留正常的过期策略，可在后台刷新过期数据。Loader 请求失败继续交给路由错误边界处理。
 
 ### 依赖方向
 
@@ -235,7 +235,10 @@ src/features/example-posts/
 ```ts
 export const Route = createFileRoute('/posts')({
   loader: ({ context }) => {
-    return context.queryClient.ensureQueryData(postsQueryOptions())
+    return context.queryClient.query({
+      ...postsQueryOptions(),
+      staleTime: 'static',
+    })
   },
   component: PostsPage,
 })

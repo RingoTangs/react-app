@@ -12,9 +12,9 @@ Use route files for path mapping, route params, search schemas, loaders, `before
 
 路由文件适合放路径映射、路由参数、search schema、loader、`beforeLoad`、路由级 pending 状态和路由级错误行为。
 
-When a loader needs data, call the owning feature's `queryOptions()` and let `context.queryClient.ensureQueryData(...)` handle preloading and cache reuse.
+When a loader needs data, call `context.queryClient.query({ ...postsQueryOptions(), staleTime: 'static' })` with the owning feature's query options. Return cached data immediately, fetching only when data is absent. Keep this override local to the loader so feature hooks can still refresh stale data; let request errors propagate to the router.
 
-当 loader 需要数据时，调用所属 feature 的 `queryOptions()`，并通过 `context.queryClient.ensureQueryData(...)` 完成预取和缓存复用。
+当 loader 需要数据时，将所属 feature 的 query options 传给 `context.queryClient.query({ ...postsQueryOptions(), staleTime: 'static' })`，优先返回已有缓存，没有数据时才请求。该覆盖仅放在 loader 中，feature hook 仍可刷新过期数据；请求错误继续向路由传播。
 
 ## Avoid
 

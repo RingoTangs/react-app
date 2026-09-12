@@ -152,7 +152,7 @@ Features and shared code must not import application environment config. Pass en
 
 Provider composition happens in `App.tsx`, not through a feature-facing API. If a provider exposes behavior that features consume, such as theme, auth, or i18n, put the reusable provider, hooks, and types in `shared/<capability>` for product-agnostic capabilities or `features/<domain>` for business capabilities. Then compose that provider in `App.tsx`.
 
-The template now wires a shared app-level `QueryClient` into TanStack Router context. Route loaders can preload feature-owned `queryOptions()` through `context.queryClient.ensureQueryData(...)`, while components reuse the same cache entry through feature hooks.
+The template now wires a shared app-level `QueryClient` into TanStack Router context. Route loaders use `context.queryClient.query({ ...postsQueryOptions(), staleTime: 'static' })` to return existing cached data immediately or fetch when no data is cached. This override applies only to the loader; feature hooks keep their normal stale-time policy and can refresh stale data in the background. Loader request failures propagate to the route error boundary.
 
 Router uses `defaultPreloadStaleTime: 0` to pass preload decisions to React Query. The posts example offers retry on initial failure and preserves cached results, including empty lists, when a background refresh fails.
 
@@ -237,7 +237,10 @@ When route loaders need data, they should call feature-owned query options, not 
 ```ts
 export const Route = createFileRoute('/posts')({
   loader: ({ context }) => {
-    return context.queryClient.ensureQueryData(postsQueryOptions())
+    return context.queryClient.query({
+      ...postsQueryOptions(),
+      staleTime: 'static',
+    })
   },
   component: PostsPage,
 })

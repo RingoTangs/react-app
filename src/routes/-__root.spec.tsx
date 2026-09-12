@@ -4,7 +4,7 @@ import {
   createRouter,
   RouterProvider,
 } from '@tanstack/react-router'
-import { act, cleanup, render, screen } from '@testing-library/react'
+import { act, cleanup, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import * as errorReporting from '@/app/reportError'
@@ -166,5 +166,47 @@ describe('root route error boundary', () => {
       await screen.findByText('Posts Route + Feature Query Options'),
     ).toBeInTheDocument()
     expect(mockedGetPosts).toHaveBeenCalledTimes(2)
+  })
+
+  it('returns stale cached data from the loader while the page refreshes in the background', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    const { router, queryClient } = renderWithRouter(['/error'])
+    await screen.findByText('Oops! Something went wrong')
+
+    queryClient.setQueryData(postsQueryOptions().queryKey, posts, {
+      updatedAt: Date.now() - 60_000,
+    })
+    let resolveRefresh!: (value: typeof posts) => void
+    mockedGetPosts.mockReturnValue(
+      new Promise<typeof posts>((resolve) => {
+        resolveRefresh = resolve
+      }),
+    )
+
+    await act(async () => {
+      await router.preloadRoute({ to: '/posts' })
+    })
+    expect(mockedGetPosts).not.toHaveBeenCalled()
+
+    await act(async () => {
+      await router.navigate({ to: '/posts' })
+    })
+    expect(await screen.findByText(posts[0]!.title)).toBeInTheDocument()
+    expect(
+      router.state.matches.find((match) => match.routeId === '/posts')
+        ?.loaderData,
+    ).toEqual(posts)
+    await waitFor(() => expect(mockedGetPosts).toHaveBeenCalledTimes(1))
+    expect(
+      queryClient.isFetching({ queryKey: postsQueryOptions().queryKey }),
+    ).toBe(1)
+
+    const refreshedPosts = [{ ...posts[0]!, title: 'Refreshed posts' }]
+    await act(async () => resolveRefresh(refreshedPosts))
+    expect(await screen.findByText('Refreshed posts')).toBeInTheDocument()
+    expect(screen.queryByText(posts[0]!.title)).not.toBeInTheDocument()
+    expect(queryClient.getQueryData(postsQueryOptions().queryKey)).toEqual(
+      refreshedPosts,
+    )
   })
 })

@@ -36,7 +36,7 @@ A team-oriented React starter built on React 19, Vite 8, TanStack Router, TanSta
 
 ### Requirements
 
-- Node.js `>=22.12.0` (`.nvmrc` selects the Node 22 release line)
+- Node.js `^22.22.2 || ^24.15.0 || >=26.0.0` (`.nvmrc` selects Node 22.22.2)
 - pnpm `10.24.0`
 
 ### Run locally

@@ -6,7 +6,7 @@ Application code lives in `src/`. Application environment config and infrastruct
 
 ## Build, Test, and Development Commands
 
-Use `pnpm@10.24.0` with Node `>=22.12.0`. `.npmrc` enables `engine-strict=true`, so installs should fail on unsupported Node versions.
+Use `pnpm@10.24.0` with Node `^22.22.2 || ^24.15.0 || >=26.0.0`. `.nvmrc` selects Node 22.22.2. `.npmrc` enables `engine-strict=true`, so installs should fail on unsupported Node versions.
 
 - `pnpm dev` starts Vite on `http://localhost:3000`.
 - `pnpm build` runs TypeScript project builds, then creates a production bundle in `dist/`.
@@ -25,7 +25,7 @@ Write explanatory comments in hand-written `src` code in Simplified Chinese. Pre
 
 ## Testing Guidelines
 
-Vitest runs in the `happy-dom` environment with shared setup from `src/setupTests.ts`. Test-only types are managed in `tsconfig.test.json`; production app code should not rely on Vitest globals. Write component tests with Testing Library and keep them close to the source file, for example `src/features/billing/ui/BillingPage.spec.tsx`. Cover new UI states, user interactions, and error boundaries when behavior changes. Run `pnpm test:run` before opening a PR.
+Vitest runs in the `jsdom` environment with shared setup from `src/setupTests.ts`. Test-only types are managed in `tsconfig.test.json`; production app code should not rely on Vitest globals. Write component tests with Testing Library and keep them close to the source file, for example `src/features/billing/ui/BillingPage.spec.tsx`. Cover new UI states, user interactions, and error boundaries when behavior changes. Run `pnpm test:run` before opening a PR.
 
 ## Commit & Pull Request Guidelines
 

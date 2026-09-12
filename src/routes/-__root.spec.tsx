@@ -57,6 +57,8 @@ const renderWithRouter = (initialEntries: Array<string>) => {
 }
 
 beforeEach(() => {
+  // jsdom 不实现页面滚动；这些测试只验证路由和数据状态。
+  vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
   mockedGetPosts.mockReset()
   mockedGetPosts.mockResolvedValue([])
 })

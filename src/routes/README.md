@@ -1,34 +1,20 @@
-# Routes
+# 文件路由
 
-## Purpose
+这里负责 URL 到页面的映射，以及参数校验、loader、导航前检查和路由级加载、错误状态。页面实现放在所属 feature 中。
 
-`routes` contains TanStack file-based route definitions. It maps URLs to route behavior and delegates page rendering to features.
+## 数据加载
 
-`routes` 用于 TanStack 文件路由定义。它负责将 URL 映射到路由行为，并把页面渲染委托给 features。
+参考 [Posts 路由](posts.tsx)：从 feature 公共入口导入页面和 `postsQueryOptions`，由上下文中的 QueryClient 执行查询。
 
-## Put Here
+`query({ ...postsQueryOptions(), staleTime: 'static' })` 会优先返回已有缓存，没有数据时才请求。这个覆盖仅用于 loader；组件仍通过 feature hook 按正常过期策略后台刷新。请求失败继续交给路由错误边界。
 
-Use route files for path mapping, route params, search schemas, loaders, `beforeLoad`, route-level pending states, and route-level error behavior.
+路由不直接调用 `fetch`、拼接接口地址或定义查询 key，这些内容由 feature 管理。
 
-路由文件适合放路径映射、路由参数、search schema、loader、`beforeLoad`、路由级 pending 状态和路由级错误行为。
+## 错误处理与生成文件
 
-When a loader needs data, call `context.queryClient.query({ ...postsQueryOptions(), staleTime: 'static' })` with the owning feature's query options. Return cached data immediately, fetching only when data is absent. Keep this override local to the loader so feature hooks can still refresh stale data; let request errors propagate to the router.
+- [根路由](__root.tsx) 声明上下文类型和默认错误界面。使用 `errorComponent` 处理路由渲染及加载错误，通过 `router.invalidate()` 重试。
+- 查询使用 suspense 或 `throwOnError` 时，先通过 `useQueryErrorResetBoundary()` 重置查询错误，再重试路由。
+- 不用通用错误边界包裹根路由的 Outlet；事件处理、定时器和 Promise 错误在调用处处理。
+- [routeTree.gen.ts](../routeTree.gen.ts) 由插件生成，不手动编辑。
 
-当 loader 需要数据时，将所属 feature 的 query options 传给 `context.queryClient.query({ ...postsQueryOptions(), staleTime: 'static' })`，优先返回已有缓存，没有数据时才请求。该覆盖仅放在 loader 中，feature hook 仍可刷新过期数据；请求错误继续向路由传播。
-
-## Avoid
-
-Do not build full page implementations or business workflows directly in route files. Page-level business components should live in `features/<feature>/ui`.
-
-不要直接在 route 文件中实现完整页面或业务流程。页面级业务组件应放在 `features/<feature>/ui`。
-
-Do not call `fetch`, build endpoint URLs, define query keys, or place API functions in route files. Those details belong to the owning feature.
-
-不要在 route 文件中直接调用 `fetch`、拼接 endpoint、定义 query key 或放置 API 函数。这些细节属于所属 feature。
-
-## Examples
-
-- `__root.tsx` for the root route layout and outlet
-- `index.tsx` for `/`
-- `users.index.tsx` importing `features/users/ui/UserListPage`
-- `settings.tsx` loading `features/settings/model/queryOptions.ts`
+完整路由约定见[项目说明](../../README.zh-CN.md)。

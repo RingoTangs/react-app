@@ -1,25 +1,16 @@
-# Shared Assets
+# 共享资源
 
-Shared assets are product-agnostic files that are imported by application code
-and processed by Vite.
+这里放与业务无关、由代码导入并交给 Vite 处理的共享图片、SVG、视频等文件。
 
-共享资产是产品无关、会被应用代码 import，并由 Vite 参与构建处理的文件。
+## 放置速查
 
-## Put Here
+| 资源类型                              | 放置位置                          |
+| ------------------------------------- | --------------------------------- |
+| 多个 feature 共用的导入资源           | 当前目录 `src/shared/assets`      |
+| 某个 feature 私有的插图、占位图或视频 | `src/features/<feature>/assets`   |
+| 需要固定公开 URL 的文件               | 根目录 [public](../../../public/) |
+| 作为 React 组件使用的通用图标         | 按需建立 `src/shared/ui/icons`    |
 
-- Shared images, illustrations, SVG files, videos, and static media used by
-  multiple features.
-- Assets that should receive Vite hashing, bundling, and cache handling.
+导入资源由 Vite 按构建配置处理；固定路径公共文件与导入资源的缓存方式不同。`public/assets/` 不放固定文件名资源，`/assets/` 已保留给带哈希的构建产物。
 
-- 多个 feature 会复用的图片、插图、SVG、视频和静态媒体。
-- 需要经过 Vite hash、bundle 和缓存处理的资产。
-
-## Avoid
-
-- Feature-specific images or copy; put those in `src/features/<feature>/assets`.
-- Files that need stable public URLs; put those in `public`.
-- SVG React icon components; put those in `src/shared/ui/icons` when introduced.
-
-- 不要放 feature 私有图片或文案；应放到 `src/features/<feature>/assets`。
-- 不要放需要固定公开 URL 的文件；应放到 `public`。
-- 不要放 SVG React 图标组件；未来引入时应放到 `src/shared/ui/icons`。
+完整资源与部署说明见[项目说明](../../../README.zh-CN.md)。

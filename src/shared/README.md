@@ -1,43 +1,21 @@
-# Shared
+# 通用基础模块
 
-## Purpose
+这里存放与具体业务无关、可供多个 feature 使用的 UI、工具和资源。
 
-`shared` contains reusable, product-agnostic building blocks. Code here should be safe to use across multiple features without owning business behavior.
+## 内容归属
 
-`shared` 用于产品无关的可复用基础模块。这里的代码应能安全地被多个 feature 复用，并且不拥有具体业务行为。
+| 目录      | 用途与示例                                                                                      |
+| --------- | ----------------------------------------------------------------------------------------------- |
+| `ui/`     | 通用组件和兜底界面，例如 [Button](ui/Button.tsx)、[PageErrorFallback](ui/PageErrorFallback.tsx) |
+| `lib/`    | 通用工具，例如 [dayjs](lib/dayjs.ts)、[sleep](lib/sleep.ts)                                     |
+| `assets/` | 跨模块共享的导入资源，见[资源放置说明](assets/README.md)                                        |
 
-## Put Here
+鉴权、当前用户、权限、通知等业务能力，即使被多个页面使用，也应放在 `features/<业务域>`。通用请求层仅在实际需求明确后引入。
 
-Use `ui/` for reusable UI components and fallback states. Use `lib/` for pure helpers and framework-light utilities. Use `assets/` for product-agnostic media imported by application code. Add shared request infrastructure only when real integration requirements justify it.
+## 依赖边界
 
-`ui/` 放可复用 UI 组件和通用 fallback 状态，`lib/` 放纯工具函数和轻框架工具，`assets/` 放由应用代码 import 的产品无关媒体资源。只有真实集成需求能支撑时，才添加共享请求基础设施。
+- 不导入 app、routes 或 features，不承载业务流程、专属文案或接口。
+- 不直接读取环境变量；需要配置时通过参数或工厂选项传入。
+- `ui/index.ts` 和 `lib/index.ts` 用于稳定公共 API，不为每个子目录添加统一导出入口。
 
-Use `index.ts` only for stable shared public APIs such as `ui` and `lib`.
-
-`index.ts` 只用于 `ui`、`lib` 这类稳定的 shared 公共 API。
-
-## Avoid
-
-Do not import from `app`, `routes`, or `features`. Do not place feature-specific copy, workflows, API functions, or domain decisions here.
-
-不要从 `app`、`routes` 或 `features` 导入。不要在这里放 feature 专属文案、业务流程、API 函数或领域决策。
-
-Do not read `app/env` or `import.meta.env` from shared code. If a shared utility needs environment-derived values, accept them as parameters or factory options.
-
-不要在 shared 代码中读取 `app/env` 或 `import.meta.env`。如果 shared 工具需要环境派生值，应通过参数或工厂选项传入。
-
-Do not put public business features here. Reused business capabilities such as auth, current user, permissions, or notifications still belong in `features/<domain>`.
-
-不要把公共业务 feature 放在这里。可复用的业务能力，例如鉴权、当前用户、权限或通知，仍然应放在 `features/<domain>`。
-
-Do not place feature-private assets here. Use `src/features/<feature>/assets` unless the media is product-agnostic and reused across features. Files requiring stable public URLs belong in `public`.
-
-不要在这里放 feature 私有资产。除非资源产品无关且跨 feature 复用，否则应放到 `src/features/<feature>/assets`。需要固定公开 URL 的文件应放到 `public`。
-
-## Examples
-
-- `ui/Button.tsx`
-- `ui/NotFound.tsx`
-- `assets/README.md`
-- `lib/dayjs.ts`
-- `lib/sleep.ts`
+完整依赖方向见[项目说明](../../README.zh-CN.md)。

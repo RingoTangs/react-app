@@ -27,6 +27,7 @@
 
   // tailwindcss
   "tailwindCSS.classFunctions": ["tv"],
+  "tailwindCSS.lint.suggestCanonicalClasses": "ignore",
 
   "css.lint.unknownAtRules": "ignore",
   "scss.lint.unknownAtRules": "ignore",

@@ -114,15 +114,12 @@ src/
 │   │   ├── assets/
 │   │   ├── hooks/
 │   │   └── ui/
-│   ├── example-posts/          # demo server-state feature
-│   │   ├── index.ts            # 公共组件和 query options
-│   │   ├── api/
-│   │   ├── hooks/
-│   │   ├── model/
-│   │   └── ui/
-│   ├── home/
-│   │   └── ui/
-│   │       └── HomePage.tsx
+│   └── example-posts/          # demo server-state feature
+│       ├── index.ts            # 公共组件和 query options
+│       ├── api/
+│       ├── hooks/
+│       ├── model/
+│       └── ui/
 │
 └── shared/                     # 产品无关的可复用基础模块
     ├── assets/                 # 由应用代码 import 的共享媒体资源
@@ -141,7 +138,7 @@ src/
 ### 目录边界
 
 - `app` 负责应用环境配置和跨应用基础设施：providers、router setup、devtools 和监控。
-- `routes` 负责 URL 到页面的映射。路由文件应保持薄层，并将页面实现委托给 `features`。
+- `routes` 负责 URL 到页面的映射，可包含简单静态页面和 feature 组合；业务逻辑、数据访问和复杂页面放在 `features`。
 - `features` 负责业务或 demo 能力。新增真实产品行为时，优先按业务域放到这里。
 - `shared` 负责可复用 UI 和纯工具。它不应依赖 `app`、`routes` 或 `features`。
 - `public` 负责不经过 Vite import、需要固定公开 URL 的静态文件。
@@ -179,7 +176,7 @@ flowchart TD
 
 - `shared` 是最低层，必须独立于 `app`、`routes` 和 `features`。
 - `app` 负责基础设施装配，可以组合 routes、shared 模块和 provider 支撑的公共能力。
-- `routes` 负责编排 URL 行为和加载流程，再把页面实现委托给 `features`。
+- `routes` 负责编排 URL 行为和加载流程、组合 feature，也可实现简单静态页面。
 - `features` 可以依赖 `shared` 和稳定的 `config`，但不能依赖 app wiring 模块。
 - Provider 支撑的公共能力应从 `shared` 或公共 feature API 暴露，再由 `App.tsx` 装配。
 
@@ -248,7 +245,7 @@ export const Route = createFileRoute('/posts')({
 
 ### Routes 与 Feature 页面
 
-页面级业务组件应放在 `features/<feature-name>/ui`。路由文件应保持薄层，并专注于路由语义：路径映射、路由参数、search schema、loader、guard、redirect，以及路由级 pending 或 error 行为。
+页面级业务组件应放在 `features/<feature-name>/ui`。路由文件可包含简单静态页面和 feature 组合，以及路由语义：路径映射、路由参数、search schema、loader、guard、redirect，以及路由级 pending 或 error 行为。
 
 ```tsx
 import { createFileRoute } from '@tanstack/react-router'
@@ -258,6 +255,8 @@ export const Route = createFileRoute('/users')({
   component: UserListPage,
 })
 ```
+
+模板首页作为局部组件放在 `src/routes/index.tsx`，Posts 预览通过 feature 公共入口导入。出现独立业务逻辑或复杂页面后，再提取为 feature。
 
 如果 404、通用错误态等 fallback 页面不归属某个具体 feature，并且可跨业务复用，应放在 `shared/ui`。
 

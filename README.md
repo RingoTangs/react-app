@@ -114,15 +114,12 @@ src/
 │   │   ├── assets/
 │   │   ├── hooks/
 │   │   └── ui/
-│   ├── example-posts/          # Demo server-state feature
-│   │   ├── index.ts            # Public components and query options
-│   │   ├── api/
-│   │   ├── hooks/
-│   │   ├── model/
-│   │   └── ui/
-│   ├── home/
-│   │   └── ui/
-│   │       └── HomePage.tsx
+│   └── example-posts/          # Demo server-state feature
+│       ├── index.ts            # Public components and query options
+│       ├── api/
+│       ├── hooks/
+│       ├── model/
+│       └── ui/
 │
 └── shared/                     # Reusable, product-agnostic building blocks
     ├── assets/                 # Shared media imported by application code
@@ -141,7 +138,7 @@ src/
 ### Directory Boundaries
 
 - `app` owns application environment config and cross-cutting infrastructure: providers, router setup, devtools, and monitoring.
-- `routes` owns URL-to-page mapping. Route files should stay thin and delegate page implementation to `features`.
+- `routes` owns URL-to-page mapping and may contain simple static pages or feature composition. Business logic, data access, and complex pages belong in `features`.
 - `features` owns business or demo capabilities. Add real product behavior here by domain.
 - `shared` owns reusable UI and pure helpers. It should not depend on `app`, `routes`, or `features`.
 - `public` owns static files that must be served from stable URLs without Vite imports.
@@ -181,7 +178,7 @@ flowchart TD
 
 - `shared` is the lowest layer and must stay independent from `app`, `routes`, and `features`.
 - `app` wires infrastructure and may compose routes, shared modules, and provider-backed public capabilities.
-- `routes` orchestrates URL behavior and loading, then delegates page implementation to `features`.
+- `routes` orchestrates URL behavior and loading, composes features, and may implement simple static pages.
 - `features` may depend on `shared`, but not app wiring or application environment config.
 - Provider-backed capabilities should be exposed from `shared` or a public feature API, then composed in `App.tsx`.
 
@@ -250,7 +247,7 @@ Do not add a top-level `src/api`. Do not call `fetch` directly from React compon
 
 ### Routes vs Feature Pages
 
-Page-level business components belong in `features/<feature-name>/ui`. Route files should stay thin and focus on route semantics: path mapping, route params, search schemas, loaders, guards, redirects, and route-level pending or error behavior.
+Page-level business components belong in `features/<feature-name>/ui`. Route files may contain simple static pages and feature composition alongside route semantics: path mapping, route params, search schemas, loaders, guards, redirects, and route-level pending or error behavior.
 
 ```tsx
 import { createFileRoute } from '@tanstack/react-router'
@@ -260,6 +257,8 @@ export const Route = createFileRoute('/users')({
   component: UserListPage,
 })
 ```
+
+The template homepage is a local component in `src/routes/index.tsx`; its Posts preview is imported from the feature public API. Extract a feature when independent business logic or a complex page develops.
 
 Reusable fallback pages such as generic not-found or error states belong in `shared/ui` when they are not owned by a specific feature.
 

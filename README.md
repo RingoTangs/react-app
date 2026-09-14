@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <strong>A team-oriented React starter for scalable frontend applications.</strong>
+  <strong>一个面向团队协作、可扩展前端应用的 React 工程模板。</strong>
 </p>
 
 <p align="center">
@@ -19,148 +19,142 @@
   <img alt="pnpm" src="https://img.shields.io/badge/pnpm-10-f69220?logo=pnpm&logoColor=white" />
 </p>
 
-<p align="center">
-  English | <a href="./README.zh-CN.md">简体中文</a>
-</p>
+一个面向团队协作的 React 工程模板，基于 React 19、Vite 8、TanStack Router、TanStack Query、Tailwind CSS v4 和 Vitest 构建。模板保持运行时默认配置克制，并将应用装配、监控和传输层扩展点放入清晰边界。
 
-A team-oriented React starter built on React 19, Vite 8, TanStack Router, TanStack Query, Tailwind CSS v4, and Vitest. The template keeps runtime defaults conservative and pushes app wiring, monitoring, and transport setup into explicit boundaries.
+## 为什么选择这个模板
 
-## Why This Template
+- 明确划分 `app`、`routes`、`features`、`shared` 的架构边界。
+- 内置面向生产的路由、服务端状态、错误兜底、格式化和测试默认规则。
+- 集中维护项目文档，说明目录约定和依赖方向。
+- 保持克制的运行时假设：显式导入、按 feature 管理集成能力、不使用泛化 `components/` 堆放目录。
 
-- Clear architectural boundaries for `app`, `routes`, `features`, and `shared`.
-- Production-oriented defaults for routing, server state, error handling, formatting, and tests.
-- Centralized project documentation with directory conventions and dependency direction diagrams.
-- Minimal runtime assumptions with explicit imports, feature-owned integrations, and no generic `components/` dumping ground.
+## 快速开始
 
-## Quick Start
+### 环境要求
 
-### Requirements
-
-- Node.js `22.23.2` (`.nvmrc` selects the same exact version)
+- Node.js `22.23.2`（`.nvmrc` 使用相同的精确版本）
 - pnpm `10.24.0`
 
-### Run locally
+### 本地运行
 
 ```bash
 pnpm install
 pnpm dev
 ```
 
-The dev server runs on `http://localhost:3000`.
+开发服务器运行在 `http://localhost:3000`。
 
-## Scripts
+## 脚本
 
 ```bash
-pnpm dev          # start Vite dev server
-pnpm build        # typecheck and create a production build
-pnpm preview      # preview the built app locally
-pnpm test         # run Vitest in watch mode
-pnpm test:run     # run tests once
-pnpm lint         # run ESLint
-pnpm lint:fix     # apply ESLint fixes
-pnpm format       # verify Prettier formatting
-pnpm format:fix   # rewrite files with Prettier
-pnpm typecheck    # run TypeScript project checks
+pnpm dev          # 启动 Vite 开发服务器
+pnpm build        # 执行类型检查并生成生产构建
+pnpm preview      # 本地预览生产构建
+pnpm test         # 以 watch 模式运行 Vitest
+pnpm test:run     # 单次运行测试，适合 CI
+pnpm lint         # 运行 ESLint
+pnpm lint:fix     # 应用 ESLint 自动修复
+pnpm format       # 检查 Prettier 格式
+pnpm format:fix   # 使用 Prettier 重写文件
+pnpm typecheck    # 运行 TypeScript 项目检查
 pnpm check        # lint + format + typecheck + test
-pnpm check:fix    # apply local lint and format fixes
+pnpm check:fix    # 应用本地 lint 和格式化修复
 ```
 
-## Docker Deployment
+## Docker 部署
 
-Build the static production image and serve it with Nginx:
+构建静态生产镜像，并通过 Nginx 托管：
 
 ```bash
 docker build -t react-app:local .
 docker run --rm -p 8080:80 react-app:local
 ```
 
-The container serves the app at `http://localhost:8080`. The image is built in multiple stages: Node and pnpm create the Vite `dist/` output, then Nginx serves only the static assets.
+容器访问地址为 `http://localhost:8080`。镜像使用多阶段构建：Node 和 pnpm 负责生成 Vite `dist/` 产物，最终阶段只用 Nginx 托管静态资源。
 
-The root `nginx.conf` includes an SPA fallback so TanStack Router routes can be refreshed directly. `VITE_*` environment variables are injected at build time; if a project needs runtime environment switching, add a separate runtime config mechanism such as `/config.js` or `/env.json`.
+Nginx 对 `/assets/` 下带内容哈希的构建文件设置一年 `immutable` 缓存。该路径保留给 Vite 构建产物，不要在 `public/assets/` 放置固定文件名资源。HTML 和固定路径公共文件使用 `Cache-Control: no-cache`，复用前需要重新验证。不存在的静态文件路径（包括带扩展名的路径）返回 404，不回退到 SPA 页面；页面路由不要使用类似文件名的路径。Docker 安装依赖时采用与本地相同的工作区设置和 Node 版本检查。
 
-Nginx caches content-hashed build files under `/assets/` for one year with `immutable`. This path is reserved for Vite output: do not put fixed-name public files in `public/assets/`. HTML and fixed-name public files use `Cache-Control: no-cache` so clients revalidate before reuse. Missing static file paths (including paths with a file extension) return 404 instead of the SPA document; page routes should not use file-like paths. Docker installs dependencies with the same workspace settings and engine checks as local development.
+根目录 `nginx.conf` 已包含 SPA fallback，TanStack Router 路由可以直接刷新。`VITE_*` 环境变量是构建期注入；如果项目需要运行时切换环境，应额外设计 `/config.js` 或 `/env.json` 这类运行时配置机制。
 
-## Project Layout
+## 项目结构
 
 ```text
 public/
-└── app-icon.svg                # Static public asset served from a stable URL
+└── app-icon.svg                # 固定 URL 访问的公共静态资产
 
 types/
-└── tanstack-router.d.ts         # TanStack Router type registration
+└── tanstack-router.d.ts         # TanStack Router 类型注册
 
 src/
-├── main.tsx                    # React DOM bootstrap
-├── App.tsx                     # Root providers and router composition
-├── style.css                   # Global styles and Tailwind CSS entry
-├── setupTests.ts               # Vitest and Testing Library setup
-├── routeTree.gen.ts            # Generated TanStack Router route tree; do not edit manually
+├── main.tsx                    # React DOM 启动入口
+├── App.tsx                     # 根 providers 与 router 装配
+├── style.css                   # 全局样式和 Tailwind CSS 入口
+├── setupTests.ts               # Vitest 与 Testing Library 测试初始化
+├── routeTree.gen.ts            # TanStack Router 生成的路由树；不要手动编辑
 │
-├── app/                        # App-level infrastructure and wiring
-│   ├── env.ts                  # Application environment config
-│   ├── queryClient.ts          # Shared app-level QueryClient setup
-│   ├── reportError.ts          # Error reporting integration point
-│   └── router.ts               # Router instance and defaults
+├── app/                        # 应用级基础设施和装配
+│   ├── env.ts                  # 应用环境配置
+│   ├── queryClient.ts          # 应用级共享 QueryClient 配置
+│   ├── reportError.ts          # 错误上报集成点
+│   └── router.ts               # Router 实例和默认配置
 │
-├── routes/                     # TanStack file-based routes
-│   ├── -__root.spec.tsx        # Root route behavior tests
-│   ├── __root.tsx              # Root context, layout, and error boundary
-│   ├── error.tsx               # Demo error route
-│   ├── index.tsx               # Route for /
-│   └── posts.tsx               # Demo data route delegating to a feature page
+├── routes/                     # TanStack 文件路由
+│   ├── -__root.spec.tsx        # 根路由行为测试
+│   ├── __root.tsx              # 根路由 context、布局和错误边界
+│   ├── error.tsx               # demo error 路由
+│   ├── index.tsx               # / 路由
+│   └── posts.tsx               # demo 数据路由，委托给 feature 页面
 │
-├── features/                   # Product or demo capabilities grouped by domain
-│   ├── example-counter/        # Demo local state feature
+├── features/                   # 按业务域组织的产品或 demo 能力
+│   ├── example-counter/        # demo 本地状态 feature
 │   │   ├── assets/
 │   │   ├── hooks/
 │   │   └── ui/
-│   └── example-posts/          # Demo server-state feature
-│       ├── index.ts            # Public components and query options
+│   └── example-posts/          # demo server-state feature
+│       ├── index.ts            # 公共组件和 query options
 │       ├── api/
 │       ├── hooks/
 │       ├── model/
 │       └── ui/
 │
-└── shared/                     # Reusable, product-agnostic building blocks
-    ├── assets/                 # Shared media imported by application code
-    ├── ui/                     # Shared UI components
+└── shared/                     # 产品无关的可复用基础模块
+    ├── assets/                 # 由应用代码 import 的共享媒体资源
+    ├── ui/                     # 共享 UI 组件
     │   ├── Button.tsx
     │   ├── NotFound.tsx
     │   ├── PageErrorFallback.tsx
     │   └── index.ts
-    └── lib/                    # Pure helpers and framework-light utilities
+    └── lib/                    # 纯工具函数和轻框架工具
         ├── dayjs.ts
         ├── sleep.ts
         └── index.ts
 ```
 
-### Directory Boundaries
+### 目录边界
 
-- `app` owns application environment config and cross-cutting infrastructure: providers, router setup, devtools, and monitoring.
-- `routes` owns URL-to-page mapping and may contain simple static pages or feature composition. Business logic, data access, and complex pages belong in `features`.
-- `features` owns business or demo capabilities. Add real product behavior here by domain.
-- `shared` owns reusable UI and pure helpers. It should not depend on `app`, `routes`, or `features`.
-- `public` owns static files that must be served from stable URLs without Vite imports.
-- `types` owns repo-level ambient declarations. Do not scatter global `.d.ts` files under `src`.
-- `routeTree.gen.ts` is generated by TanStack Router and should not be edited manually.
+- `app` 负责应用环境配置和跨应用基础设施：providers、router setup、devtools 和监控。
+- `routes` 负责 URL 到页面的映射，可包含简单静态页面和 feature 组合；业务逻辑、数据访问和复杂页面放在 `features`。
+- `features` 负责业务或 demo 能力。新增真实产品行为时，优先按业务域放到这里。
+- `shared` 负责可复用 UI 和纯工具。它不应依赖 `app`、`routes` 或 `features`。
+- `public` 负责不经过 Vite import、需要固定公开 URL 的静态文件。
+- `types` 负责 repo 级 ambient declarations。不要在 `src` 下散落全局 `.d.ts` 文件。
+- `routeTree.gen.ts` 由 TanStack Router 生成，不要手动编辑。
 
-Features and shared code must not import application environment config. Pass environment-derived values through feature public interfaces or shared utility parameters instead.
+Features 和 shared 代码不能导入应用环境配置；如需环境派生值，应通过 feature 公共接口或 shared 工具参数传入。
 
-Provider composition happens in `App.tsx`, not through a feature-facing API. If a provider exposes behavior that features consume, such as theme, auth, or i18n, put the reusable provider, hooks, and types in `shared/<capability>` for product-agnostic capabilities or `features/<domain>` for business capabilities. Then compose that provider in `App.tsx`.
+Provider 在 `App.tsx` 中组合，而不是作为 feature 面向的公共 API。如果某个 provider 暴露 feature 会消费的能力，例如 theme、auth 或 i18n，应将可复用的 provider、hooks 和 types 放到 `shared/<capability>`，业务能力则放到 `features/<domain>`，再由 `App.tsx` 统一装配。
 
-The template now wires a shared app-level `QueryClient` into TanStack Router context. Route loaders use `context.queryClient.query({ ...postsQueryOptions(), staleTime: 'static' })` to return existing cached data immediately or fetch when no data is cached. This override applies only to the loader; feature hooks keep their normal stale-time policy and can refresh stale data in the background. Loader request failures propagate to the route error boundary.
+模板现在会把应用级共享 `QueryClient` 注入 TanStack Router context。route loader 通过 `context.queryClient.query({ ...postsQueryOptions(), staleTime: 'static' })` 优先返回已有缓存，没有缓存时才请求。该覆盖仅作用于 loader；feature hook 保留正常的过期策略，可在后台刷新过期数据。Loader 请求失败继续交给路由错误边界处理。
 
-Router uses `defaultPreloadStaleTime: 0` to pass preload decisions to React Query. The posts example offers retry on initial failure and preserves cached results, including empty lists, when a background refresh fails.
-
-### Dependency Direction
+### 依赖方向
 
 ```mermaid
 flowchart TD
-  App["app<br/>infrastructure & composition"]
-  Routes["routes<br/>URL mapping & loading orchestration"]
-  Features["features<br/>business capabilities"]
-  Shared["shared<br/>product-agnostic building blocks"]
-  ProviderCapability["shared/&lt;capability&gt; or features/&lt;domain&gt;<br/>provider-backed public capability"]
+  App["app<br/>基础设施与装配"]
+  Routes["routes<br/>URL 映射与加载编排"]
+  Features["features<br/>业务能力"]
+  Shared["shared<br/>产品无关基础模块"]
+  ProviderCapability["shared/&lt;capability&gt; 或 features/&lt;domain&gt;<br/>provider 支撑的公共能力"]
 
   App --> Routes
   App --> Shared
@@ -169,21 +163,21 @@ flowchart TD
   Features --> Shared
   ProviderCapability --> Shared
 
-  Shared -. forbidden .-> App
-  Shared -. forbidden .-> Routes
-  Shared -. forbidden .-> Features
-  Features -. forbidden .-> App
+  Shared -. 禁止 .-> App
+  Shared -. 禁止 .-> Routes
+  Shared -. 禁止 .-> Features
+  Features -. 禁止 .-> App
 ```
 
-- `shared` is the lowest layer and must stay independent from `app`, `routes`, and `features`.
-- `app` wires infrastructure and may compose routes, shared modules, and provider-backed public capabilities.
-- `routes` orchestrates URL behavior and loading, composes features, and may implement simple static pages.
-- `features` may depend on `shared` and other features' public APIs, but not app wiring or application environment config.
-- Provider-backed capabilities should be exposed from `shared` or a public feature API, then composed in `App.tsx`.
+- `shared` 是最低层，必须独立于 `app`、`routes` 和 `features`。
+- `app` 负责基础设施装配，可以组合 routes、shared 模块和 provider 支撑的公共能力。
+- `routes` 负责编排 URL 行为和加载流程、组合 feature，也可实现简单静态页面。
+- `features` 可以依赖 `shared` 和其他 feature 的公共 API，但不能依赖 app 装配模块或应用环境配置。
+- Provider 支撑的公共能力应从 `shared` 或公共 feature API 暴露，再由 `App.tsx` 装配。
 
-### Feature Module Convention
+### Feature 模块约定
 
-Feature modules start small and grow by need. Use `ui/` for feature-owned components and page sections, `api/` for feature-specific data access, `model/` for domain types, schemas, query keys, or local state, `hooks/` for feature-specific React hooks, `lib/` for feature-only pure helpers, `constants/` for feature-only constants, and `assets/` for feature-owned images, videos, SVG files, or other media imported by feature code.
+Feature 模块从小开始，按需要增长。使用 `ui/` 放 feature 自己拥有的组件和页面分区，`api/` 放 feature 专属数据访问，`model/` 放领域类型、schema、query keys 或局部状态，`hooks/` 放 feature 专属 React hooks，`lib/` 放只服务当前 feature 的纯工具函数，`constants/` 放 feature 私有常量，`assets/` 放由 feature 代码 import 的 feature 自有图片、视频、SVG 或其他媒体资源。
 
 ```text
 src/features/<feature-name>/
@@ -196,39 +190,39 @@ src/features/<feature-name>/
 └── constants/
 ```
 
-Do not create empty folders by default. Add a folder only when the feature has code that clearly belongs there. Keep feature-specific requests under the owning feature, and introduce shared request infrastructure only when a real transport layer or generated SDK is needed.
+不要默认创建空目录。只有当 feature 中确实有对应代码时才新增目录。Feature 专属请求应放在所属 feature 下；只有当项目真正需要通用传输层或 generated SDK 时，才引入共享请求基础设施。
 
-`example-counter` demonstrates a small feature with only assets, a state hook, and UI with colocated tests. Its initial value and arithmetic stay in the hook. `example-posts` demonstrates a fuller data module; add this structure only as the feature needs it.
+`example-counter` 展示最小模块：仅保留资源、状态 hook、UI 及其就近测试，初始值和加减运算直接放在 hook 内。`example-posts` 展示更完整的数据模块结构，按 feature 的实际复杂度增加目录即可。
 
-### Asset Placement
+### 资产放置规则
 
-Use `public/` for favicon, PWA icons, SEO images, and files that need stable public URLs. Use `src/shared/assets/` for product-agnostic images, videos, SVG files, or other media imported by multiple modules and processed by Vite. Use `src/features/<feature>/assets/` for feature-private media. If an SVG should be consumed as a reusable React icon component, place it under `src/shared/ui/icons/` when that icon layer is introduced.
+`public/` 用于 favicon、PWA icon、SEO 图片，以及需要固定公开 URL 的文件。`src/shared/assets/` 用于产品无关、被多个模块 import，并由 Vite 处理的图片、视频、SVG 或其他媒体资源。`src/features/<feature>/assets/` 用于 feature 私有媒体资源。如果某个 SVG 应作为可复用 React 图标组件使用，未来引入图标层时应放到 `src/shared/ui/icons/`。
 
-### Exports and Public Features
+### 导出与公共 Feature
 
-Use barrel exports only for stable public boundaries. The template keeps `src/shared/ui/index.ts` and `src/shared/lib/index.ts` because those folders expose reusable, product-agnostic APIs. Do not add `src/app/index.ts`, `src/features/index.ts`, route barrels, or feature subfolder barrels just to shorten imports.
+Barrel export 只用于稳定公共边界。模板保留 `src/shared/ui/index.ts` 和 `src/shared/lib/index.ts`，因为这些目录对外提供产品无关的可复用 API。不要为了缩短导入路径而新增 `src/app/index.ts`、`src/features/index.ts`、路由 barrel 或 feature 子目录 barrel。
 
-Public business capabilities still belong in `src/features/<domain>`, not in `shared`. Examples include `auth`, `current-user`, `permissions`, and `notifications`. Add `src/features/<feature>/index.ts` only when a feature intentionally exposes a stable public API consumed by multiple modules; export only public components, hooks, types, and shared query options, not private endpoints, tests, or implementation details.
+公共业务能力仍然放在 `src/features/<domain>`，不要放进 `shared`。典型例子包括 `auth`、`current-user`、`permissions` 和 `notifications`。只有当某个 feature 明确需要向多个模块暴露稳定公共 API 时，才添加 `src/features/<feature>/index.ts`；它只应导出公共组件、hooks、类型和共享 query options，不导出私有 endpoint、测试或实现细节。
 
-`example-posts` exposes only `PostsPage`, `PostsPreview`, and `postsQueryOptions` through its public entry. Other features and routes import from `@/features/example-posts`; internal files keep relative imports. Route integration tests may mock the internal request function directly, but obtain query keys through the public query options instead of expanding the feature API for tests.
+`example-posts` 的公共入口仅导出 `PostsPage`、`PostsPreview` 和 `postsQueryOptions`。其他 feature 和路由从 `@/features/example-posts` 导入，模块内部继续使用相对路径。路由集成测试可直接模拟内部请求函数，但通过公共 query options 获取查询 key，不为测试扩大公共 API。
 
-The public `PostsPage` export is lazy-loaded so importing the preview or query options does not load the page implementation. Routes provide its Suspense boundary; a non-route consumer must provide one itself.
+公共 `PostsPage` 导出采用懒加载，导入预览组件或 query options 不会加载页面实现。路由提供所需的 Suspense 边界；非路由调用方需要自行提供。
 
-### Data Fetching
+### 数据请求
 
-This template does not include a shared HTTP client. Keep request functions inside the owning feature, query keys and query options in `model`, React Query hooks in `hooks`, and loading, error, empty, and success states in feature `ui`.
+模板不内置共享 HTTP client。请求函数放在所属 feature 的 `api`，query keys 和 query options 放在 `model`，React Query hooks 放在 `hooks`，loading、error、empty、success 状态由 feature `ui` 处理。
 
 ```text
 src/features/example-posts/
-├── api/getPosts.ts             # feature-owned request function
-├── hooks/usePostsQuery.ts      # React Query binding
-├── model/queryOptions.ts       # shared query options for hooks and loaders
-├── model/queryKeys.ts          # query key factory
-├── model/types.ts              # domain type
-└── ui/PostsPage.tsx            # route page reusing feature query state
+├── api/getPosts.ts             # feature 自己维护的请求函数
+├── hooks/usePostsQuery.ts      # React Query 绑定
+├── model/queryOptions.ts       # hooks 和 loaders 复用的 query options
+├── model/queryKeys.ts          # query key 工厂
+├── model/types.ts              # 领域类型
+└── ui/PostsPage.tsx            # 复用 feature 查询状态的路由页面
 ```
 
-When route loaders need data, they should call feature-owned query options, not feature endpoints directly. This keeps route preloading and component `useQuery` on the same query key and cache entry.
+当 route loader 需要数据时，应调用 feature 自己暴露的 query options，而不是直接调用 feature endpoint。这样 route 预取和组件里的 `useQuery` 会使用同一个 query key 和缓存项。
 
 ```ts
 export const Route = createFileRoute('/posts')({
@@ -242,11 +236,11 @@ export const Route = createFileRoute('/posts')({
 })
 ```
 
-Do not add a top-level `src/api`. Do not call `fetch` directly from React components, hooks, or route files; keep network access in feature `api` files when a real backend exists. When a real backend integration needs base URLs, authentication, retries, OpenAPI, ky, Axios, or RPC clients, design that transport layer from the project requirements instead of inheriting one from the template.
+不要新增顶层 `src/api`。不要在 React 组件、hooks 或 route 文件中直接调用 `fetch`；如果有真实后端，再把网络访问放在 feature 的 `api` 文件中。当真实后端集成需要 baseURL、认证、重试、OpenAPI、ky、Axios 或 RPC client 时，再基于项目需求设计传输层。
 
-### Routes vs Feature Pages
+### Routes 与 Feature 页面
 
-Page-level business components belong in `features/<feature-name>/ui`. Route files may contain simple static pages and feature composition alongside route semantics: path mapping, route params, search schemas, loaders, guards, redirects, and route-level pending or error behavior.
+页面级业务组件应放在 `features/<feature-name>/ui`。路由文件可包含简单静态页面和 feature 组合，以及路由语义：路径映射、路由参数、search schema、loader、guard、redirect，以及路由级 pending 或 error 行为。
 
 ```tsx
 import { createFileRoute } from '@tanstack/react-router'
@@ -257,41 +251,43 @@ export const Route = createFileRoute('/users')({
 })
 ```
 
-The template homepage is a local component in `src/routes/index.tsx`; its Posts preview is imported from the feature public API. Extract a feature when independent business logic or a complex page develops.
+模板首页作为局部组件放在 `src/routes/index.tsx`，Posts 预览通过 feature 公共入口导入。出现独立业务逻辑或复杂页面后，再提取为 feature。
 
-Reusable fallback pages such as generic not-found or error states belong in `shared/ui` when they are not owned by a specific feature.
+如果 404、通用错误态等 fallback 页面不归属某个具体 feature，并且可跨业务复用，应放在 `shared/ui`。
 
-If a route loader preloads React Query data, the app router context must expose the shared `queryClient`. The app layer owns that infrastructure wiring; route files still use feature `queryOptions` and do not own API details.
+如果 route loader 要预取 React Query 数据，app router context 必须暴露共享的 `queryClient`。app 层负责这类基础设施装配；route 文件仍然只使用 feature 的 `queryOptions`，不拥有 API 细节。
 
-### Error Handling
+### 错误兜底
 
-Route-level render errors, loader errors, and route match errors should be handled with TanStack Router `errorComponent`. The root route provides the default fallback UI and reports caught errors through `reportError`.
+路由级 render error、loader error 和 route match error 应使用 TanStack Router `errorComponent` 处理。根路由提供默认 fallback UI，并通过 `reportError` 统一上报捕获到的错误。
 
-`reportError(error)` is an integration point, not a configured monitoring service. It currently logs only in development and does nothing in production. Connect production reporting in `src/app/reportError.ts`.
+`reportError(error)` 是监控接入点，尚未配置实际监控服务：当前仅在开发环境输出日志，生产环境不执行上报。生产监控应在 `src/app/reportError.ts` 中接入。
 
-Retry route and loader failures with `router.invalidate()` so active loaders run again and the route error boundary resets. If a query uses suspense or `throwOnError`, coordinate its retry with `useQueryErrorResetBoundary()` before invalidating the router.
+Router 设置 `defaultPreloadStaleTime: 0`，将预加载的数据新鲜度判断交给 React Query。Posts 示例支持首次失败后重试；后台刷新失败时保留缓存结果（包括空列表），并提供错误提示和重试入口。
 
-Use `react-error-boundary` only for feature-local failures where a widget can fail while the rest of the page remains usable. Do not wrap the root route `<Outlet />` with a generic `react-error-boundary`; it does not own TanStack Router's route match lifecycle. Errors from event handlers, timers, and unhandled promises must be handled at the call site with `try/catch` or `.catch()`.
+路由和 loader 失败应通过 `router.invalidate()` 重试，从而重新运行当前 loaders 并重置 route error boundary。如果 query 使用 suspense 或 `throwOnError`，应先通过 `useQueryErrorResetBoundary()` 协调 query 重试，再 invalidate router。
 
-## Template Defaults
+`react-error-boundary` 只用于 feature 内部局部失败兜底，例如某个 widget 失败但页面其他区域仍可用。不要在 root route 中用通用 `react-error-boundary` 包裹 `<Outlet />`，因为它不拥有 TanStack Router 的 route match 生命周期。事件回调、定时器和未处理 Promise 中的错误不能依赖 ErrorBoundary，必须在调用点使用 `try/catch` 或 `.catch()` 处理。
 
-- Router and React Query devtools are enabled only in development.
-- The template uses explicit imports throughout; helper APIs such as `tv()` should be imported where used.
-- SVG and XML files are formatted with `@prettier/plugin-xml` through Prettier's XML parser.
-- React Query uses conservative defaults: `staleTime: 30s`, `gcTime: 5m`, query `retry: 1`, mutation `retry: 0`, `refetchOnWindowFocus: false`, `refetchOnReconnect: true`.
-- The template does not preselect a shared HTTP client; feature-owned `api` files may use native `fetch` until a real shared transport layer is justified.
-- Route errors use TanStack Router `errorComponent`, retries invalidate the router, and reporting goes through a single adapter.
+## 模板默认规则
 
-## Development Rules
+- Router 和 React Query devtools 只在开发环境启用。
+- 模板全局使用显式导入；例如 `tv()` 这类 helper 应在使用处显式导入。
+- SVG 和 XML 文件通过 `@prettier/plugin-xml` 使用 Prettier XML parser 格式化。
+- React Query 使用保守默认值：`staleTime: 30s`、`gcTime: 5m`、query `retry: 1`、mutation `retry: 0`、`refetchOnWindowFocus: false`、`refetchOnReconnect: true`。
+- 模板不预设共享 HTTP client；在真实共享传输层出现前，feature 自己的 `api` 文件可以先使用原生 `fetch`。
+- 路由错误使用 TanStack Router `errorComponent`，重试时 invalidate router，并通过单一 adapter 上报。
 
-- Use explicit imports for React, router, and app utilities.
-- Keep business logic out of `app/`; add product behavior under feature modules as the project grows.
-- Keep reusable UI under `shared/ui` and pure utilities under `shared/lib`.
-- Keep Vite environment access behind `app/env.ts`; pass environment-derived values into features and shared utilities instead of importing app config there.
-- Expose feature-consumable provider capabilities from `shared/<capability>` or a public feature API, then compose them in `App.tsx`.
-- Keep feature-specific requests under the owning feature; introduce shared transport only when real integration requirements justify it.
-- Use TanStack Router `errorComponent` for route-level error fallbacks. Use `react-error-boundary` only for clearly local feature widgets.
-- Use barrel exports only at stable public boundaries such as `shared/ui` and `shared/lib`; avoid feature-wide or app-wide barrels by default.
-- Do not reintroduce generic `components/` or `utils/` top-level folders; add code to `shared` or `features` instead.
-- Do not hand-edit generated router output in `src/routeTree.gen.ts`.
-- Run `pnpm check` before opening a PR.
+## 开发规则
+
+- React、router 和应用工具都使用显式导入。
+- 不要把业务逻辑放进 `app/`；随着项目增长，产品行为应放到 feature 模块中。
+- 可复用 UI 放在 `shared/ui`，纯工具函数放在 `shared/lib`。
+- 将 Vite 环境变量访问封装在 `app/env.ts` 中；环境派生值应传入 features 和 shared 工具，不要在其中导入 app 配置。
+- Feature 会消费的 provider 能力应从 `shared/<capability>` 或公共 feature API 暴露，再由 `App.tsx` 装配。
+- Feature 专属请求放在所属 feature 下；只有真实集成需求能支撑时，才引入共享传输层。
+- 路由级错误兜底使用 TanStack Router `errorComponent`。`react-error-boundary` 只用于明确的 feature 局部组件兜底。
+- Barrel export 只用于 `shared/ui`、`shared/lib` 这类稳定公共边界；默认不要新增 feature 级或 app 级 barrel。
+- 不要重新引入顶层泛目录 `components/` 或 `utils/`；根据归属放到 `shared` 或 `features`。
+- 不要手动编辑生成文件 `src/routeTree.gen.ts`。
+- 提交 PR 前运行 `pnpm check`。

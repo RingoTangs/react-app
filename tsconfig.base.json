@@ -40,7 +40,7 @@
     /* 跳过声明文件内部的类型检查以提速，业务源码仍正常检查。 */
     "skipLibCheck": true,
     /*
-     * 不接收任何导出内容的导入，也要检查能否找到模块。
+     * 把副作用导入从“静默忽略”变成“强制检查”。
      * 例如：import './setup'，如果找不到 setup 模块就报错。
      */
     "noUncheckedSideEffectImports": true

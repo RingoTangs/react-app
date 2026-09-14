@@ -1,9 +1,15 @@
+// 检查测试代码，复用应用的 React、浏览器类型和路径别名。
 {
+  // 继承应用配置，并在下面覆盖测试专属设置。
   "extends": "./tsconfig.app.json",
+  // 测试使用独立缓存和额外的断言类型。
   "compilerOptions": {
+    // 与应用分开保存检查缓存，避免相互覆盖。
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.test.tsbuildinfo",
+    // 整体替换应用的 types：保留 Vite 类型，增加 jest-dom 断言类型。
     "types": ["vite/client", "@testing-library/jest-dom/vitest"]
   },
+  // 整体替换应用的 include，只收集测试入口；测试导入的源码仍会参与检查。
   "include": [
     "src/**/*.spec.ts",
     "src/**/*.spec.tsx",
@@ -12,5 +18,6 @@
     "src/setupTests.ts",
     "types/**/*.d.ts"
   ],
+  // 清除应用配置中排除测试的规则，否则上面的测试入口也可能被排除。
   "exclude": []
 }

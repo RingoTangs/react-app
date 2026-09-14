@@ -26,13 +26,25 @@
     "noUnusedParameters": true,
     /* 只检查类型，不输出 JavaScript 或声明文件；实际打包交给 Vite。 */
     "noEmit": true,
-    /* 用 import type / export type 明确标记纯类型，普通导入导出保留为运行时代码。 */
+    /*
+     * 只当作类型使用的内容，要用 import type / export type。
+     * 例如：import type { User } from './types'。
+     * 普通 import 会保留到运行时，不会因为只用作类型就自动删除。
+     */
     "verbatimModuleSyntax": true,
-    /* 禁止需要额外转换的 TypeScript 语法，例如 enum 和构造函数参数属性。 */
+    /*
+     * 只允许去掉类型标注后就能运行的写法。
+     * 例如：const count: number = 0 可以，去掉 : number 后仍是正常代码。
+     * enum Status { Ready, Done } 不可以，因为它需要转换成额外的 JavaScript 代码。
+     */
     "erasableSyntaxOnly": true,
     /* 跳过声明文件内部的类型检查以提速，业务源码仍正常检查。 */
     "skipLibCheck": true,
-    /* 检查仅为执行副作用而导入的模块是否能找到，例如 import './setup'。 */
+    /*
+     * 不接收任何导出内容的导入，也要检查能否找到模块。
+     * 例如：import './setup'，如果找不到 setup 模块就报错。
+     * 避免把路径写成 './setpu' 后，类型检查却没有提醒。
+     */
     "noUncheckedSideEffectImports": true
   }
 }

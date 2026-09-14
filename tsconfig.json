@@ -1,11 +1,11 @@
-// TypeScript 检查总入口，通过 tsc -b 统一检查下面三个项目。
+/* TypeScript 检查总入口，通过 tsc -b 统一检查下面三个项目。 */
 {
-  // 分别检查应用、测试和构建工具，各自使用对应的环境类型。
+  /* 分别检查应用、测试和构建工具，各自使用对应的环境类型。 */
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.test.json" },
     { "path": "./tsconfig.node.json" }
   ],
-  // 根配置不直接收集源码，具体检查范围交给上面引用的项目。
+  /* 根配置不直接收集源码，具体检查范围交给上面引用的项目。 */
   "files": []
 }

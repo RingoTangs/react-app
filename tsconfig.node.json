@@ -1,14 +1,14 @@
-// 检查在 Node 环境中执行的 Vite 配置，不加载应用的浏览器类型设置。
+/* 检查在 Node 环境中执行的 Vite 配置，不加载应用的浏览器类型设置。 */
 {
-  // 继承项目共用的检查规则。
+  /* 继承项目共用的检查规则。 */
   "extends": "./tsconfig.base.json",
-  // 补充构建工具需要的缓存和环境类型。
+  /* 补充构建工具需要的缓存和环境类型。 */
   "compilerOptions": {
-    // 构建工具独立保存检查缓存，避免与应用和测试混用。
+    /* 构建工具独立保存检查缓存，避免与应用和测试混用。 */
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
-    // 提供 Node API 和 Vitest 配置类型；这里不设置 Node 的运行版本。
+    /* 提供 Node API 和 Vitest 配置类型；这里不设置 Node 的运行版本。 */
     "types": ["node", "vitest/config"]
   },
-  // 当前只将 Vite 配置作为检查入口，其导入的模块也会参与检查。
+  /* 当前只将 Vite 配置作为检查入口，其导入的模块也会参与检查。 */
   "include": ["vite.config.ts"]
 }

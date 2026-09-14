@@ -1,27 +1,27 @@
-// 检查运行在浏览器中的应用代码，也为测试配置提供浏览器和 React 类型设置。
+/* 检查运行在浏览器中的应用代码，也为测试配置提供浏览器和 React 类型设置。 */
 {
-  // 继承项目共用的检查规则。
+  /* 继承项目共用的检查规则。 */
   "extends": "./tsconfig.base.json",
-  // 在共用规则上补充应用需要的编译选项。
+  /* 在共用规则上补充应用需要的编译选项。 */
   "compilerOptions": {
-    // 应用独立保存检查缓存，避免与测试和构建工具混用。
+    /* 应用独立保存检查缓存，避免与测试和构建工具混用。 */
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-    // 使用 React 自动 JSX 转换，写 JSX 时不必专门导入 React。
+    /* 使用 React 自动 JSX 转换，写 JSX 时不必专门导入 React。 */
     "jsx": "react-jsx",
-    // 提供标准 JavaScript、浏览器 DOM 和 DOM 集合遍历的类型。
+    /* 提供标准 JavaScript、浏览器 DOM 和 DOM 集合遍历的类型。 */
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    // 按 JavaScript 标准的字段定义方式处理类字段，而不是按普通赋值处理。
+    /* 按 JavaScript 标准的字段定义方式处理类字段，而不是按普通赋值处理。 */
     "useDefineForClassFields": true,
-    // 让类型检查识别 @/ 路径；必须与 Vite 的别名配置保持一致。
+    /* 让类型检查识别 @/ 路径；必须与 Vite 的别名配置保持一致。 */
     "paths": {
       "@/*": ["./src/*"]
     },
-    // 加载 Vite 提供的类型，例如 import.meta.env 和静态资源导入。
+    /* 加载 Vite 提供的类型，例如 import.meta.env 和静态资源导入。 */
     "types": ["vite/client"]
   },
-  // 从应用源码和项目级声明文件中收集检查入口。
+  /* 从应用源码和项目级声明文件中收集检查入口。 */
   "include": ["src/**/*.ts", "src/**/*.tsx", "types/**/*.d.ts"],
-  // 不把测试文件作为应用检查入口，测试由独立配置负责。
+  /* 不把测试文件作为应用检查入口，测试由独立配置负责。 */
   "exclude": [
     "src/**/*.spec.ts",
     "src/**/*.spec.tsx",

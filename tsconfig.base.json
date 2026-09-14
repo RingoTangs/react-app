@@ -1,38 +1,38 @@
-// 应用、测试和构建工具共用的 TypeScript 检查规则。
+/* 应用、测试和构建工具共用的 TypeScript 检查规则。 */
 {
-  // 设置语言支持、模块解析和代码检查方式。
+  /* 设置语言支持、模块解析和代码检查方式。 */
   "compilerOptions": {
-    // 缓存上次检查结果，加快后续检查。
+    /* 缓存上次检查结果，加快后续检查。 */
     "incremental": true,
-    // 以 ES2020 作为语言目标；浏览器兼容范围还需由 Vite 构建配置决定。
+    /* 以 ES2020 作为语言目标；浏览器兼容范围还需由 Vite 构建配置决定。 */
     "target": "ES2020",
-    // 提供 ES2020 标准 API 的类型提示，不会给运行环境补齐这些 API。
+    /* 提供 ES2020 标准 API 的类型提示，不会给运行环境补齐这些 API。 */
     "lib": ["ES2020"],
-    // 将每个源码文件视为独立模块，避免顶层变量意外变成全局变量。
+    /* 将每个源码文件视为独立模块，避免顶层变量意外变成全局变量。 */
     "moduleDetection": "force",
-    // 使用现代 ES 模块语法，由 Vite 处理模块打包。
+    /* 使用现代 ES 模块语法，由 Vite 处理模块打包。 */
     "module": "ESNext",
 
-    // 按打包工具的方式查找模块，支持省略导入路径中的文件扩展名。
+    /* 按打包工具的方式查找模块，支持省略导入路径中的文件扩展名。 */
     "moduleResolution": "bundler",
 
-    // 开启严格类型检查，例如检查空值和无法推断类型的参数。
+    /* 开启严格类型检查，例如检查空值和无法推断类型的参数。 */
     "strict": true,
-    // 防止 switch 中有代码的分支意外继续执行下一个分支。
+    /* 防止 switch 中有代码的分支意外继续执行下一个分支。 */
     "noFallthroughCasesInSwitch": true,
-    // 提示未使用的局部变量和导入。
+    /* 提示未使用的局部变量和导入。 */
     "noUnusedLocals": true,
-    // 提示未使用的函数参数；以 _ 开头的参数可以保留。
+    /* 提示未使用的函数参数；以 _ 开头的参数可以保留。 */
     "noUnusedParameters": true,
-    // 只检查类型，不输出 JavaScript 或声明文件；实际打包交给 Vite。
+    /* 只检查类型，不输出 JavaScript 或声明文件；实际打包交给 Vite。 */
     "noEmit": true,
-    // 用 import type / export type 明确标记纯类型，普通导入导出保留为运行时代码。
+    /* 用 import type / export type 明确标记纯类型，普通导入导出保留为运行时代码。 */
     "verbatimModuleSyntax": true,
-    // 禁止需要额外转换的 TypeScript 语法，例如 enum 和构造函数参数属性。
+    /* 禁止需要额外转换的 TypeScript 语法，例如 enum 和构造函数参数属性。 */
     "erasableSyntaxOnly": true,
-    // 跳过声明文件内部的类型检查以提速，业务源码仍正常检查。
+    /* 跳过声明文件内部的类型检查以提速，业务源码仍正常检查。 */
     "skipLibCheck": true,
-    // 检查仅为执行副作用而导入的模块是否能找到，例如 import './setup'。
+    /* 检查仅为执行副作用而导入的模块是否能找到，例如 import './setup'。 */
     "noUncheckedSideEffectImports": true
   }
 }

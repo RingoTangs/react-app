@@ -1,4 +1,4 @@
-FROM node:22-alpine AS deps
+FROM node:22.23.2-alpine AS deps
 
 WORKDIR /app
 
@@ -8,7 +8,7 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 
 RUN pnpm install --frozen-lockfile
 
-FROM node:22-alpine AS build
+FROM node:22.23.2-alpine AS build
 
 WORKDIR /app
 

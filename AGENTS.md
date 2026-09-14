@@ -6,7 +6,7 @@ Application code lives in `src/`. Application environment config and infrastruct
 
 ## Build, Test, and Development Commands
 
-Use `pnpm@10.24.0` with Node `^22.22.2 || ^24.15.0 || >=26.0.0`. `.nvmrc` selects Node 22.22.2. `.npmrc` enables `engine-strict=true`, so installs should fail on unsupported Node versions.
+Use `pnpm@10.24.0` with Node `22.23.2`. `.nvmrc` selects Node 22.23.2. `.npmrc` enables `engine-strict=true`, so installs should fail on unsupported Node versions.
 
 - `pnpm dev` starts Vite on `http://localhost:3000`.
 - `pnpm build` runs TypeScript project builds, then creates a production bundle in `dist/`.

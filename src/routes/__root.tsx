@@ -1,7 +1,19 @@
 import type { QueryClient } from '@tanstack/react-query'
 import { createRootRouteWithContext, useRouter } from '@tanstack/react-router'
 import { reportError } from '@/reportError'
-import { PageErrorFallback } from '@/shared/ui'
+import { NotFound, PageErrorFallback } from '@/shared/ui'
+
+const RootNotFoundComponent: React.FC = () => {
+  const router = useRouter()
+
+  return (
+    <NotFound
+      onBackHome={() => {
+        router.navigate({ to: '/' }).catch(reportError)
+      }}
+    />
+  )
+}
 
 const RootErrorComponent: React.FC = () => {
   const router = useRouter()
@@ -22,6 +34,7 @@ export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
 }>()({
   errorComponent: RootErrorComponent,
+  notFoundComponent: RootNotFoundComponent,
   onCatch: (error) => {
     reportError(error)
   },

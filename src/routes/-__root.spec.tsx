@@ -69,6 +69,47 @@ afterEach(() => {
   vi.restoreAllMocks()
 })
 
+describe('根路由 404 页面', () => {
+  it('未知路径展示 404，点击按钮后返回首页', async () => {
+    const user = userEvent.setup()
+    const { history, router } = renderWithRouter(['/missing-page'])
+
+    expect(
+      await screen.findByRole('heading', { name: 'Page Not Found' }),
+    ).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Back to Home' }))
+
+    expect(
+      await screen.findByText('Start from a stable baseline, not a demo.'),
+    ).toBeInTheDocument()
+    expect(router.state.location.pathname).toBe('/')
+    expect(history.location.pathname).toBe('/')
+    expect(screen.queryByText('Page Not Found')).not.toBeInTheDocument()
+  })
+
+  it('返回首页失败时上报错误并保留 404 页面', async () => {
+    const user = userEvent.setup()
+    const { router } = renderWithRouter(['/missing-page'])
+    await screen.findByRole('heading', { name: 'Page Not Found' })
+
+    const error = new Error('Navigation failed')
+    const navigate = vi.spyOn(router, 'navigate').mockRejectedValueOnce(error)
+    const reportError = vi
+      .spyOn(errorReporting, 'reportError')
+      .mockImplementation(() => {})
+
+    await user.click(screen.getByRole('button', { name: 'Back to Home' }))
+
+    expect(navigate).toHaveBeenCalledWith({ to: '/' })
+    await waitFor(() => expect(reportError).toHaveBeenCalledWith(error))
+    expect(reportError).toHaveBeenCalledTimes(1)
+    expect(router.state.location.pathname).toBe('/missing-page')
+    expect(
+      screen.getByRole('heading', { name: 'Page Not Found' }),
+    ).toBeInTheDocument()
+  })
+})
+
 describe('root route error boundary', () => {
   it('resets the error fallback when browser history goes back to a healthy route', async () => {
     vi.spyOn(console, 'error').mockImplementation(() => {})

@@ -1,7 +1,7 @@
-import type { router } from '@/app/router'
+import type { AppRouter } from '@/App'
 
 declare module '@tanstack/react-router' {
   interface Register {
-    router: typeof router
+    router: AppRouter
   }
 }

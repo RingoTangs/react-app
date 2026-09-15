@@ -7,9 +7,9 @@ import {
 import { act, cleanup, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import * as errorReporting from '@/app/reportError'
 import { postsQueryOptions } from '@/features/example-posts'
 import { getPosts } from '@/features/example-posts/api/getPosts'
+import * as errorReporting from '@/reportError'
 import { routeTree } from '@/routeTree.gen'
 
 vi.mock('@/features/example-posts/api/getPosts', () => ({

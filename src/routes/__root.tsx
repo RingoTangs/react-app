@@ -1,6 +1,6 @@
 import type { QueryClient } from '@tanstack/react-query'
 import { createRootRouteWithContext, useRouter } from '@tanstack/react-router'
-import { reportError } from '@/app/reportError'
+import { reportError } from '@/reportError'
 import { PageErrorFallback } from '@/shared/ui'
 
 const RootErrorComponent: React.FC = () => {

@@ -23,7 +23,7 @@
 
 ## 为什么选择这个模板
 
-- 明确划分 `app`、`routes`、`features`、`shared` 的架构边界。
+- 明确划分 `App.tsx`、`routes`、`features`、`shared` 的架构边界。
 - 内置面向生产的路由、服务端状态、错误兜底、格式化和测试默认规则。
 - 集中维护项目文档，说明目录约定和依赖方向。
 - 保持克制的运行时假设：显式导入、按 feature 管理集成能力、不使用泛化 `components/` 堆放目录。
@@ -87,16 +87,11 @@ types/
 
 src/
 ├── main.tsx                    # React DOM 启动入口
-├── App.tsx                     # 根 providers 与 router 装配
+├── App.tsx                     # QueryClient、Router、providers 和开发工具装配
+├── reportError.ts              # 错误上报集成点
 ├── style.css                   # 全局样式和 Tailwind CSS 入口
 ├── setupTests.ts               # Vitest 与 Testing Library 测试初始化
 ├── routeTree.gen.ts            # TanStack Router 生成的路由树；不要手动编辑
-│
-├── app/                        # 应用级基础设施和装配
-│   ├── env.ts                  # 应用环境配置
-│   ├── queryClient.ts          # 应用级共享 QueryClient 配置
-│   ├── reportError.ts          # 错误上报集成点
-│   └── router.ts               # Router 实例和默认配置
 │
 ├── routes/                     # TanStack 文件路由
 │   ├── -__root.spec.tsx        # 根路由行为测试
@@ -132,10 +127,10 @@ src/
 
 ### 目录边界
 
-- `app` 负责应用环境配置和跨应用基础设施：providers、router setup、devtools 和监控。
+- `App.tsx` 负责 QueryClient、Router、providers 和开发工具装配；`reportError.ts` 独立提供错误上报接入点。
 - `routes` 负责 URL 到页面的映射，可包含简单静态页面和 feature 组合；业务逻辑、数据访问和复杂页面放在 `features`。
 - `features` 负责业务或 demo 能力。新增真实产品行为时，优先按业务域放到这里。
-- `shared` 负责可复用 UI 和纯工具。它不应依赖 `app`、`routes` 或 `features`。
+- `shared` 负责可复用 UI 和纯工具。它不应依赖 `App.tsx`、`routes` 或 `features`。
 - `public` 负责不经过 Vite import、需要固定公开 URL 的静态文件。
 - `types` 负责 repo 级 ambient declarations。不要在 `src` 下散落全局 `.d.ts` 文件。
 - `routeTree.gen.ts` 由 TanStack Router 生成，不要手动编辑。
@@ -150,7 +145,7 @@ Provider 在 `App.tsx` 中组合，而不是作为 feature 面向的公共 API�
 
 ```mermaid
 flowchart TD
-  App["app<br/>基础设施与装配"]
+  App["App.tsx<br/>基础设施与装配"]
   Routes["routes<br/>URL 映射与加载编排"]
   Features["features<br/>业务能力"]
   Shared["shared<br/>产品无关基础模块"]
@@ -169,10 +164,10 @@ flowchart TD
   Features -. 禁止 .-> App
 ```
 
-- `shared` 是最低层，必须独立于 `app`、`routes` 和 `features`。
-- `app` 负责基础设施装配，可以组合 routes、shared 模块和 provider 支撑的公共能力。
+- `shared` 是最低层，必须独立于 `App.tsx`、`routes` 和 `features`。
+- `App.tsx` 负责基础设施装配，可以组合 routes、shared 模块和 provider 支撑的公共能力。
 - `routes` 负责编排 URL 行为和加载流程、组合 feature，也可实现简单静态页面。
-- `features` 可以依赖 `shared` 和其他 feature 的公共 API，但不能依赖 app 装配模块或应用环境配置。
+- `features` 可以依赖 `shared` 和其他 feature 的公共 API，但不能依赖 应用入口或应用环境配置。
 - Provider 支撑的公共能力应从 `shared` 或公共 feature API 暴露，再由 `App.tsx` 装配。
 
 ### Feature 模块约定
@@ -200,7 +195,7 @@ src/features/<feature-name>/
 
 ### 导出与公共 Feature
 
-Barrel export 只用于稳定公共边界。模板保留 `src/shared/ui/index.ts` 和 `src/shared/lib/index.ts`，因为这些目录对外提供产品无关的可复用 API。不要为了缩短导入路径而新增 `src/app/index.ts`、`src/features/index.ts`、路由 barrel 或 feature 子目录 barrel。
+Barrel export 只用于稳定公共边界。模板保留 `src/shared/ui/index.ts` 和 `src/shared/lib/index.ts`，因为这些目录对外提供产品无关的可复用 API。不要为了缩短导入路径而新增 `src/features/index.ts`、路由 barrel 或 feature 子目录 barrel。
 
 公共业务能力仍然放在 `src/features/<domain>`，不要放进 `shared`。典型例子包括 `auth`、`current-user`、`permissions` 和 `notifications`。只有当某个 feature 明确需要向多个模块暴露稳定公共 API 时，才添加 `src/features/<feature>/index.ts`；它只应导出公共组件、hooks、类型和共享 query options，不导出私有 endpoint、测试或实现细节。
 
@@ -255,13 +250,13 @@ export const Route = createFileRoute('/users')({
 
 如果 404、通用错误态等 fallback 页面不归属某个具体 feature，并且可跨业务复用，应放在 `shared/ui`。
 
-如果 route loader 要预取 React Query 数据，app router context 必须暴露共享的 `queryClient`。app 层负责这类基础设施装配；route 文件仍然只使用 feature 的 `queryOptions`，不拥有 API 细节。
+如果 route loader 要预取 React Query 数据，Router context 必须暴露共享的 `queryClient`。`App.tsx` 负责这类基础设施装配；route 文件仍然只使用 feature 的 `queryOptions`，不拥有 API 细节。
 
 ### 错误兜底
 
 路由级 render error、loader error 和 route match error 应使用 TanStack Router `errorComponent` 处理。根路由提供默认 fallback UI，并通过 `reportError` 统一上报捕获到的错误。
 
-`reportError(error)` 是监控接入点，尚未配置实际监控服务：当前仅在开发环境输出日志，生产环境不执行上报。生产监控应在 `src/app/reportError.ts` 中接入。
+`reportError(error)` 是监控接入点，尚未配置实际监控服务：当前仅在开发环境输出日志，生产环境不执行上报。生产监控应在 `src/reportError.ts` 中接入。
 
 Router 设置 `defaultPreloadStaleTime: 0`，将预加载的数据新鲜度判断交给 React Query。Posts 示例支持首次失败后重试；后台刷新失败时保留缓存结果（包括空列表），并提供错误提示和重试入口。
 
@@ -281,13 +276,13 @@ Router 设置 `defaultPreloadStaleTime: 0`，将预加载的数据新鲜度判�
 ## 开发规则
 
 - React、router 和应用工具都使用显式导入。
-- 不要把业务逻辑放进 `app/`；随着项目增长，产品行为应放到 feature 模块中。
+- 不要把业务逻辑放进 `App.tsx`；随着项目增长，产品行为应放到 feature 模块中。
 - 可复用 UI 放在 `shared/ui`，纯工具函数放在 `shared/lib`。
-- 将 Vite 环境变量访问封装在 `app/env.ts` 中；环境派生值应传入 features 和 shared 工具，不要在其中导入 app 配置。
+- 应用装配和错误上报直接使用 `import.meta.env.DEV`，无需单独的环境封装；环境派生的业务配置通过参数或组件接口传入 features 和 shared 工具。
 - Feature 会消费的 provider 能力应从 `shared/<capability>` 或公共 feature API 暴露，再由 `App.tsx` 装配。
 - Feature 专属请求放在所属 feature 下；只有真实集成需求能支撑时，才引入共享传输层。
 - 路由级错误兜底使用 TanStack Router `errorComponent`。`react-error-boundary` 只用于明确的 feature 局部组件兜底。
-- Barrel export 只用于 `shared/ui`、`shared/lib` 这类稳定公共边界；默认不要新增 feature 级或 app 级 barrel。
+- Barrel export 只用于 `shared/ui`、`shared/lib` 这类稳定公共边界；默认不要新增 feature 级或应用入口 barrel。
 - 不要重新引入顶层泛目录 `components/` 或 `utils/`；根据归属放到 `shared` 或 `features`。
 - 不要手动编辑生成文件 `src/routeTree.gen.ts`。
 - 提交 PR 前运行 `pnpm check`。

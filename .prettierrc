@@ -10,7 +10,7 @@
   "trailingComma": "all",
   "arrowParens": "always",
   "plugins": ["@prettier/plugin-xml", "prettier-plugin-tailwindcss"],
-  "tailwindFunctions": ["tv"],
+  "tailwindFunctions": ["tv", "cn"],
   "overrides": [
     {
       "files": ["*.svg", "*.xml"],

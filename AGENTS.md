@@ -25,7 +25,7 @@ Write explanatory comments in hand-written `src` code in Simplified Chinese. Pre
 
 ## Testing Guidelines
 
-Vitest runs in the `jsdom` environment with shared setup from `src/setupTests.ts`. Test-only types are managed in `tsconfig.test.json`; production app code should not rely on Vitest globals. Write component tests with Testing Library and keep them close to the source file, for example `src/features/billing/ui/BillingPage.spec.tsx`. Cover new UI states, user interactions, and error boundaries when behavior changes. Run `pnpm test:run` before opening a PR.
+Vitest runs in the `jsdom` environment with shared setup from `src/setupTests.ts`. Application and test code are checked together by `tsconfig.app.json`; the setup file imports jest-dom assertion types. Import Vitest APIs explicitly in tests; production app code should not rely on test APIs. Write component tests with Testing Library and keep them close to the source file, for example `src/features/billing/ui/BillingPage.spec.tsx`. Cover new UI states, user interactions, and error boundaries when behavior changes. Run `pnpm test:run` before opening a PR.
 
 ## Commit & Pull Request Guidelines
 

@@ -109,7 +109,6 @@ src/
 │   │   ├── hooks/
 │   │   └── ui/
 │   └── example-posts/          # demo server-state feature
-│       ├── index.ts            # 公共预览组件
 │       ├── api/
 │       ├── hooks/
 │       ├── model/
@@ -206,7 +205,7 @@ Barrel export 只用于稳定公共边界。模板保留 `src/shared/ui/index.ts
 
 公共业务能力仍然放在 `src/features/<domain>`，不要放进 `shared`。典型例子包括 `auth`、`current-user`、`permissions` 和 `notifications`。只有当某个 feature 明确需要向多个模块暴露稳定公共 API 时，才添加 `src/features/<feature>/index.ts`；它只应导出公共组件、hooks、类型和共享 query options，不导出私有 endpoint、测试或实现细节。
 
-`example-posts` 的公共入口仅导出 `PostsPreview`，首页从 `@/features/example-posts` 导入。请求函数、query keys、query options 和 hooks 保留为模块内部实现。路由测试可直接模拟内部请求函数，不为测试扩大公共 API。
+首页直接从各 feature 的 UI 文件导入 Counter 和 PostsPreview，不为单个组件增加转导出入口。请求函数、query keys、query options 和 hooks 保留为模块内部实现。路由测试可直接模拟内部请求函数，不为测试扩大公共 API。
 
 ### 数据请求
 
@@ -239,7 +238,7 @@ export const Route = createFileRoute('/users')({
 })
 ```
 
-模板首页作为局部组件放在 `src/routes/index.tsx`，Posts 预览通过 feature 公共入口导入。出现独立业务逻辑或复杂页面后，再提取为 feature。
+模板首页作为局部组件放在 `src/routes/index.tsx`，直接导入 Counter 和 PostsPreview 的 UI 文件进行组合。出现独立业务逻辑或复杂页面后，再提取为 feature。
 
 如果 404、通用错误态等 fallback 页面不归属某个具体 feature，并且可跨业务复用，应放在 `shared/ui`。
 

@@ -1,9 +1,17 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { useCounterStore } from '../model/useCounterStore'
 import { Counter } from './Counter'
 
-afterEach(cleanup)
+beforeEach(() => {
+  useCounterStore.setState(useCounterStore.getInitialState(), true)
+})
+
+afterEach(() => {
+  cleanup()
+  useCounterStore.setState(useCounterStore.getInitialState(), true)
+})
 
 describe('counter 组件', () => {
   it('默认从 0 开始', () => {
@@ -11,30 +19,52 @@ describe('counter 组件', () => {
     expect(screen.getByTestId('count')).toHaveTextContent('Current count: 0')
   })
 
-  it('可以传入初始值', () => {
-    render(<Counter initial={100} />)
-    expect(screen.getByTestId('count')).toHaveTextContent('Current count: 100')
-  })
-
   it('点击 + 按钮计数加 1', () => {
-    render(<Counter initial={5} />)
+    render(<Counter />)
     const incrementBtn = screen.getByText('+')
     fireEvent.click(incrementBtn)
-    expect(screen.getByTestId('count')).toHaveTextContent('Current count: 6')
+    expect(screen.getByTestId('count')).toHaveTextContent('Current count: 1')
   })
 
   it('点击 - 按钮计数减 1', () => {
-    render(<Counter initial={10} />)
+    render(<Counter />)
     fireEvent.click(screen.getByText('-'))
-    expect(screen.getByTestId('count')).toHaveTextContent('Current count: 9')
+    expect(screen.getByTestId('count')).toHaveTextContent('Current count: -1')
   })
 
-  it('点击重置按钮恢复初始值', () => {
-    render(<Counter initial={99} />)
+  it('点击重置按钮恢复为 0', () => {
+    render(<Counter />)
     fireEvent.click(screen.getByText('+'))
     fireEvent.click(screen.getByText('+'))
     fireEvent.click(screen.getByText('Reset'))
-    expect(screen.getByTestId('count')).toHaveTextContent('Current count: 99')
+    expect(screen.getByTestId('count')).toHaveTextContent('Current count: 0')
+  })
+
+  it('多个组件共享计数及重置操作', () => {
+    render(
+      <>
+        <Counter />
+        <Counter />
+      </>,
+    )
+    fireEvent.click(
+      screen.getAllByRole('button', { name: 'Increase count' })[0],
+    )
+    screen.getAllByTestId('count').forEach((count) => {
+      expect(count).toHaveTextContent('Current count: 1')
+    })
+    fireEvent.click(screen.getAllByRole('button', { name: 'Reset count' })[1])
+    screen.getAllByTestId('count').forEach((count) => {
+      expect(count).toHaveTextContent('Current count: 0')
+    })
+  })
+
+  it('卸载后重新挂载保留计数', () => {
+    const { unmount } = render(<Counter />)
+    fireEvent.click(screen.getByRole('button', { name: 'Increase count' }))
+    unmount()
+    render(<Counter />)
+    expect(screen.getByTestId('count')).toHaveTextContent('Current count: 1')
   })
 
   it('标题正确渲染并可以使用 jest-dom 扩展断言', () => {

@@ -104,9 +104,9 @@ src/
 │   └── index.tsx               # / 路由
 │
 ├── features/                   # 按业务域组织的产品或 demo 能力
-│   ├── example-counter/        # demo 本地状态 feature
+│   ├── example-counter/        # demo Zustand 共享状态 feature
 │   │   ├── assets/
-│   │   ├── hooks/
+│   │   ├── model/
 │   │   └── ui/
 │   └── example-posts/          # demo server-state feature
 │       ├── api/
@@ -193,7 +193,9 @@ src/features/<feature-name>/
 
 不要默认创建空目录。只有当 feature 中确实有对应代码时才新增目录。Feature 专属请求应放在所属 feature 下；只有当项目真正需要通用传输层或 generated SDK 时，才引入共享请求基础设施。
 
-`example-counter` 展示最小模块：仅保留资源、状态 hook、UI 及其就近测试，初始值和加减运算直接放在 hook 内。`example-posts` 展示更完整的数据模块结构，按 feature 的实际复杂度增加目录即可。首页同时展示本地状态示例 Counter 和异步数据示例 PostsPreview。
+`example-counter` 展示 Zustand 共享客户端状态：store 放在 feature 的 `model` 内，计数展示和操作组件分别按需订阅状态或操作，不通过 props 传递。所有 Counter 共享计数，从 0 开始，重置回 0；组件重新挂载保留计数，刷新页面后恢复为 0，不做持久化。`example-posts` 展示 TanStack Query 异步数据管理，按 feature 的实际复杂度增加目录即可。
+
+组件局部状态仍使用 `useState`；需要跨组件共享的客户端状态使用 Zustand，并放在所属 feature 内；服务端数据及缓存使用 TanStack Query，不重复存入 Zustand。无需为此创建顶层 `store` 目录。
 
 ### 资产放置规则
 

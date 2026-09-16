@@ -9,9 +9,11 @@
 **/.output
 **/.data
 **/coverage
+**/.tanstack/
 **/pnpm-lock.yaml
 **/*.log
 **/.env
 **/.env.*
+!**/.env.example
 **/.gitignore
 routeTree.gen.ts

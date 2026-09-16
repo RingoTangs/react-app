@@ -75,7 +75,26 @@ docker run --rm -p 8080:80 react-app:local
 
 Nginx 对 `/assets/` 下带内容哈希的构建文件设置一年 `immutable` 缓存。该路径保留给 Vite 构建产物，不要在 `public/assets/` 放置固定文件名资源。HTML 和固定路径公共文件使用 `Cache-Control: no-cache`，复用前需要重新验证。不存在的静态文件路径（包括带扩展名的路径）返回 404，不回退到 SPA 页面；页面路由不要使用类似文件名的路径。Docker 安装依赖时采用与本地相同的工作区设置和 Node 版本检查。
 
-根目录 `nginx.conf` 已包含 SPA fallback，TanStack Router 路由可以直接刷新。`VITE_*` 环境变量是构建期注入；如果项目需要运行时切换环境，应额外设计 `/config.js` 或 `/env.json` 这类运行时配置机制。
+根目录 `nginx.conf` 已包含 SPA fallback，TanStack Router 路由可以直接刷新。
+
+### Docker 环境变量
+
+`.dockerignore` 排除了所有 `.env*` 文件，宿主机的 `.env.production` 不会自动进入构建上下文。Git 允许提交不含敏感信息的 `.env.example`，但它同样不会进入 Docker 构建上下文。当前模板没有业务环境变量，不预设构建参数或创建空示例文件。
+
+未来需要 `VITE_*` 变量时，在 Dockerfile 的 `build` 阶段、`RUN pnpm build` 之前声明对应的 `ARG`。以下仅为接入示例，当前 Dockerfile 尚未添加此参数：
+
+```dockerfile
+ARG VITE_API_BASE_URL
+RUN pnpm build
+```
+
+将原来的 `RUN pnpm build` 替换为上述片段后，可在构建时传入：
+
+```bash
+docker build --build-arg VITE_API_BASE_URL=https://api.example.com -t react-app:local .
+```
+
+`VITE_*` 在构建时写入前端产物，不能存放密钥；修改值后需要重新构建镜像，`docker run -e` 无法改变已构建的前端变量。若需要运行时切换环境，再按实际需求设计 `/config.js` 或 `/env.json` 等运行时配置机制。
 
 ## 项目结构
 
@@ -298,3 +317,7 @@ Router 设置 `defaultPreloadStaleTime: 0`，将预加载的数据新鲜度判�
 - 不要重新引入顶层泛目录 `components/` 或 `utils/`；根据归属放到 `shared` 或 `features`。
 - 不要手动编辑生成文件 `src/routeTree.gen.ts`。
 - 提交 PR 前运行 `pnpm check`。
+
+## 许可证
+
+本项目采用 [MIT 许可证](./LICENSE)，Copyright (c) 2026 RingoTangs。

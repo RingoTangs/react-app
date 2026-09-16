@@ -11,6 +11,7 @@ build
 .output
 .data
 coverage
+.tanstack/
 
 *.log
 .env

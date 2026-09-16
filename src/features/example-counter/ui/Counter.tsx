@@ -1,6 +1,6 @@
 import { Button } from '@/shared/ui'
 import counterMarkUrl from '../assets/counter-mark.svg'
-import { useCounterStore } from '../model/useCounterStore'
+import { useCounterStore } from '../model/counterStore'
 
 const buttonClassName =
   'rounded-lg bg-amber-400 px-4 py-2 font-semibold text-stone-950 shadow-none hover:bg-amber-300 hover:shadow-none focus:ring-0 focus:ring-offset-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-300'

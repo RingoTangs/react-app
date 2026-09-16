@@ -1,2 +1,2 @@
-export * from './dayjs'
+export * from './date'
 export * from './sleep'

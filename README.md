@@ -123,7 +123,7 @@ src/
     │   ├── PageErrorFallback.tsx
     │   └── index.ts
     └── lib/                    # 纯工具函数和轻框架工具
-        ├── dayjs.ts
+        ├── date.ts
         ├── sleep.ts
         └── index.ts
 ```
@@ -209,6 +209,23 @@ Barrel export 只用于稳定公共边界。模板保留 `src/shared/ui/index.ts
 公共业务能力仍然放在 `src/features/<domain>`，不要放进 `shared`。典型例子包括 `auth`、`current-user`、`permissions` 和 `notifications`。只有当某个 feature 明确需要向多个模块暴露稳定公共 API 时，才添加 `src/features/<feature>/index.ts`；它只应导出公共组件、hooks、类型和共享 query options，不导出私有 endpoint、测试或实现细节。
 
 首页直接从各 feature 的 UI 文件导入 Counter 和 PostsPreview，不为单个组件增加转导出入口。请求函数、query keys、query options 和 hooks 保留为模块内部实现。路由测试可直接模拟内部请求函数，不为测试扩大公共 API。
+
+### 日期工具
+
+`shared/lib/date.ts` 提供常用日期格式化，并导出已配置 UTC、时区插件的 `dayjs` 和格式常量 `dayPatterns`。
+
+```ts
+import { dayjs, formatDate, formatDateTime, formatTime } from '@/shared/lib'
+
+formatDate('2026-09-16') // '2026-09-16'
+formatDateTime(new Date(2026, 8, 16, 14, 30, 5)) // '2026-09-16 14:30:05'
+formatTime(dayjs.utc('2026-09-16T14:30:05Z')) // '14:30:05'
+formatDate(null) // ''
+```
+
+参数必传，但允许值为 `undefined` 或 `null`；空值、空白字符串和解析无效的日期返回空字符串，不默认显示当前时间。数字按毫秒时间戳处理，`0` 也是有效值。普通输入使用本地时区，Day.js 对象保留自身 UTC 或时区设置，原对象不会被修改。
+
+这些函数沿用 Day.js 默认解析，不用于严格日期校验。自定义格式、时区转换等复杂需求直接使用 `dayjs`，不额外封装。
 
 ### 数据请求
 

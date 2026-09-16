@@ -1,4 +1,5 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it } from 'vitest'
 import { Counter } from './Counter'
 
@@ -38,8 +39,29 @@ describe('counter 组件', () => {
 
   it('标题正确渲染并可以使用 jest-dom 扩展断言', () => {
     render(<Counter />)
-    const title = screen.getByTestId('title')
+    const title = screen.getByRole('heading', { name: '计数器', level: 2 })
     expect(title).toBeInTheDocument()
     expect(title).toHaveTextContent('计数器')
+    expect(screen.getByRole('button', { name: '减一' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '加一' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '重置计数' })).toBeInTheDocument()
+  })
+
+  it('支持 Tab 切换焦点和键盘操作', async () => {
+    const user = userEvent.setup()
+    render(<Counter />)
+    await user.tab()
+    expect(screen.getByRole('button', { name: '减一' })).toHaveFocus()
+    await user.keyboard('{Enter}')
+    expect(screen.getByTestId('count')).toHaveTextContent('当前值：-1')
+    await user.tab()
+    expect(screen.getByRole('button', { name: '加一' })).toHaveFocus()
+    await user.keyboard(' ')
+    expect(screen.getByTestId('count')).toHaveTextContent('当前值：0')
+    await user.keyboard('{Enter}')
+    await user.tab()
+    expect(screen.getByRole('button', { name: '重置计数' })).toHaveFocus()
+    await user.keyboard('{Enter}')
+    expect(screen.getByTestId('count')).toHaveTextContent('当前值：0')
   })
 })

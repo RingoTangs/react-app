@@ -60,6 +60,27 @@ afterEach(() => {
   vi.restoreAllMocks()
 })
 
+describe('首页示例', () => {
+  it('同时展示计数器和文章预览，支持加减及重置', async () => {
+    const user = userEvent.setup()
+    renderWithRouter(['/'])
+    expect(
+      await screen.findByRole('heading', { name: '计数器', level: 2 }),
+    ).toBeInTheDocument()
+    expect(await screen.findByText('No posts found')).toBeInTheDocument()
+    expect(screen.getByTestId('count')).toHaveTextContent('当前值：0')
+    await user.click(screen.getByRole('button', { name: '加一' }))
+    expect(screen.getByTestId('count')).toHaveTextContent('当前值：1')
+    await user.click(screen.getByRole('button', { name: '减一' }))
+    expect(screen.getByTestId('count')).toHaveTextContent('当前值：0')
+    await user.click(screen.getByRole('button', { name: '减一' }))
+    expect(screen.getByTestId('count')).toHaveTextContent('当前值：-1')
+    await user.click(screen.getByRole('button', { name: '重置计数' }))
+    expect(screen.getByTestId('count')).toHaveTextContent('当前值：0')
+    expect(screen.getByText('No posts found')).toBeInTheDocument()
+  })
+})
+
 describe('根路由 404 页面', () => {
   it.each(['/missing-page', '/posts'])(
     '%s 展示 404，点击按钮后返回首页',

@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
+import { Counter } from '@/features/example-counter/ui/Counter'
 import { PostsPreview } from '@/features/example-posts'
 
 const highlights = [
@@ -70,6 +71,10 @@ const HomePage: React.FC = () => {
               </p>
             </div>
           ))}
+        </div>
+
+        <div className="mt-20">
+          <Counter />
         </div>
 
         <div className="mt-20">

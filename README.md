@@ -194,7 +194,7 @@ src/features/<feature-name>/
 
 不要默认创建空目录。只有当 feature 中确实有对应代码时才新增目录。Feature 专属请求应放在所属 feature 下；只有当项目真正需要通用传输层或 generated SDK 时，才引入共享请求基础设施。
 
-`example-counter` 展示最小模块：仅保留资源、状态 hook、UI 及其就近测试，初始值和加减运算直接放在 hook 内。`example-posts` 展示更完整的数据模块结构，按 feature 的实际复杂度增加目录即可。
+`example-counter` 展示最小模块：仅保留资源、状态 hook、UI 及其就近测试，初始值和加减运算直接放在 hook 内。`example-posts` 展示更完整的数据模块结构，按 feature 的实际复杂度增加目录即可。首页同时展示本地状态示例 Counter 和异步数据示例 PostsPreview。
 
 ### 资产放置规则
 

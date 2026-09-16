@@ -101,8 +101,7 @@ src/
 │   ├── -__root.spec.tsx        # 根路由行为测试
 │   ├── __root.tsx              # 根路由 context、布局和错误边界
 │   ├── error.tsx               # demo error 路由
-│   ├── index.tsx               # / 路由
-│   └── posts.tsx               # demo 数据路由，委托给 feature 页面
+│   └── index.tsx               # / 路由
 │
 ├── features/                   # 按业务域组织的产品或 demo 能力
 │   ├── example-counter/        # demo 本地状态 feature
@@ -110,7 +109,7 @@ src/
 │   │   ├── hooks/
 │   │   └── ui/
 │   └── example-posts/          # demo server-state feature
-│       ├── index.ts            # 公共组件和 query options
+│       ├── index.ts            # 公共预览组件
 │       ├── api/
 │       ├── hooks/
 │       ├── model/
@@ -143,7 +142,7 @@ Features 和 shared 代码不能导入应用环境配置；如需环境派生值
 
 Provider 在 `App.tsx` 中组合，而不是作为 feature 面向的公共 API。如果某个 provider 暴露 feature 会消费的能力，例如 theme、auth 或 i18n，应将可复用的 provider、hooks 和 types 放到 `shared/<capability>`，业务能力则放到 `features/<domain>`，再由 `App.tsx` 统一装配。
 
-模板现在会把应用级共享 `QueryClient` 注入 TanStack Router context。route loader 通过 `context.queryClient.query({ ...postsQueryOptions(), staleTime: 'static' })` 优先返回已有缓存，没有缓存时才请求。该覆盖仅作用于 loader；feature hook 保留正常的过期策略，可在后台刷新过期数据。Loader 请求失败继续交给路由错误边界处理。
+模板将应用级共享 QueryClient 注入 Router context，保留后续扩展 loader 的能力；当前文章示例仅在首页通过 PostsPreview 展示，不提供独立文章页面或 loader 预取示例。
 
 ### 依赖方向
 
@@ -207,9 +206,7 @@ Barrel export 只用于稳定公共边界。模板保留 `src/shared/ui/index.ts
 
 公共业务能力仍然放在 `src/features/<domain>`，不要放进 `shared`。典型例子包括 `auth`、`current-user`、`permissions` 和 `notifications`。只有当某个 feature 明确需要向多个模块暴露稳定公共 API 时，才添加 `src/features/<feature>/index.ts`；它只应导出公共组件、hooks、类型和共享 query options，不导出私有 endpoint、测试或实现细节。
 
-`example-posts` 的公共入口仅导出 `PostsPage`、`PostsPreview` 和 `postsQueryOptions`。其他 feature 和路由从 `@/features/example-posts` 导入，模块内部继续使用相对路径。路由集成测试可直接模拟内部请求函数，但通过公共 query options 获取查询 key，不为测试扩大公共 API。
-
-公共 `PostsPage` 导出采用懒加载，导入预览组件或 query options 不会加载页面实现。路由提供所需的 Suspense 边界；非路由调用方需要自行提供。
+`example-posts` 的公共入口仅导出 `PostsPreview`，首页从 `@/features/example-posts` 导入。请求函数、query keys、query options 和 hooks 保留为模块内部实现。路由测试可直接模拟内部请求函数，不为测试扩大公共 API。
 
 ### 数据请求
 
@@ -219,25 +216,13 @@ Barrel export 只用于稳定公共边界。模板保留 `src/shared/ui/index.ts
 src/features/example-posts/
 ├── api/getPosts.ts             # feature 自己维护的请求函数
 ├── hooks/usePostsQuery.ts      # React Query 绑定
-├── model/queryOptions.ts       # hooks 和 loaders 复用的 query options
+├── model/queryOptions.ts       # feature 内部查询配置
 ├── model/queryKeys.ts          # query key 工厂
 ├── model/types.ts              # 领域类型
-└── ui/PostsPage.tsx            # 复用 feature 查询状态的路由页面
+└── ui/PostsPreview.tsx         # 首页使用的查询状态预览组件
 ```
 
-当 route loader 需要数据时，应调用 feature 自己暴露的 query options，而不是直接调用 feature endpoint。这样 route 预取和组件里的 `useQuery` 会使用同一个 query key 和缓存项。
-
-```ts
-export const Route = createFileRoute('/posts')({
-  loader: ({ context }) => {
-    return context.queryClient.query({
-      ...postsQueryOptions(),
-      staleTime: 'static',
-    })
-  },
-  component: PostsPage,
-})
-```
+未来需要 loader 预取时，再通过 feature 公共接口暴露 query options，让 loader 和组件复用查询 key 与缓存。
 
 不要新增顶层 `src/api`。不要在 React 组件、hooks 或 route 文件中直接调用 `fetch`；如果有真实后端，再把网络访问放在 feature 的 `api` 文件中。当真实后端集成需要 baseURL、认证、重试、OpenAPI、ky、Axios 或 RPC client 时，再基于项目需求设计传输层。
 

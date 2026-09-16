@@ -32,7 +32,7 @@ export const PostsPreview: React.FC = () => {
 
   if (postsQuery.isPending && !postsQuery.isFetched) {
     return (
-      <section className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm">
+      <section className="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm sm:p-8">
         <p className="text-sm font-medium tracking-[0.16em] text-amber-300 uppercase">
           Data Fetching
         </p>
@@ -48,7 +48,7 @@ export const PostsPreview: React.FC = () => {
 
   if (postsQuery.data === undefined) {
     return (
-      <section className="rounded-3xl border border-red-400/30 bg-red-950/30 p-8 backdrop-blur-sm">
+      <section className="rounded-3xl border border-red-400/30 bg-red-950/30 p-6 backdrop-blur-sm sm:p-8">
         <p className="text-sm font-medium tracking-[0.16em] text-red-200 uppercase">
           Data Fetching
         </p>
@@ -67,7 +67,7 @@ export const PostsPreview: React.FC = () => {
 
   if (posts.length === 0) {
     return (
-      <section className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm">
+      <section className="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm sm:p-8">
         {refreshError}
         <p className="text-sm font-medium tracking-[0.16em] text-amber-300 uppercase">
           Data Fetching
@@ -83,7 +83,7 @@ export const PostsPreview: React.FC = () => {
   }
 
   return (
-    <section className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm">
+    <section className="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm sm:p-8">
       {refreshError}
       <div className="mb-6 max-w-2xl">
         <p className="text-sm font-medium tracking-[0.16em] text-amber-300 uppercase">

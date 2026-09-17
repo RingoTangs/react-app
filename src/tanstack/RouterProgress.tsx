@@ -1,6 +1,6 @@
 import type { LoadingBarRef } from 'react-top-loading-bar'
 import { useRouterState } from '@tanstack/react-router'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import LoadingBar from 'react-top-loading-bar'
 
 /*
@@ -17,25 +17,33 @@ const ActiveBar: React.FC<{
   const barRef = useRef<LoadingBarRef>(null)
   const startedRef = useRef(false)
   const completedRef = useRef(false)
+  const [initialPending] = useState(pending)
 
   useEffect(() => {
-    if (pending && !startedRef.current) {
-      /*
-       * 这里的 0ms 不是防闪烁延迟，而是把启动安排到当前 effect 执行之后。
-       * 避免第三方组件初始化，以及 StrictMode 重放 effect 时，将刚启动的进度覆盖为 0。
-       */
-      const timer = setTimeout(() => {
-        barRef.current?.start()
-        startedRef.current = true
-      }, 0)
-      // 状态变化、卸载或 StrictMode 重放时，取消尚未执行的启动任务。
-      return () => clearTimeout(timer)
-    } else if (!pending && startedRef.current && !completedRef.current) {
-      // 只完成真正启动过的进度条，避免空闲时闪过一条 100% 的进度。
-      barRef.current?.complete()
-      completedRef.current = true
+    // 同步启动，避免显示后还需等待另一个定时器才能开始。
+    if (initialPending && barRef.current) {
+      barRef.current.start()
+      startedRef.current = true
     }
-  }, [pending])
+    /*
+     * 仅随本轮实例挂载和卸载运行；StrictMode 重放时允许重新初始化。
+     * 不依赖 pending，避免加载结束时先清理掉“已经启动”的记录。
+     */
+    return () => {
+      startedRef.current = false
+    }
+  }, [initialPending])
+
+  useEffect(() => {
+    if (pending || completedRef.current) return
+    completedRef.current = true
+    if (startedRef.current && barRef.current) {
+      barRef.current.complete()
+    } else {
+      // 显示更新与加载结束同时发生时，直接清理未启动实例，不播放完成动画。
+      onFinished()
+    }
+  }, [pending, onFinished])
 
   return (
     <LoadingBar
@@ -53,6 +61,7 @@ const ProgressCycle: React.FC<{ pending: boolean }> = ({ pending }) => {
   // visible 表示显示延迟已到；finished 表示完成动画已结束。
   const [visible, setVisible] = useState(false)
   const [finished, setFinished] = useState(false)
+  const onFinished = useCallback(() => setFinished(true), [])
 
   useEffect(() => {
     if (!pending) return
@@ -64,7 +73,7 @@ const ProgressCycle: React.FC<{ pending: boolean }> = ({ pending }) => {
   if (!visible || finished) return null
 
   // 加载结束后仍保留实例，等完成动画播放完再卸载。
-  return <ActiveBar pending={pending} onFinished={() => setFinished(true)} />
+  return <ActiveBar pending={pending} onFinished={onFinished} />
 }
 
 export const RouterProgress: React.FC = () => {

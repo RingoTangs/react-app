@@ -55,7 +55,6 @@ describe('路由进度条', () => {
     routeState.status = 'pending'
     const { rerender } = render(<RouterProgress />)
     advance(150)
-    advance(0)
     expect(bar()?.style.width).toBe('10%')
     advance(1000)
     const width = bar()?.style.width
@@ -70,11 +69,38 @@ describe('路由进度条', () => {
     expect(container()).toBeNull()
   })
 
+  it('150ms 到期后立即结束会正常完成并卸载', () => {
+    routeState.status = 'pending'
+    const { rerender } = render(<RouterProgress />)
+    advance(150)
+    expect(bar()?.style.width).toBe('10%')
+    routeState.status = 'idle'
+    rerender(<RouterProgress />)
+    expect(bar()?.style.width).toBe('100%')
+    advance(1000)
+    advance(300)
+    expect(container()).toBeNull()
+    expect(vi.getTimerCount()).toBe(0)
+  })
+
+  it('显示延迟与 idle 更新同时提交时直接清理未启动实例', () => {
+    routeState.status = 'pending'
+    const { rerender } = render(<RouterProgress />)
+    act(() => {
+      vi.advanceTimersByTime(150)
+      routeState.status = 'idle'
+      rerender(<RouterProgress />)
+    })
+    expect(container()).toBeNull()
+    expect(vi.getTimerCount()).toBe(0)
+    advance(2000)
+    expect(container()).toBeNull()
+  })
+
   it('上一轮完成定时器不会隐藏、归零或卸载下一轮', () => {
     routeState.status = 'pending'
     const { rerender } = render(<RouterProgress />)
     advance(150)
-    advance(0)
     const first = container()
     routeState.status = 'idle'
     rerender(<RouterProgress />)
@@ -83,7 +109,6 @@ describe('路由进度条', () => {
     rerender(<RouterProgress />)
     expect(container()).toBeNull()
     advance(150)
-    advance(0)
     const second = container()
     expect(second).not.toBe(first)
     expect(bar()?.style.opacity).toBe('1')
@@ -100,7 +125,6 @@ describe('路由进度条', () => {
     const { unmount } = render(<RouterProgress />)
     advance(ms)
     if (ms >= 150) {
-      advance(0)
       expect(bar()?.style.width).toBe('10%')
     }
     unmount()
@@ -108,7 +132,7 @@ describe('路由进度条', () => {
     expect(vi.getTimerCount()).toBe(0)
   })
 
-  it('在 StrictMode 下不重复启动或遗留定时器', () => {
+  it('在 StrictMode 下正确初始化且重渲染不重启或遗留定时器', () => {
     routeState.status = 'pending'
     const { rerender, unmount } = render(
       <StrictMode>
@@ -117,7 +141,6 @@ describe('路由进度条', () => {
     )
     expect(vi.getTimerCount()).toBe(1)
     advance(150)
-    advance(0)
     expect(bar()?.style.width).toBe('10%')
     expect(vi.getTimerCount()).toBe(1)
     advance(1000)

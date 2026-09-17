@@ -109,6 +109,7 @@ src/
 ├── main.tsx                    # React DOM 启动入口
 ├── App.tsx                     # providers 和开发工具装配
 ├── reportError.ts              # 错误上报集成点
+├── RouterProgress.tsx          # 路由切换进度条，按加载轮次隔离动画
 ├── site.ts                     # 供路由标题复用的站点名称
 ├── style.css                   # 全局样式和 Tailwind CSS 入口
 ├── setupTests.ts               # Vitest 与 Testing Library 测试初始化
@@ -300,6 +301,8 @@ Router 设置 `defaultPreloadStaleTime: 0`，将预加载的数据新鲜度判�
 `react-error-boundary` 只用于 feature 内部局部失败兜底，例如某个 widget 失败但页面其他区域仍可用。不要在 root route 中用通用 `react-error-boundary` 包裹 `<Outlet />`，因为它不拥有 TanStack Router 的 route match 生命周期。事件回调、定时器和未处理 Promise 中的错误不能依赖 ErrorBoundary，必须在调用点使用 `try/catch` 或 `.catch()` 处理。
 
 ## 模板默认规则
+
+路由进度条在切换持续 150ms 后显示，仅反映路由加载和页面过渡，不代表普通 React Query 请求或所有网络请求。每轮加载使用独立进度条实例，避免上一轮完成动画干扰下一轮。
 
 - Router 和 React Query devtools 只在开发环境启用。
 - 模板全局使用显式导入；例如 `tv()` 这类 helper 应在使用处显式导入。

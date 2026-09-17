@@ -5,7 +5,8 @@ import {
   useRouter,
 } from '@tanstack/react-router'
 import { reportError } from '@/reportError'
-import { NotFound, PageErrorFallback, RouterProgress } from '@/shared/ui'
+import { RouterProgress } from '@/RouterProgress'
+import { NotFound, PageErrorFallback } from '@/shared/ui'
 import { SITE_NAME } from '@/site'
 
 const RootNotFoundComponent: React.FC = () => {

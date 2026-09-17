@@ -37,6 +37,12 @@ const expectHomeHead = () =>
     'Explore Zustand shared state and TanStack Query data examples.',
   )
 
+const expectNotFoundHead = () =>
+  expectHead(
+    '404 - Page Not Found | React App Template',
+    'The page you are looking for does not exist.',
+  )
+
 const renderWithRouter = (initialEntries: Array<string>) => {
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -116,10 +122,7 @@ describe('根路由 404 页面', () => {
       expect(
         await screen.findByRole('heading', { name: 'Page Not Found' }),
       ).toBeInTheDocument()
-      await expectHead(
-        'React App Template',
-        'A React application template with typed routing, shared state, and async data examples.',
-      )
+      await expectNotFoundHead()
       await user.click(screen.getByRole('button', { name: 'Back to Home' }))
 
       expect(
@@ -132,10 +135,31 @@ describe('根路由 404 页面', () => {
     },
   )
 
+  it('从首页导航至不存在的路径后，浏览器后退恢复首页元信息', async () => {
+    const { history, router } = renderWithRouter(['/'])
+    await screen.findByRole('heading', { name: 'Counter', level: 2 })
+    await expectHomeHead()
+
+    await act(async () => {
+      // 用 history 模拟未知地址，避免将不存在的路径伪装成合法的类型化路由。
+      history.push('/missing-page')
+    })
+    await screen.findByRole('heading', { name: 'Page Not Found' })
+    await expectNotFoundHead()
+
+    await act(async () => {
+      history.back()
+    })
+    await screen.findByRole('heading', { name: 'Counter', level: 2 })
+    expect(router.state.location.pathname).toBe('/')
+    await expectHomeHead()
+  })
+
   it('返回首页失败时上报错误并保留 404 页面', async () => {
     const user = userEvent.setup()
     const { router } = renderWithRouter(['/missing-page'])
     await screen.findByRole('heading', { name: 'Page Not Found' })
+    await expectNotFoundHead()
 
     const error = new Error('Navigation failed')
     const navigate = vi.spyOn(router, 'navigate').mockRejectedValueOnce(error)
@@ -152,6 +176,7 @@ describe('根路由 404 页面', () => {
     expect(
       screen.getByRole('heading', { name: 'Page Not Found' }),
     ).toBeInTheDocument()
+    await expectNotFoundHead()
   })
 })
 

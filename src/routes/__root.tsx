@@ -37,16 +37,21 @@ const RootErrorComponent: React.FC = () => {
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
 }>()({
-  head: () => {
+  head: ({ match }) => {
+    // 当前 Router 用内部字段 _notFound 标记未匹配路径；升级时需运行 404 回归测试。
+    const isNotFound = match._notFound || match.status === 'notFound'
     return {
       meta: [
         {
-          title: 'React App Template',
+          title: isNotFound
+            ? '404 - Page Not Found | React App Template'
+            : 'React App Template',
         },
         {
           name: 'description',
-          content:
-            'A React application template with typed routing, shared state, and async data examples.',
+          content: isNotFound
+            ? 'The page you are looking for does not exist.'
+            : 'A React application template with typed routing, shared state, and async data examples.',
         },
       ],
     }

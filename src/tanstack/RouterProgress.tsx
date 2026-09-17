@@ -50,6 +50,9 @@ const ActiveBar: React.FC<{
       ref={barRef}
       height={2}
       color="#fbbf24"
+      loaderSpeed={300} // 进度条运行时移动速度
+      waitingTime={100} // 当进度条到达 100% 后，等多久再开始消失。
+      transitionTime={200} // 进度条淡出消失需要多久
       containerClassName="router-progress"
       onLoaderFinished={onFinished}
     />

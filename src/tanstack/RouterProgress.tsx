@@ -14,10 +14,10 @@ const PROGRESS_HEIGHT_PX = 2
 const PROGRESS_LOADER_SPEED_MS = 300
 
 // 到达 100% 后，等待多久开始淡出。
-const PROGRESS_WAITING_TIME_MS = 100
+const PROGRESS_WAITING_TIME_MS = 500
 
 // 淡出动画的时长。
-const PROGRESS_TRANSITION_TIME_MS = 200
+const PROGRESS_TRANSITION_TIME_MS = 1000
 
 /*
  * RouterProgress 划分加载轮次，ProgressCycle 延迟显示，ActiveBar 控制动画。

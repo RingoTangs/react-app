@@ -109,13 +109,13 @@ src/
 ├── main.tsx                    # React DOM 启动入口
 ├── App.tsx                     # providers 和开发工具装配
 ├── reportError.ts              # 错误上报集成点
-├── RouterProgress.tsx          # 路由切换进度条，按加载轮次隔离动画
 ├── site.ts                     # 供路由标题复用的站点名称
 ├── style.css                   # 全局样式和 Tailwind CSS 入口
 ├── setupTests.ts               # Vitest 与 Testing Library 测试初始化
 ├── routeTree.gen.ts            # TanStack Router 生成的路由树；不要手动编辑
 │
-├── tanstack/                   # TanStack 应用级实例和配置
+├── tanstack/                   # TanStack 应用级初始化与集成
+│   ├── RouterProgress.tsx      # 路由切换进度条，按加载轮次隔离动画
 │   ├── queryClient.ts          # Provider 与 Router 共用的 QueryClient
 │   └── router.ts               # Router 实例和默认配置
 │
@@ -152,7 +152,7 @@ src/
 
 ### 目录边界
 
-- `App.tsx` 负责 Provider 和开发工具组合；`tanstack` 创建 QueryClient、Router 单例并维护默认配置；`reportError.ts` 独立提供错误上报接入点。
+- `App.tsx` 负责 Provider 和开发工具组合；`tanstack` 管理 QueryClient、Router 的初始化与应用级集成组件；`reportError.ts` 独立提供错误上报接入点。
 - `routes` 负责 URL 到页面的映射，可包含简单静态页面和 feature 组合；业务逻辑、数据访问和复杂页面放在 `features`。
 - `features` 负责业务或 demo 能力。新增真实产品行为时，优先按业务域放到这里。
 - `shared` 负责可复用 UI 和纯工具。它不应依赖 `App.tsx`、`tanstack`、`routes` 或 `features`。
@@ -171,7 +171,8 @@ Provider 在 `App.tsx` 中组合，而不是作为 feature 面向的公共 API�
 ```mermaid
 flowchart TD
   App["App.tsx<br/>Provider 与开发工具组合"]
-  TanStack["tanstack<br/>QueryClient 与 Router 初始化"]
+  TanStack["tanstack 实例<br/>QueryClient 与 Router 初始化"]
+  RouterIntegration["tanstack 集成组件<br/>RouterProgress"]
   Routes["routes<br/>URL 映射与加载编排"]
   Features["features<br/>业务能力"]
   Shared["shared<br/>产品无关基础模块"]
@@ -182,6 +183,7 @@ flowchart TD
   TanStack --> Shared
   App --> ProviderCapability
   Routes --> Features
+  Routes --> RouterIntegration
   Features --> Shared
   ProviderCapability --> Shared
 
@@ -194,7 +196,8 @@ flowchart TD
 ```
 
 - `shared` 是最低层，必须独立于 `App.tsx`、`tanstack`、`routes` 和 `features`。
-- `App.tsx` 引用 `tanstack` 的实例来组合 Provider；路由和 QueryClient 配置集中在 `tanstack`，不添加 barrel 或业务查询代码。
+- `App.tsx` 引用 `tanstack` 的实例来组合 Provider；该目录承载应用级 TanStack 初始化与集成，不添加 barrel 或业务查询代码。
+- 路由可以直接导入 `tanstack` 中不依赖 Router 单例或路由模块的集成组件，但不得在运行时导入 Router 单例，避免循环依赖。
 - `routes` 负责编排 URL 行为和加载流程、组合 feature，也可实现简单静态页面。
 - `features` 可以依赖 `shared` 和其他 feature 的公共 API，但不能依赖应用入口、`tanstack` 的应用级实例或应用环境配置。
 - Provider 支撑的公共能力应从 `shared` 或公共 feature API 暴露，再由 `App.tsx` 装配。

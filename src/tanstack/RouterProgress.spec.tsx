@@ -64,8 +64,8 @@ describe('路由进度条', () => {
     routeState.status = 'idle'
     rerender(<RouterProgress />)
     expect(bar()?.style.width).toBe('100%')
+    advance(500)
     advance(1000)
-    advance(300)
     expect(container()).toBeNull()
   })
 
@@ -77,8 +77,8 @@ describe('路由进度条', () => {
     routeState.status = 'idle'
     rerender(<RouterProgress />)
     expect(bar()?.style.width).toBe('100%')
+    advance(500)
     advance(1000)
-    advance(300)
     expect(container()).toBeNull()
     expect(vi.getTimerCount()).toBe(0)
   })
@@ -112,8 +112,8 @@ describe('路由进度条', () => {
     const second = container()
     expect(second).not.toBe(first)
     expect(bar()?.style.opacity).toBe('1')
-    advance(1100)
-    advance(300)
+    advance(500)
+    advance(1000)
     expect(container()).toBe(second)
     expect(bar()?.style.opacity).toBe('1')
     expect(Number.parseFloat(bar()!.style.width)).toBeGreaterThan(0)

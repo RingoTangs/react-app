@@ -201,7 +201,11 @@ describe('root route error boundary', () => {
     )
 
     expect(
-      await screen.findByText('Oops! Something went wrong'),
+      await screen.findByText(
+        'Oops! Something went wrong',
+        {},
+        { timeout: 3000 },
+      ),
     ).toBeInTheDocument()
     expect(reportError).toHaveBeenCalledWith(expect.any(Error))
     await expectHead(

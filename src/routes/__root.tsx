@@ -1,5 +1,9 @@
 import type { QueryClient } from '@tanstack/react-query'
-import { createRootRouteWithContext, useRouter } from '@tanstack/react-router'
+import {
+  createRootRouteWithContext,
+  HeadContent,
+  useRouter,
+} from '@tanstack/react-router'
 import { reportError } from '@/reportError'
 import { NotFound, PageErrorFallback } from '@/shared/ui'
 
@@ -33,6 +37,26 @@ const RootErrorComponent: React.FC = () => {
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
 }>()({
+  head: () => {
+    return {
+      meta: [
+        {
+          title: 'React App Template',
+        },
+        {
+          name: 'description',
+          content:
+            'A React application template with typed routing, shared state, and async data examples.',
+        },
+      ],
+    }
+  },
+  shellComponent: ({ children }) => (
+    <>
+      <HeadContent />
+      {children}
+    </>
+  ),
   errorComponent: RootErrorComponent,
   notFoundComponent: RootNotFoundComponent,
   onCatch: (error) => {

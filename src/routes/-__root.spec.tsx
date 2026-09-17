@@ -19,6 +19,24 @@ vi.mock('@/features/example-posts/api/getPosts', () => ({
 const mockedGetPosts = vi.mocked(getPosts)
 const queryClients: QueryClient[] = []
 
+const expectHead = async (title: string, description: string) => {
+  await waitFor(() => {
+    expect(document.title).toBe(title)
+    expect(document.head.querySelectorAll('title')).toHaveLength(1)
+    const descriptions = document.head.querySelectorAll(
+      'meta[name="description"]',
+    )
+    expect(descriptions).toHaveLength(1)
+    expect(descriptions[0]).toHaveAttribute('content', description)
+  })
+}
+
+const expectHomeHead = () =>
+  expectHead(
+    'Home - React App Template',
+    'Explore Zustand shared state and TanStack Query data examples.',
+  )
+
 const renderWithRouter = (initialEntries: Array<string>) => {
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -61,6 +79,9 @@ afterEach(() => {
   useCounterStore.setState(useCounterStore.getInitialState(), true)
   queryClients.splice(0).forEach((client) => client.clear())
   vi.restoreAllMocks()
+  expect(
+    document.head.querySelectorAll('title, meta[name="description"]'),
+  ).toHaveLength(0)
 })
 
 describe('首页示例', () => {
@@ -71,6 +92,7 @@ describe('首页示例', () => {
       await screen.findByRole('heading', { name: 'Counter', level: 2 }),
     ).toBeInTheDocument()
     expect(await screen.findByText('No posts found')).toBeInTheDocument()
+    await expectHomeHead()
     expect(screen.getByTestId('count')).toHaveTextContent('Current count: 0')
     await user.click(screen.getByRole('button', { name: 'Increase count' }))
     expect(screen.getByTestId('count')).toHaveTextContent('Current count: 1')
@@ -94,6 +116,10 @@ describe('根路由 404 页面', () => {
       expect(
         await screen.findByRole('heading', { name: 'Page Not Found' }),
       ).toBeInTheDocument()
+      await expectHead(
+        'React App Template',
+        'A React application template with typed routing, shared state, and async data examples.',
+      )
       await user.click(screen.getByRole('button', { name: 'Back to Home' }))
 
       expect(
@@ -102,6 +128,7 @@ describe('根路由 404 页面', () => {
       expect(router.state.location.pathname).toBe('/')
       expect(history.location.pathname).toBe('/')
       expect(screen.queryByText('Page Not Found')).not.toBeInTheDocument()
+      await expectHomeHead()
     },
   )
 
@@ -148,6 +175,10 @@ describe('root route error boundary', () => {
       await screen.findByText('Oops! Something went wrong'),
     ).toBeInTheDocument()
     expect(reportError).toHaveBeenCalledWith(expect.any(Error))
+    await expectHead(
+      'Error Demo - React App Template',
+      'Demonstrates route error handling and recovery.',
+    )
 
     await act(async () => {
       history.back()
@@ -162,5 +193,6 @@ describe('root route error boundary', () => {
     expect(
       screen.queryByText('Oops! Something went wrong'),
     ).not.toBeInTheDocument()
+    await expectHomeHead()
   })
 })

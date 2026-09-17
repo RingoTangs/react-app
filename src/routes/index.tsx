@@ -90,5 +90,15 @@ const HomePage: React.FC = () => {
 }
 
 export const Route = createFileRoute('/')({
+  head: () => ({
+    meta: [
+      { title: 'Home - React App Template' },
+      {
+        name: 'description',
+        content:
+          'Explore Zustand shared state and TanStack Query data examples.',
+      },
+    ],
+  }),
   component: HomePage,
 })

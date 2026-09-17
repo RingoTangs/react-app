@@ -5,5 +5,14 @@ const ErrorDemoPage: React.FC = () => {
 }
 
 export const Route = createFileRoute('/error')({
+  head: () => ({
+    meta: [
+      { title: 'Error Demo - React App Template' },
+      {
+        name: 'description',
+        content: 'Demonstrates route error handling and recovery.',
+      },
+    ],
+  }),
   component: ErrorDemoPage,
 })

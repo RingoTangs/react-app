@@ -3,12 +3,30 @@ import { useRouterState } from '@tanstack/react-router'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import LoadingBar from 'react-top-loading-bar'
 
+// 导航超过这个时间才显示进度条，避免快速导航时闪烁。
+const PROGRESS_DELAY_MS = 150
+
+// 进度条外观。
+const PROGRESS_COLOR = '#fbbf24'
+const PROGRESS_HEIGHT_PX = 2
+
+// 进度条宽度变化的动画时长。
+const PROGRESS_LOADER_SPEED_MS = 300
+
+// 到达 100% 后，等待多久开始淡出。
+const PROGRESS_WAITING_TIME_MS = 100
+
+// 淡出动画的时长。
+const PROGRESS_TRANSITION_TIME_MS = 200
+
 /*
  * RouterProgress 划分加载轮次，ProgressCycle 延迟显示，ActiveBar 控制动画。
  * 每轮使用独立实例，防止第三方库上一轮的完成定时器干扰新导航。
  */
 
-// 百分比和动画交给第三方组件，不混用受控 progress 属性。
+/**
+ * 百分比和动画交给第三方组件，不混用受控 progress 属性。
+ */
 const ActiveBar: React.FC<{
   pending: boolean
   onFinished: () => void
@@ -48,18 +66,20 @@ const ActiveBar: React.FC<{
   return (
     <LoadingBar
       ref={barRef}
-      height={2}
-      color="#fbbf24"
-      loaderSpeed={300} // 进度条运行时移动速度
-      waitingTime={100} // 当进度条到达 100% 后，等多久再开始消失。
-      transitionTime={200} // 进度条淡出消失需要多久
+      height={PROGRESS_HEIGHT_PX}
+      color={PROGRESS_COLOR}
+      loaderSpeed={PROGRESS_LOADER_SPEED_MS}
+      waitingTime={PROGRESS_WAITING_TIME_MS}
+      transitionTime={PROGRESS_TRANSITION_TIME_MS}
       containerClassName="router-progress"
       onLoaderFinished={onFinished}
     />
   )
 }
 
-// 管理一轮显示：等待、播放完成动画、卸载。
+/**
+ * 管理一轮显示：等待、播放完成动画、卸载。
+ */
 const ProgressCycle: React.FC<{ pending: boolean }> = ({ pending }) => {
   // visible 表示显示延迟已到；finished 表示完成动画已结束。
   const [visible, setVisible] = useState(false)
@@ -68,8 +88,8 @@ const ProgressCycle: React.FC<{ pending: boolean }> = ({ pending }) => {
 
   useEffect(() => {
     if (!pending) return
-    // 等待 150ms 避免快速导航闪烁；提前结束或卸载时取消等待。
-    const timer = setTimeout(setVisible, 150, true)
+    // 延迟显示，避免快速导航闪烁；提前结束或卸载时取消等待。
+    const timer = setTimeout(setVisible, PROGRESS_DELAY_MS, true)
     return () => clearTimeout(timer)
   }, [pending])
 

@@ -33,4 +33,22 @@ export const router = createRouter({
    * 它和“恢复历史页面滚动位置”是两种不同的行为。
    */
   scrollRestoration: true,
+
+  /*
+   * 控制已有成功 loader 数据 stale 后的重新加载方式。
+   *
+   * - 'background'（默认）：
+   *   立即复用旧 loader 数据完成导航，并在后台重新执行 loader。
+   *   后台刷新不会让 Router 进入 foreground pending 状态。
+   *
+   * - 'blocking'：
+   *   stale 后先重新执行 loader，并等待最新结果完成后再完成导航；
+   *   因此可以触发 Router 的 pending 状态、pendingComponent 和导航进度条。
+   *
+   * 注意：
+   * staleReloadMode 只决定“stale 后如何 reload”，
+   * 不决定数据什么时候 stale；数据新鲜时间由 staleTime 控制。
+   * 'blocking' 也不等于关闭缓存。
+   */
+  defaultStaleReloadMode: 'background',
 })

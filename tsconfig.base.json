@@ -10,6 +10,12 @@
     "lib": ["ES2020"],
     /* 将每个源码文件视为独立模块，避免顶层变量意外变成全局变量。 */
     "moduleDetection": "force",
+    /*
+     * 类中的字段使用现代 JavaScript 标准行为。
+     * 例如：class User { name = '小明' } 会直接在实例上定义 name，
+     * 而不是按 this.name = '小明' 的方式赋值，避免意外触发父类 setter。
+     */
+    "useDefineForClassFields": true,
     /* 使用现代 ES 模块语法，由 Vite 处理模块打包。 */
     "module": "ESNext",
 

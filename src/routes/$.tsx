@@ -3,6 +3,17 @@ import { reportError } from '@/reportError'
 import { NotFound } from '@/shared/ui'
 import { SITE_NAME } from '@/site'
 
+const NotFoundComponent: React.FC = () => {
+  const router = useRouter()
+  return (
+    <NotFound
+      onBackHome={() => {
+        router.navigate({ to: '/' }).catch(reportError)
+      }}
+    />
+  )
+}
+
 export const Route = createFileRoute('/$')({
   head: () => {
     return {
@@ -17,16 +28,5 @@ export const Route = createFileRoute('/$')({
       ],
     }
   },
-  component: NotFoundPage,
+  component: NotFoundComponent,
 })
-
-function NotFoundPage() {
-  const router = useRouter()
-  return (
-    <NotFound
-      onBackHome={() => {
-        router.navigate({ to: '/' }).catch(reportError)
-      }}
-    />
-  )
-}

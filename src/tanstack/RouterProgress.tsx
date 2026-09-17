@@ -82,6 +82,9 @@ const ProgressCycle: React.FC<{ pending: boolean }> = ({ pending }) => {
 export const RouterProgress: React.FC = () => {
   // 仅关注路由加载和页面过渡，不跟随普通 React Query 请求。
   const pending = useRouterState({
+    // router.state.status 表示整个 Router 当前的前台导航状态
+    // 1. pending 表示“请求的目标路由还在加载，或者框架的过渡尚未稳定”
+    // 2. idle 则表示当前没有这种前台导航等待
     select: (state) => state.status === 'pending',
   })
   // 保存上次状态和轮次编号；id 不是进度百分比。

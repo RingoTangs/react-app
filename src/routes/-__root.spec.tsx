@@ -112,8 +112,8 @@ describe('首页示例', () => {
   })
 })
 
-describe('根路由 404 页面', () => {
-  it.each(['/missing-page', '/posts'])(
+describe('通配路由 404 页面', () => {
+  it.each(['/missing-page', '/posts', '/missing/nested/page'])(
     '%s 展示 404，点击按钮后返回首页',
     async (pathname) => {
       const user = userEvent.setup()
@@ -123,6 +123,10 @@ describe('根路由 404 页面', () => {
         await screen.findByRole('heading', { name: 'Page Not Found' }),
       ).toBeInTheDocument()
       await expectNotFoundHead()
+      expect(router.state.matches.map((match) => match.routeId)).toEqual([
+        '__root__',
+        '/$',
+      ])
       await user.click(screen.getByRole('button', { name: 'Back to Home' }))
 
       expect(

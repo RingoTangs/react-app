@@ -120,6 +120,7 @@ src/
 ├── routes/                     # TanStack 文件路由
 │   ├── -__root.spec.tsx        # 根路由行为测试
 │   ├── __root.tsx              # 根路由 context、布局和错误边界
+│   ├── $.tsx                   # 未知 URL 的 404 页面及元信息
 │   ├── error.tsx               # demo error 路由
 │   └── index.tsx               # / 路由
 │
@@ -280,6 +281,8 @@ export const Route = createFileRoute('/users')({
 模板首页作为局部组件放在 `src/routes/index.tsx`，直接导入 Counter 和 PostsPreview 的 UI 文件进行组合。出现独立业务逻辑或复杂页面后，再提取为 feature。
 
 如果 404、通用错误态等 fallback 页面不归属某个具体 feature，并且可跨业务复用，应放在 `shared/ui`。
+
+`routes/$.tsx` 承接未知 URL，复用共享 NotFound 组件，并声明专属 404 标题和描述。根路由仍保留 `notFoundComponent`，用于已匹配路由主动抛出 `notFound()` 的情况；它不额外覆盖路由元信息。通配路由只负责客户端 404 展示，不会自动让服务器返回 HTTP 404。
 
 如果 route loader 要预取 React Query 数据，Router context 必须暴露共享的 `queryClient`。`tanstack/router.ts` 注入 `tanstack/queryClient.ts` 的共享实例，`App.tsx` 的 Provider 也使用该实例；route 文件仍然只使用 feature 的 `queryOptions`，不拥有 API 细节。
 

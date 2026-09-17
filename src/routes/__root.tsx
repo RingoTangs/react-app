@@ -6,6 +6,7 @@ import {
 } from '@tanstack/react-router'
 import { reportError } from '@/reportError'
 import { NotFound, PageErrorFallback } from '@/shared/ui'
+import { SITE_NAME } from '@/site'
 
 const RootNotFoundComponent: React.FC = () => {
   const router = useRouter()
@@ -41,7 +42,7 @@ export const Route = createRootRouteWithContext<{
     return {
       meta: [
         {
-          title: 'React App Template',
+          title: SITE_NAME,
         },
         {
           name: 'description',

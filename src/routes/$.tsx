@@ -1,13 +1,14 @@
 import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { reportError } from '@/reportError'
 import { NotFound } from '@/shared/ui'
+import { SITE_NAME } from '@/site'
 
 export const Route = createFileRoute('/$')({
   head: () => {
     return {
       meta: [
         {
-          title: '404 - Page Not Found | React App Template',
+          title: `404 - Page Not Found | ${SITE_NAME}`,
         },
         {
           name: 'description',

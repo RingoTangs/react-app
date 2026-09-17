@@ -109,6 +109,7 @@ src/
 ├── main.tsx                    # React DOM 启动入口
 ├── App.tsx                     # providers 和开发工具装配
 ├── reportError.ts              # 错误上报集成点
+├── site.ts                     # 供路由标题复用的站点名称
 ├── style.css                   # 全局样式和 Tailwind CSS 入口
 ├── setupTests.ts               # Vitest 与 Testing Library 测试初始化
 ├── routeTree.gen.ts            # TanStack Router 生成的路由树；不要手动编辑

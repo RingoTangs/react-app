@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Counter } from '@/features/example-counter/ui/Counter'
 import { PostsPreview } from '@/features/example-posts/ui/PostsPreview'
+import { SITE_NAME } from '@/site'
 
 const highlights = [
   {
@@ -92,7 +93,7 @@ const HomePage: React.FC = () => {
 export const Route = createFileRoute('/')({
   head: () => ({
     meta: [
-      { title: 'Home - React App Template' },
+      { title: `Home - ${SITE_NAME}` },
       {
         name: 'description',
         content:

@@ -4,6 +4,8 @@ import { tanstackRouter } from '@tanstack/router-plugin/vite'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 
+const PORT = 3000
+
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
@@ -16,7 +18,10 @@ export default defineConfig({
     tailwindcss(),
   ],
   server: {
-    port: 3000,
+    port: PORT,
+  },
+  preview: {
+    port: PORT,
   },
   resolve: {
     alias: {

@@ -115,7 +115,7 @@ export const RouterProgress: React.FC = () => {
    */
   const pending = useRouterState({
     select: (state) =>
-      state.status === 'pending' && state.resolvedLocation !== undefined,
+      state.status === 'pending' && state.resolvedLocation !== void 0,
   })
 
   // 保存上一轮状态和 navigation cycle 编号。

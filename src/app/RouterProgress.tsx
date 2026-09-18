@@ -114,8 +114,7 @@ export const RouterProgress: React.FC = () => {
    * 所以普通后台刷新也不会触发 TopProgressBar。
    */
   const pending = useRouterState({
-    select: (state) =>
-      state.status === 'pending' && state.resolvedLocation !== void 0,
+    select: (state) => state.status === 'pending',
   })
 
   // 保存上一轮状态和 navigation cycle 编号。

@@ -51,9 +51,9 @@ export const router = createRouter({
    * 不决定数据什么时候 stale；数据新鲜时间由 staleTime 控制。
    * 'blocking' 也不等于关闭缓存。
    */
-  defaultStaleReloadMode: 'background',
+  defaultStaleReloadMode: 'blocking',
 
-  defaultPendingMs: 150,
+  defaultPendingMs: 1000,
   defaultPendingMinMs: 500,
   defaultPendingComponent: () => (
     <Spin fullscreen size="xl" label="Loading..." />

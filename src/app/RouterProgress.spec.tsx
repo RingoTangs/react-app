@@ -3,7 +3,11 @@ import { StrictMode } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { RouterProgress } from './RouterProgress'
 
-const routeState = vi.hoisted(() => ({ status: 'idle', read: vi.fn() }))
+const routeState = vi.hoisted(() => ({
+  status: 'idle',
+  resolvedLocation: undefined as object | undefined,
+  read: vi.fn(),
+}))
 
 vi.mock('@tanstack/react-router', () => ({
   useRouterState: routeState.read,
@@ -17,6 +21,7 @@ beforeEach(() => {
   vi.useFakeTimers()
   vi.spyOn(Math, 'random').mockReturnValue(0)
   routeState.status = 'idle'
+  routeState.resolvedLocation = undefined
   routeState.read.mockImplementation(
     ({ select }: { select: (state: typeof routeState) => boolean }) =>
       select(routeState),
@@ -41,6 +46,7 @@ describe('路由进度条', () => {
   it('短于 150ms 的导航不显示进度条', () => {
     const { rerender } = render(<RouterProgress />)
     routeState.status = 'pending'
+    routeState.resolvedLocation = {}
     rerender(<RouterProgress />)
     advance(149)
     expect(container()).toBeNull()
@@ -53,6 +59,7 @@ describe('路由进度条', () => {
 
   it('持续加载延迟显示，重渲染不重启，完成后移除实例', () => {
     routeState.status = 'pending'
+    routeState.resolvedLocation = {}
     const { rerender } = render(<RouterProgress />)
     advance(150)
     expect(bar()?.style.width).toBe('10%')
@@ -71,6 +78,7 @@ describe('路由进度条', () => {
 
   it('150ms 到期后立即结束会正常完成并卸载', () => {
     routeState.status = 'pending'
+    routeState.resolvedLocation = {}
     const { rerender } = render(<RouterProgress />)
     advance(150)
     expect(bar()?.style.width).toBe('10%')
@@ -85,6 +93,7 @@ describe('路由进度条', () => {
 
   it('显示延迟与 idle 更新同时提交时直接清理未启动实例', () => {
     routeState.status = 'pending'
+    routeState.resolvedLocation = {}
     const { rerender } = render(<RouterProgress />)
     act(() => {
       vi.advanceTimersByTime(150)
@@ -99,6 +108,7 @@ describe('路由进度条', () => {
 
   it('上一轮完成定时器不会隐藏、归零或卸载下一轮', () => {
     routeState.status = 'pending'
+    routeState.resolvedLocation = {}
     const { rerender } = render(<RouterProgress />)
     advance(150)
     const first = container()
@@ -122,6 +132,7 @@ describe('路由进度条', () => {
 
   it.each([50, 150])('加载 %sms 后卸载会清理等待或递增定时器', (ms) => {
     routeState.status = 'pending'
+    routeState.resolvedLocation = {}
     const { unmount } = render(<RouterProgress />)
     advance(ms)
     if (ms >= 150) {
@@ -134,6 +145,7 @@ describe('路由进度条', () => {
 
   it('在 StrictMode 下正确初始化且重渲染不重启或遗留定时器', () => {
     routeState.status = 'pending'
+    routeState.resolvedLocation = {}
     const { rerender, unmount } = render(
       <StrictMode>
         <RouterProgress />

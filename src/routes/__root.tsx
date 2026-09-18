@@ -4,10 +4,10 @@ import {
   HeadContent,
   useRouter,
 } from '@tanstack/react-router'
+import { reportError } from '@/app/reportError'
+import { RouterProgress } from '@/app/RouterProgress'
+import { SITE_NAME } from '@/app/site'
 import { NotFound, PageErrorFallback } from '@/components'
-import { reportError } from '@/reportError'
-import { SITE_NAME } from '@/site'
-import { RouterProgress } from '@/tanstack/RouterProgress'
 
 const RootNotFoundComponent: React.FC = () => {
   const router = useRouter()

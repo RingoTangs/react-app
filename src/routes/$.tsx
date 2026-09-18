@@ -1,7 +1,7 @@
 import { createFileRoute, useRouter } from '@tanstack/react-router'
+import { reportError } from '@/app/reportError'
+import { SITE_NAME } from '@/app/site'
 import { NotFound } from '@/components'
-import { reportError } from '@/reportError'
-import { SITE_NAME } from '@/site'
 
 const NotFoundComponent: React.FC = () => {
   const router = useRouter()

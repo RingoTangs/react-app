@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { SITE_NAME } from '@/app/site'
 import { sleep } from '@/lib'
-import { SITE_NAME } from '@/site'
 
 const ErrorDemoPage: React.FC = () => {
   throw new Error('Intentional error for testing the route error boundary.')

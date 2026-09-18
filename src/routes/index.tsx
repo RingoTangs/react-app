@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
+import { SITE_NAME } from '@/app/site'
 import { Counter } from '@/features/example-counter/ui/Counter'
 import { PostsPreview } from '@/features/example-posts/ui/PostsPreview'
-import { SITE_NAME } from '@/site'
 
 const highlights = [
   {

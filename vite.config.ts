@@ -32,4 +32,7 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: './src/setupTests.ts',
   },
+  build: {
+    target: ['chrome111', 'edge111', 'firefox128', 'safari16.4'],
+  },
 })

@@ -56,6 +56,6 @@ export const router = createRouter({
   defaultPendingMs: 150,
   defaultPendingMinMs: 300,
   defaultPendingComponent: () => (
-    <Spin fullscreen size="lg" label="Loading..." />
+    <Spin fullscreen size="xl" label="Loading..." />
   ),
 })

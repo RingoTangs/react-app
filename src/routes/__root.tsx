@@ -4,8 +4,8 @@ import {
   HeadContent,
   useRouter,
 } from '@tanstack/react-router'
+import { LoaderSync } from '@/app/LoaderSync'
 import { reportError } from '@/app/reportError'
-import { RouterProgress } from '@/app/RouterProgress'
 import { SITE_NAME } from '@/app/site'
 import { NotFound, PageErrorFallback } from '@/components'
 
@@ -56,7 +56,7 @@ export const Route = createRootRouteWithContext<{
   shellComponent: ({ children }) => (
     <>
       <HeadContent />
-      <RouterProgress />
+      <LoaderSync />
       {children}
     </>
   ),

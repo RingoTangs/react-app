@@ -1,7 +1,7 @@
 import type { LoadingBarRef } from 'react-top-loading-bar'
-import { useRouterState } from '@tanstack/react-router'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import LoadingBar from 'react-top-loading-bar'
+import { useLoaderStore } from './loaderStore'
 
 // 导航超过这个时间才显示进度条，避免快速导航时闪烁。
 const PROGRESS_DELAY_MS = 150
@@ -99,7 +99,7 @@ const ProgressCycle: React.FC<{ pending: boolean }> = ({ pending }) => {
   return <ActiveBar pending={pending} onFinished={onFinished} />
 }
 
-export const RouterProgress: React.FC = () => {
+export const LoaderProgress: React.FC = () => {
   /**
    * TopProgressBar 只表示 SPA 内部的前台路由切换。
    *
@@ -113,9 +113,11 @@ export const RouterProgress: React.FC = () => {
    * Background loader reload 不会让 Router status 变成 pending，
    * 所以普通后台刷新也不会触发 TopProgressBar。
    */
-  const pending = useRouterState({
-    select: (state) => state.status === 'pending',
-  })
+  // const pending = useRouterState({
+  //   select: (state) => state.status === 'pending',
+  // })
+
+  const pending = useLoaderStore((state) => state.mode === 'navigation')
 
   // 保存上一轮状态和 navigation cycle 编号。
   // id 只用于隔离不同 navigation 的 ProgressCycle 实例。

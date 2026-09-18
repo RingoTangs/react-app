@@ -1,5 +1,4 @@
 import { createRouter } from '@tanstack/react-router'
-import { Spin } from '@/components'
 import { queryClient } from './queryClient'
 import { routeTree } from './routeTree.gen'
 
@@ -52,10 +51,4 @@ export const router = createRouter({
    * 'blocking' 也不等于关闭缓存。
    */
   defaultStaleReloadMode: 'blocking',
-
-  defaultPendingMs: 1000,
-  defaultPendingMinMs: 500,
-  defaultPendingComponent: () => (
-    <Spin fullscreen size="xl" label="Loading..." />
-  ),
 })

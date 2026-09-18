@@ -4,11 +4,15 @@ import { RouterProvider } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import { queryClient } from '@/app/queryClient'
 import { router } from '@/app/router'
+import { LoaderProgress } from './app/LoaderProgress'
+import { LoaderSpin } from './app/LoaderSpin'
 
 const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
+      <LoaderProgress />
+      <LoaderSpin />
       {import.meta.env.DEV ? (
         <>
           <TanStackRouterDevtools router={router} position="bottom-left" />

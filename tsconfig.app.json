@@ -1,22 +1,13 @@
-/* 统一检查应用和测试代码，共用浏览器、React 和测试断言类型。 */
 {
-  /* 继承项目共用的检查规则。 */
   "extends": "./tsconfig.base.json",
-  /* 在共用规则上补充应用需要的编译选项。 */
   "compilerOptions": {
-    /* 应用和测试共用检查缓存，与构建工具的缓存分开保存。 */
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-    /* 使用 React 自动 JSX 转换，写 JSX 时不必专门导入 React。 */
     "jsx": "react-jsx",
-    /* 提供标准 JavaScript、浏览器 DOM 和 DOM 集合遍历的类型。 */
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    /* 让类型检查识别 @/ 路径；必须与 Vite 的别名配置保持一致。 */
     "paths": {
       "@/*": ["./src/*"]
     },
-    /* 加载 Vite 提供的类型，例如 import.meta.env 和静态资源导入。 */
     "types": ["vite/client"]
   },
-  /* 检查应用、测试和项目级声明文件；setupTests.ts 的导入提供 jest-dom 断言类型。 */
   "include": ["src/**/*.ts", "src/**/*.tsx", "types/**/*.d.ts"]
 }

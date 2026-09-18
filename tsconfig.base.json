@@ -1,6 +1,4 @@
-/* 应用、测试和构建工具共用的 TypeScript 检查规则。 */
 {
-  /* 设置语言支持、模块解析和代码检查方式。 */
   "compilerOptions": {
     /* 缓存上次检查结果，加快后续检查。 */
     "incremental": true,

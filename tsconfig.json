@@ -1,10 +1,7 @@
-/* TypeScript 检查总入口，通过 tsc -b 统一检查下面两个项目。 */
 {
-  /* 应用与测试共同检查，构建工具使用独立的 Node 环境配置。 */
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
   ],
-  /* 根配置不直接收集源码，具体检查范围交给上面引用的项目。 */
   "files": []
 }

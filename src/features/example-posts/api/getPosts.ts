@@ -1,5 +1,5 @@
 import type { Post } from '../model/types'
-import { sleep } from '@/shared/lib'
+import { sleep } from '@/lib'
 
 const POSTS_PREVIEW_DATA: Post[] = [
   {

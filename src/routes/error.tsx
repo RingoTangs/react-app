@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { sleep } from '@/shared/lib'
+import { sleep } from '@/lib'
 import { SITE_NAME } from '@/site'
 
 const ErrorDemoPage: React.FC = () => {

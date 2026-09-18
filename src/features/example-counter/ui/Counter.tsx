@@ -1,4 +1,4 @@
-import { Button } from '@/shared/ui'
+import { Button } from '@/components'
 import counterMarkUrl from '../assets/counter-mark.svg'
 import { useCounterStore } from '../model/counterStore'
 

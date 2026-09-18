@@ -24,7 +24,7 @@
 
 ## 为什么选择这个模板
 
-- 明确划分 `App.tsx`、`tanstack`、`routes`、`features`、`shared` 的职责边界。
+- 明确划分 `App.tsx`、`tanstack`、`routes`、`features` 与通用基础目录的职责边界。
 - 内置面向生产的路由、服务端状态、错误兜底、格式化和测试默认规则。
 - 集中维护项目文档，说明目录约定和依赖方向。
 - 保持克制的运行时假设：显式导入、按 feature 管理集成能力、不使用泛化 `components/` 堆放目录。
@@ -137,17 +137,16 @@ src/
 │       ├── model/
 │       └── ui/
 │
-└── shared/                     # 产品无关的可复用基础模块
-    ├── assets/                 # 由应用代码 import 的共享媒体资源
-    ├── ui/                     # 共享 UI 组件
-    │   ├── Button.tsx
-    │   ├── NotFound.tsx
-    │   ├── PageErrorFallback.tsx
-    │   └── index.ts
-    └── lib/                    # 纯工具函数和轻框架工具
-        ├── date.ts
-        ├── sleep.ts
-        └── index.ts
+├── assets/                     # 由应用代码 import 的共享媒体资源
+├── components/                 # 产品无关的通用 UI 组件
+│   ├── Button.tsx
+│   ├── NotFound.tsx
+│   ├── PageErrorFallback.tsx
+│   └── index.ts
+└── lib/                        # 通用工具函数
+    ├── date.ts
+    ├── sleep.ts
+    └── index.ts
 ```
 
 ### 目录边界
@@ -155,14 +154,14 @@ src/
 - `App.tsx` 负责 Provider 和开发工具组合；`tanstack` 管理 QueryClient、Router 的初始化与应用级集成组件；`reportError.ts` 独立提供错误上报接入点。
 - `routes` 负责 URL 到页面的映射，可包含简单静态页面和 feature 组合；业务逻辑、数据访问和复杂页面放在 `features`。
 - `features` 负责业务或 demo 能力。新增真实产品行为时，优先按业务域放到这里。
-- `shared` 负责可复用 UI 和纯工具。它不应依赖 `App.tsx`、`tanstack`、`routes` 或 `features`。
+- `components` 负责通用 UI，`lib` 负责通用工具，`assets` 负责共享导入资源。这些通用模块不应依赖 `App.tsx`、`tanstack`、`routes` 或 `features`。
 - `public` 负责不经过 Vite import、需要固定公开 URL 的静态文件。
 - `types` 负责 repo 级 ambient declarations。不要在 `src` 下散落全局 `.d.ts` 文件。
 - `routeTree.gen.ts` 由 TanStack Router 生成，不要手动编辑。
 
-Features 和 shared 代码不能导入应用环境配置；如需环境派生值，应通过 feature 公共接口或 shared 工具参数传入。
+Features 和通用代码不能导入应用环境配置；如需环境派生值，应通过 feature 公共接口或通用工具参数传入。
 
-Provider 在 `App.tsx` 中组合，而不是作为 feature 面向的公共 API。如果某个 provider 暴露 feature 会消费的能力，例如 theme、auth 或 i18n，应将可复用的 provider、hooks 和 types 放到 `shared/<capability>`，业务能力则放到 `features/<domain>`，再由 `App.tsx` 统一装配。
+Provider 在 `App.tsx` 中组合，而不是作为 feature 面向的公共 API。如果某个 provider 暴露 feature 会消费的通用能力，应按需将 provider、hooks 和 types 放到 `src/<capability>`，例如 `src/theme` 或 `src/i18n`；auth 等业务能力则放到 `features/<domain>`，再由 `App.tsx` 统一装配。不要预先创建空目录。
 
 模板将应用级共享 QueryClient 注入 Router context，保留后续扩展 loader 的能力；当前文章示例仅在首页通过 PostsPreview 展示，不提供独立文章页面或 loader 预取示例。
 
@@ -175,32 +174,32 @@ flowchart TD
   RouterIntegration["tanstack 集成组件<br/>RouterProgress"]
   Routes["routes<br/>URL 映射与加载编排"]
   Features["features<br/>业务能力"]
-  Shared["shared<br/>产品无关基础模块"]
-  ProviderCapability["shared/&lt;capability&gt; 或 features/&lt;domain&gt;<br/>provider 支撑的公共能力"]
+  Common["components / lib / assets<br/>产品无关基础模块"]
+  ProviderCapability["src/&lt;capability&gt; 或 features/&lt;domain&gt;<br/>provider 支撑的公共能力"]
 
   App --> TanStack
   TanStack --> Routes
-  TanStack --> Shared
+  TanStack --> Common
   App --> ProviderCapability
   Routes --> Features
   Routes --> RouterIntegration
-  Features --> Shared
-  ProviderCapability --> Shared
+  Features --> Common
+  ProviderCapability --> Common
 
-  Shared -. 禁止 .-> App
-  Shared -. 禁止 .-> Routes
-  Shared -. 禁止 .-> Features
+  Common -. 禁止 .-> App
+  Common -. 禁止 .-> Routes
+  Common -. 禁止 .-> Features
   Features -. 禁止 .-> App
   Features -. 禁止 .-> TanStack
-  Shared -. 禁止 .-> TanStack
+  Common -. 禁止 .-> TanStack
 ```
 
-- `shared` 是最低层，必须独立于 `App.tsx`、`tanstack`、`routes` 和 `features`。
+- `components`、`lib` 和 `assets` 是通用基础层，必须独立于 `App.tsx`、`tanstack`、`routes` 和 `features`。
 - `App.tsx` 引用 `tanstack` 的实例来组合 Provider；该目录承载应用级 TanStack 初始化与集成，不添加 barrel 或业务查询代码。
 - 路由可以直接导入 `tanstack` 中不依赖 Router 单例或路由模块的集成组件，但不得在运行时导入 Router 单例，避免循环依赖。
 - `routes` 负责编排 URL 行为和加载流程、组合 feature，也可实现简单静态页面。
-- `features` 可以依赖 `shared` 和其他 feature 的公共 API，但不能依赖应用入口、`tanstack` 的应用级实例或应用环境配置。
-- Provider 支撑的公共能力应从 `shared` 或公共 feature API 暴露，再由 `App.tsx` 装配。
+- `features` 可以依赖通用基础模块和其他 feature 的公共 API，但不能依赖应用入口、`tanstack` 的应用级实例或应用环境配置。
+- Provider 支撑的公共能力应从按需创建的 `src/<capability>` 或公共 feature API 暴露，再由 `App.tsx` 装配。
 
 ### Feature 模块约定
 
@@ -225,22 +224,22 @@ src/features/<feature-name>/
 
 ### 资产放置规则
 
-`public/` 用于 favicon、PWA icon、SEO 图片，以及需要固定公开 URL 的文件。`src/shared/assets/` 用于产品无关、被多个模块 import，并由 Vite 处理的图片、视频、SVG 或其他媒体资源。`src/features/<feature>/assets/` 用于 feature 私有媒体资源。如果某个 SVG 应作为可复用 React 图标组件使用，未来引入图标层时应放到 `src/shared/ui/icons/`。
+`public/` 用于 favicon、PWA icon、SEO 图片，以及需要固定公开 URL 的文件。`src/assets/` 用于产品无关、被多个模块 import，并由 Vite 处理的图片、视频、SVG 或其他媒体资源。`src/features/<feature>/assets/` 用于 feature 私有媒体资源。如果某个 SVG 应作为可复用 React 图标组件使用，未来引入图标层时应放到 `src/components/icons/`。
 
 ### 导出与公共 Feature
 
-Barrel export 只用于稳定公共边界。模板保留 `src/shared/ui/index.ts` 和 `src/shared/lib/index.ts`，因为这些目录对外提供产品无关的可复用 API。不要为了缩短导入路径而新增 `src/features/index.ts`、路由 barrel 或 feature 子目录 barrel。
+Barrel export 只用于稳定公共边界。模板保留 `src/components/index.ts` 和 `src/lib/index.ts`，因为这些目录对外提供产品无关的可复用 API。不要为了缩短导入路径而新增 `src/features/index.ts`、路由 barrel 或 feature 子目录 barrel。
 
-公共业务能力仍然放在 `src/features/<domain>`，不要放进 `shared`。典型例子包括 `auth`、`current-user`、`permissions` 和 `notifications`。只有当某个 feature 明确需要向多个模块暴露稳定公共 API 时，才添加 `src/features/<feature>/index.ts`；它只应导出公共组件、hooks、类型和共享 query options，不导出私有 endpoint、测试或实现细节。
+公共业务能力仍然放在 `src/features/<domain>`，不要放进通用基础目录。典型例子包括 `auth`、`current-user`、`permissions` 和 `notifications`。只有当某个 feature 明确需要向多个模块暴露稳定公共 API 时，才添加 `src/features/<feature>/index.ts`；它只应导出公共组件、hooks、类型和共享 query options，不导出私有 endpoint、测试或实现细节。
 
 首页直接从各 feature 的 UI 文件导入 Counter 和 PostsPreview，不为单个组件增加转导出入口。请求函数、query keys、query options 和 hooks 保留为模块内部实现。路由测试可直接模拟内部请求函数，不为测试扩大公共 API。
 
 ### 日期工具
 
-`shared/lib/date.ts` 提供常用日期格式化，并导出已配置 UTC、时区插件的 `dayjs` 和格式常量 `dayPatterns`。
+`lib/date.ts` 提供常用日期格式化，并导出已配置 UTC、时区插件的 `dayjs` 和格式常量 `dayPatterns`。
 
 ```ts
-import { dayjs, formatDate, formatDateTime, formatTime } from '@/shared/lib'
+import { dayjs, formatDate, formatDateTime, formatTime } from '@/lib'
 
 formatDate('2026-09-16') // '2026-09-16'
 formatDateTime(new Date(2026, 8, 16, 14, 30, 5)) // '2026-09-16 14:30:05'
@@ -285,7 +284,7 @@ export const Route = createFileRoute('/users')({
 
 模板首页作为局部组件放在 `src/routes/index.tsx`，直接导入 Counter 和 PostsPreview 的 UI 文件进行组合。出现独立业务逻辑或复杂页面后，再提取为 feature。
 
-如果 404、通用错误态等 fallback 页面不归属某个具体 feature，并且可跨业务复用，应放在 `shared/ui`。
+如果 404、通用错误态等 fallback 页面不归属某个具体 feature，并且可跨业务复用，应放在 `components`。
 
 `routes/$.tsx` 承接未知 URL，复用共享 NotFound 组件，并声明专属 404 标题和描述。根路由仍保留 `notFoundComponent`，用于已匹配路由主动抛出 `notFound()` 的情况；它不额外覆盖路由元信息。通配路由只负责客户端 404 展示，不会自动让服务器返回 HTTP 404。
 
@@ -318,13 +317,13 @@ Router 设置 `defaultPreloadStaleTime: 0`，将预加载的数据新鲜度判�
 
 - React、router 和应用工具都使用显式导入。
 - 不要把业务逻辑放进 `App.tsx` 或 `tanstack`；随着项目增长，产品行为应放到 feature 模块中。
-- 可复用 UI 放在 `shared/ui`，纯工具函数放在 `shared/lib`。
-- 应用装配和错误上报直接使用 `import.meta.env.DEV`，无需单独的环境封装；环境派生的业务配置通过参数或组件接口传入 features 和 shared 工具。
-- Feature 会消费的 provider 能力应从 `shared/<capability>` 或公共 feature API 暴露，再由 `App.tsx` 装配。
+- 可复用 UI 放在 `components`，纯工具函数放在 `lib`。
+- 应用装配和错误上报直接使用 `import.meta.env.DEV`，无需单独的环境封装；环境派生的业务配置通过参数或组件接口传入 features 和通用工具。
+- Feature 会消费的 provider 能力应从 `src/<capability>` 或公共 feature API 暴露，再由 `App.tsx` 装配。
 - Feature 专属请求放在所属 feature 下；只有真实集成需求能支撑时，才引入共享传输层。
 - 路由级错误兜底使用 TanStack Router `errorComponent`。`react-error-boundary` 只用于明确的 feature 局部组件兜底。
-- Barrel export 只用于 `shared/ui`、`shared/lib` 这类稳定公共边界；默认不要新增 feature 级或应用入口 barrel。
-- 不要重新引入顶层泛目录 `components/` 或 `utils/`；根据归属放到 `shared` 或 `features`。
+- Barrel export 只用于 `components`、`lib` 这类稳定公共边界；默认不要新增 feature 级或应用入口 barrel。
+- `components` 和 `lib` 只收纳通用代码；feature 私有组件、工具、状态和资源留在所属 feature 内，不因目录扁平化而上移。不要另建含义重复的顶层 `utils/`。
 - 不要手动编辑生成文件 `src/routeTree.gen.ts`。
 - 提交 PR 前运行 `pnpm check`。
 

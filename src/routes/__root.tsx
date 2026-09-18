@@ -4,8 +4,8 @@ import {
   HeadContent,
   useRouter,
 } from '@tanstack/react-router'
+import { NotFound, PageErrorFallback } from '@/components'
 import { reportError } from '@/reportError'
-import { NotFound, PageErrorFallback } from '@/shared/ui'
 import { SITE_NAME } from '@/site'
 import { RouterProgress } from '@/tanstack/RouterProgress'
 

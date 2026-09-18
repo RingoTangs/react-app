@@ -100,25 +100,46 @@ const ProgressCycle: React.FC<{ pending: boolean }> = ({ pending }) => {
 }
 
 export const RouterProgress: React.FC = () => {
-  // 仅关注路由加载和页面过渡，不跟随普通 React Query 请求。
+  /**
+   * TopProgressBar 只表示 SPA 内部的前台路由切换。
+   *
+   * - status === 'pending'
+   *   当前存在尚未完成的前台 navigation。
+   *
+   * - resolvedLocation !== undefined
+   *   Router 至少已经完成过一次 location resolution。
+   *   因此可以排除首次打开 / F5 刷新时的 initial navigation。
+   *
+   * Background loader reload 不会让 Router status 变成 pending，
+   * 所以普通后台刷新也不会触发 TopProgressBar。
+   */
   const pending = useRouterState({
-    // router.state.status 表示整个 Router 当前的前台导航状态
-    // 1. pending 表示“请求的目标路由还在加载，或者框架的过渡尚未稳定”
-    // 2. idle 则表示当前没有这种前台导航等待
-    select: (state) => state.status === 'pending',
+    select: (state) =>
+      state.status === 'pending' && state.resolvedLocation !== undefined,
   })
-  // 保存上次状态和轮次编号；id 不是进度百分比。
-  const [cycle, setCycle] = useState({ pending, id: 0 })
 
-  /*
-   * 仅进入 pending 时增加编号；结束时保持编号，让当前实例播放完成动画。
-   * 在渲染阶段有条件地更新当前组件，React 会先重新渲染它，避免子组件沿用旧轮次处理新导航。
-   * 更新后记录的状态与 pending 一致，条件不再成立，因此不会无限重新渲染。
+  // 保存上一轮状态和 navigation cycle 编号。
+  // id 只用于隔离不同 navigation 的 ProgressCycle 实例。
+  const [cycle, setCycle] = useState({
+    pending,
+    id: 0,
+  })
+
+  /**
+   * 只在进入 pending 时开启一个新的 cycle。
+   *
+   * pending: false -> true
+   *   id + 1，新 navigation 使用新的 ProgressCycle 实例。
+   *
+   * pending: true -> false
+   *   id 不变，让当前 ProgressCycle 播放完成动画。
    */
   if (pending !== cycle.pending) {
-    setCycle({ pending, id: cycle.id + (pending ? 1 : 0) })
+    setCycle({
+      pending,
+      id: cycle.id + (pending ? 1 : 0),
+    })
   }
 
-  // 新 key 重建内部组件，将旧动画和回调隔离在旧实例中。
   return <ProgressCycle key={cycle.id} pending={pending} />
 }

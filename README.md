@@ -116,11 +116,10 @@ src/
 │   ├── reportError.ts          # 独立的错误上报集成点
 │   ├── router/                 # TanStack Router 配置与应用级集成
 │   │   ├── index.tsx           # Router 实例和默认配置
-│   │   ├── loading/            # Router 全局加载状态与反馈
-│   │   │   ├── LoaderProgress.tsx
-│   │   │   ├── LoaderSpin.tsx
-│   │   │   ├── LoaderSync.tsx
-│   │   │   └── loaderStore.ts
+│   │   ├── LoaderProgress.tsx  # 站内导航进度条
+│   │   ├── LoaderSpin.tsx      # 首次加载的全屏遮罩
+│   │   ├── LoaderSync.tsx      # 将 Router 状态同步到 loaderStore
+│   │   ├── loaderStore.ts      # idle / boot / navigation 加载模式
 │   │   └── routeTree.gen.ts    # 生成的路由树；不要手动编辑
 │   └── site.ts                 # 供路由标题复用的站点名称
 │

@@ -4,8 +4,8 @@ import { RouterProvider } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import { queryClient } from '@/app/queryClient'
 import { router } from '@/app/router'
-import { LoaderProgress } from '@/app/router/loading/LoaderProgress'
-import { LoaderSpin } from '@/app/router/loading/LoaderSpin'
+import { LoaderProgress } from '@/app/router/LoaderProgress'
+import { LoaderSpin } from '@/app/router/LoaderSpin'
 
 const App: React.FC = () => {
   return (

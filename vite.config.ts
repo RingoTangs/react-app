@@ -1,5 +1,4 @@
 import path from 'node:path'
-import { cwd } from 'node:process'
 import tailwindcss from '@tailwindcss/vite'
 import { tanstackRouter } from '@tanstack/router-plugin/vite'
 import react from '@vitejs/plugin-react'
@@ -7,11 +6,11 @@ import { defineConfig, loadEnv } from 'vite'
 
 const PORT = 3000
 
-const dirname = import.meta.dirname
+const PROJECT_ROOT = import.meta.dirname
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, cwd(), 'VITE_')
+  const env = loadEnv(mode, PROJECT_ROOT, 'VITE_')
 
   if (!env.VITE_SITE_NAME?.trim()) {
     throw new Error('缺少必需的环境变量 VITE_SITE_NAME')
@@ -23,7 +22,7 @@ export default defineConfig(({ mode }) => {
       tanstackRouter({
         target: 'react',
         generatedRouteTree: path.resolve(
-          dirname,
+          PROJECT_ROOT,
           './src/app/router/routeTree.gen.ts',
         ),
         autoCodeSplitting: true,
@@ -39,7 +38,7 @@ export default defineConfig(({ mode }) => {
     },
     resolve: {
       alias: {
-        '@': path.resolve(dirname, './src'),
+        '@': path.resolve(PROJECT_ROOT, './src'),
       },
     },
     test: {

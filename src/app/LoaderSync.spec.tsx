@@ -12,7 +12,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { LoaderProgress } from './LoaderProgress'
 import { LoaderSpin } from './LoaderSpin'
 import { useLoaderStore } from './loaderStore'
-import { RouterInnerWrap } from './RouterInnerWrap'
+import { LoaderSync } from './LoaderSync'
+
+const TestInnerWrap = ({ children }: React.PropsWithChildren) => (
+  <>
+    <LoaderSync />
+    {children}
+  </>
+)
 
 const advance = async (ms: number) => {
   await act(async () => {
@@ -45,7 +52,7 @@ const setup = () => {
   const router = createRouter({
     routeTree: root.addChildren([home, slow]),
     history: createMemoryHistory({ initialEntries: ['/slow'] }),
-    InnerWrap: RouterInnerWrap,
+    InnerWrap: TestInnerWrap,
     defaultStaleReloadMode: 'blocking',
   })
   const view = render(

@@ -116,7 +116,6 @@ src/
 │   ├── LoaderSpin.tsx          # 首次加载的全屏遮罩
 │   ├── LoaderSync.tsx          # 将 Router 状态同步到 loaderStore
 │   ├── loaderStore.ts          # idle / boot / navigation 加载模式
-│   ├── RouterInnerWrap.tsx     # 在路由匹配树外挂载状态同步组件
 │   ├── queryClient.ts          # Provider 与 Router 共用的 QueryClient
 │   ├── router.tsx              # Router 实例和默认配置
 │   ├── site.ts                 # 供路由标题复用的站点名称

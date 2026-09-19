@@ -13,7 +13,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, PROJECT_ROOT, 'VITE_')
 
   if (!env.VITE_SITE_NAME?.trim()) {
-    throw new Error('缺少必需的环境变量 VITE_SITE_NAME')
+    throw new Error('Missing required environment variable: VITE_SITE_NAME')
   }
 
   return {

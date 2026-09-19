@@ -121,7 +121,6 @@ src/
 │
 ├── features/                   # 按业务域组织的产品或 demo 能力
 │   ├── example-counter/        # demo Zustand 共享状态 feature
-│   │   ├── assets/
 │   │   ├── model/
 │   │   └── ui/
 │   └── example-posts/          # demo server-state feature

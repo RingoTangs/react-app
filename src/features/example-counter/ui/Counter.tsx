@@ -1,5 +1,4 @@
 import { Button } from '@/components'
-import counterMarkUrl from '../assets/counter-mark.svg'
 import { useCounterStore } from '../model/counterStore'
 
 const buttonClassName = 'px-4 py-2 font-semibold'
@@ -55,29 +54,20 @@ const CounterActions: React.FC = () => {
 export const Counter: React.FC = () => {
   return (
     <section className="border-border bg-surface rounded-3xl border p-6 backdrop-blur-sm sm:p-8">
-      <div className="flex items-start justify-between gap-4">
-        <div className="max-w-2xl min-w-0">
-          <p className="text-primary text-sm font-medium tracking-[0.16em] uppercase">
-            Zustand
-          </p>
-          <h2
-            className="text-foreground mt-3 text-3xl font-semibold"
-            data-testid="title"
-          >
-            Counter
-          </h2>
-          <p className="text-muted-foreground mt-3 text-sm leading-relaxed">
-            Separate display and control components share one feature-owned
-            Zustand store without passing state or actions through props.
-          </p>
-        </div>
-        <img
-          className="shrink-0"
-          src={counterMarkUrl}
-          alt=""
-          width="48"
-          height="48"
-        />
+      <div className="max-w-2xl">
+        <p className="text-primary text-sm font-medium tracking-[0.16em] uppercase">
+          Zustand
+        </p>
+        <h2
+          className="text-foreground mt-3 text-3xl font-semibold"
+          data-testid="title"
+        >
+          Counter
+        </h2>
+        <p className="text-muted-foreground mt-3 text-sm leading-relaxed">
+          Separate display and control components share one feature-owned
+          Zustand store without passing state or actions through props.
+        </p>
       </div>
       <CounterValue />
       <CounterActions />

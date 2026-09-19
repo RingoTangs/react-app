@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 
 import { useLoaderStore } from './loaderStore'
 
-export function LoaderSync() {
+export const LoaderSync: React.FC = () => {
   const routerState = useRouterState({
     select: (state) => ({
       pending: state.status === 'pending',

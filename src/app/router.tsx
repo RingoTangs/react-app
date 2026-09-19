@@ -16,7 +16,11 @@ export const router = createRouter({
   context: {
     queryClient,
   },
-  defaultPreload: 'intent', // hover/touch 时提前加载 route
+
+  /**
+   * 检测到用户跳转意图时，预加载路由代码和 loader 数据
+   */
+  defaultPreload: 'intent',
 
   /*
    * 将 Router 的 preload 数据新鲜时间设为 0。

@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-
-import { Spin } from '@/components'
+import { FadeLoader } from 'react-spinners'
 import { useLoaderStore } from './loaderStore'
 
 const SHOW_DELAY = 150
@@ -41,5 +40,9 @@ export function LoaderSpin() {
     return null
   }
 
-  return <Spin size="xl" fullscreen label="loading..." />
+  return (
+    <div className="flex min-h-dvh w-full items-center justify-center">
+      <FadeLoader color="#36d7b7" />
+    </div>
+  )
 }

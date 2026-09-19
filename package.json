@@ -48,6 +48,7 @@
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "react-error-boundary": "^6.1.5",
+    "react-spinners": "^0.17.1",
     "react-top-loading-bar": "^3.0.2",
     "tailwind-merge": "^3.6.0",
     "tailwind-variants": "^3.3.1",

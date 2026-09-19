@@ -14,7 +14,7 @@ coverage
 .tanstack/
 
 *.log
-.env
+# Keep the tracked public Vite defaults available during the build
 .env.*
 
 .husky

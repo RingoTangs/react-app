@@ -79,22 +79,9 @@ Nginx 对 `/assets/` 下带内容哈希的构建文件设置一年 `immutable` �
 
 ### Docker 环境变量
 
-`.dockerignore` 排除了所有 `.env*` 文件，宿主机的 `.env.production` 不会自动进入构建上下文。Git 允许提交不含敏感信息的 `.env.example`，但它同样不会进入 Docker 构建上下文。当前模板没有业务环境变量，不预设构建参数或创建空示例文件。
+根目录 `.env` 保存项目公开且必需的 Vite 构建默认值，并受 Git 跟踪。Docker 构建会读取同一份 `.env`，因此本地构建和默认镜像使用一致的 `VITE_SITE_NAME`。`.env.local`、`.env.production` 等覆盖文件仍会被 Git 和 Docker 构建上下文排除。
 
-未来需要 `VITE_*` 变量时，在 Dockerfile 的 `build` 阶段、`RUN pnpm build` 之前声明对应的 `ARG`。以下仅为接入示例，当前 Dockerfile 尚未添加此参数：
-
-```dockerfile
-ARG VITE_API_BASE_URL
-RUN pnpm build
-```
-
-将原来的 `RUN pnpm build` 替换为上述片段后，可在构建时传入：
-
-```bash
-docker build --build-arg VITE_API_BASE_URL=https://api.example.com -t react-app:local .
-```
-
-`VITE_*` 在构建时写入前端产物，不能存放密钥；修改值后需要重新构建镜像，`docker run -e` 无法改变已构建的前端变量。若需要运行时切换环境，再按实际需求设计 `/config.js` 或 `/env.json` 等运行时配置机制。
+`VITE_SITE_NAME` 缺失或为空时，Vite 会立即终止启动或构建。所有 `VITE_*` 变量都会写入浏览器可访问的前端产物，因此不能存放密钥。修改这些值后需要重新构建；`docker run -e` 无法改变已经生成的静态文件。部署需要不同配置时，应在构建阶段注入对应值；若需要运行时切换环境，再按实际需求设计 `/config.js` 或 `/env.json` 等运行时配置机制。
 
 ## 项目结构
 

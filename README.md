@@ -115,11 +115,12 @@ src/
 │   ├── queryClient.ts          # Provider 与 Router 共用的 QueryClient
 │   ├── reportError.ts          # 独立的错误上报集成点
 │   ├── router/                 # TanStack Router 配置与应用级集成
-│   │   ├── index.tsx           # Router 实例和默认配置
+│   │   ├── index.ts            # App 装配所需的受控公共接口
 │   │   ├── LoaderProgress.tsx  # 站内导航进度条
 │   │   ├── LoaderSpin.tsx      # 首次加载的全屏遮罩
 │   │   ├── LoaderSync.tsx      # 将 Router 状态同步到 loaderStore
 │   │   ├── loaderStore.ts      # idle / boot / navigation 加载模式
+│   │   ├── router.tsx          # Router 实例和默认配置
 │   │   └── routeTree.gen.ts    # 生成的路由树；不要手动编辑
 │   └── site.ts                 # 供路由标题复用的站点名称
 │
@@ -201,7 +202,7 @@ flowchart TD
 ```
 
 - `components`、`lib` 和 `assets` 是通用基础层，必须独立于 `App.tsx`、`app`、`routes` 和 `features`。
-- `App.tsx` 引用 `app` 的实例来组合 Provider；该目录承载应用配置、初始化与集成，不添加 barrel 或业务查询代码。
+- `App.tsx` 引用 `app` 的实例来组合 Provider；`app` 不提供顶层聚合入口，内聚子模块可以通过显式导出提供受控公共接口。
 - 路由可以直接导入独立的 `app/site` 和 `app/reportError`，但不得在运行时导入 Router 单例、生成路由树或 `App.tsx`，避免循环依赖。路由测试可以导入生成路由树，创建隔离的测试 Router。
 - `routes` 负责编排 URL 行为和加载流程、组合 feature，也可实现简单静态页面。
 - `features` 可以依赖通用基础模块和其他 feature 的公共 API，但不能依赖应用入口或 `app` 模块。
@@ -234,7 +235,7 @@ src/features/<feature-name>/
 
 ### 导出与公共 Feature
 
-Barrel export 只用于稳定公共边界。模板保留 `src/components/index.ts` 和 `src/lib/index.ts`，因为这些目录对外提供产品无关的可复用 API。不要为了缩短导入路径而新增 `src/features/index.ts`、路由 barrel 或 feature 子目录 barrel。
+Barrel export 只用于稳定公共边界。模板保留 `src/components/index.ts` 和 `src/lib/index.ts`，因为这些目录对外提供产品无关的可复用 API；`src/app/router/index.ts` 也通过显式导出提供 App 装配所需的受控接口。不要创建 `src/app/index.ts`，也不要为了缩短导入路径新增 `src/features/index.ts`、route 文件 barrel 或 feature 子目录 barrel。
 
 公共业务能力仍然放在 `src/features/<domain>`，不要放进通用基础目录。典型例子包括 `auth`、`current-user`、`permissions` 和 `notifications`。只有当某个 feature 明确需要向多个模块暴露稳定公共 API 时，才添加 `src/features/<feature>/index.ts`；它只应导出公共组件、hooks、类型和共享 query options，不导出私有 endpoint、测试或实现细节。
 
@@ -294,7 +295,7 @@ export const Route = createFileRoute('/users')({
 
 `routes/$.tsx` 承接未知 URL，复用共享 NotFound 组件，并声明专属 404 标题和描述。根路由仍保留 `notFoundComponent`，用于已匹配路由主动抛出 `notFound()` 的情况；它不额外覆盖路由元信息。通配路由只负责客户端 404 展示，不会自动让服务器返回 HTTP 404。
 
-如果 route loader 要预取 React Query 数据，Router context 必须暴露共享的 `queryClient`。`app/router/index.tsx` 注入 `app/queryClient.ts` 的共享实例，`App.tsx` 的 Provider 也使用该实例；route 文件仍然只使用 feature 的 `queryOptions`，不拥有 API 细节。
+如果 route loader 要预取 React Query 数据，Router context 必须暴露共享的 `queryClient`。`app/router/router.tsx` 注入 `app/queryClient.ts` 的共享实例，`App.tsx` 的 Provider 也使用该实例；route 文件仍然只使用 feature 的 `queryOptions`，不拥有 API 细节。
 
 ### 错误兜底
 
@@ -334,7 +335,7 @@ Router 设置 `defaultPreloadStaleTime: 0`，将预加载的数据新鲜度判�
 - Feature 会消费的 provider 能力应从 `src/<capability>` 或公共 feature API 暴露，再由 `App.tsx` 装配。
 - Feature 专属请求放在所属 feature 下；只有真实集成需求能支撑时，才引入共享传输层。
 - 路由级错误兜底使用 TanStack Router `errorComponent`。`react-error-boundary` 只用于明确的 feature 局部组件兜底。
-- Barrel export 只用于 `components`、`lib` 这类稳定公共边界；默认不要新增 feature 级或应用入口 barrel。
+- Barrel export 只用于稳定公共边界；不创建 `src/app/index.ts`，内聚的 app 子模块可以显式导出受控公共接口。
 - `components` 和 `lib` 只收纳通用代码；feature 私有组件、工具、状态和资源留在所属 feature 内，不因目录扁平化而上移。不要另建含义重复的顶层 `utils/`。
 - 不要手动编辑生成文件 `src/app/router/routeTree.gen.ts`。
 - 提交 PR 前运行 `pnpm check`。

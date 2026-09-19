@@ -129,6 +129,7 @@ src/
 │   ├── __root.tsx              # 根路由 context、布局和错误边界
 │   ├── $.tsx                   # 未知 URL 的 404 页面及元信息
 │   ├── error.tsx               # demo error 路由
+│   ├── loading.tsx             # Router 加载反馈演示路由
 │   └── index.tsx               # / 路由
 │
 ├── features/                   # 按业务域组织的产品或 demo 能力
@@ -290,6 +291,8 @@ export const Route = createFileRoute('/users')({
 ```
 
 模板首页作为局部组件放在 `src/routes/index.tsx`，直接导入 Counter 和 PostsPreview 的 UI 文件进行组合。出现独立业务逻辑或复杂页面后，再提取为 feature。
+
+`routes/loading.tsx` 使用 1500ms loader 展示 Router 的全局加载反馈：站内导航显示顶部进度条，直接访问或整页重载显示全屏 Spinner。`routes/error.tsx` 只负责触发和验证路由错误边界，不再承担加载反馈演示。
 
 如果 404、通用错误态等 fallback 页面不归属某个具体 feature，并且可跨业务复用，应放在 `components`。
 

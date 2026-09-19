@@ -37,6 +37,12 @@ const expectHomeHead = () =>
     'Explore Zustand shared state and TanStack Query data examples.',
   )
 
+const expectLoadingHead = () =>
+  expectHead(
+    'Router Loading Demo - React App Template',
+    'Demonstrates initial and navigation loading feedback.',
+  )
+
 const expectNotFoundHead = () =>
   expectHead(
     '404 - Page Not Found | React App Template',
@@ -98,6 +104,12 @@ describe('首页示例', () => {
       await screen.findByRole('heading', { name: 'Counter', level: 2 }),
     ).toBeInTheDocument()
     expect(await screen.findByText('No posts found')).toBeInTheDocument()
+    expect(
+      screen.getByRole('link', { name: 'Verify Router Loading' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('link', { name: 'Verify Error Boundary' }),
+    ).toBeInTheDocument()
     await expectHomeHead()
     expect(screen.getByTestId('count')).toHaveTextContent('Current count: 0')
     await user.click(screen.getByRole('button', { name: 'Increase count' }))
@@ -109,6 +121,41 @@ describe('首页示例', () => {
     await user.click(screen.getByRole('button', { name: 'Reset count' }))
     expect(screen.getByTestId('count')).toHaveTextContent('Current count: 0')
     expect(screen.getByText('No posts found')).toBeInTheDocument()
+  })
+})
+
+describe('router loading 演示页面', () => {
+  it('从首页进入演示页，提供返回首页和整页重载入口', async () => {
+    const user = userEvent.setup()
+    const { history, router } = renderWithRouter(['/'])
+
+    await screen.findByRole('heading', { name: 'Counter', level: 2 })
+    await user.click(
+      screen.getByRole('link', { name: 'Verify Router Loading' }),
+    )
+
+    expect(
+      await screen.findByRole(
+        'heading',
+        { name: 'Router Loading Demo' },
+        { timeout: 3000 },
+      ),
+    ).toBeInTheDocument()
+    expect(router.state.location.pathname).toBe('/loading')
+    expect(history.location.pathname).toBe('/loading')
+    expect(
+      screen.getByRole('link', { name: 'Reload to Verify Spinner' }),
+    ).toHaveAttribute('href', '/loading')
+    await expectLoadingHead()
+
+    await user.click(screen.getByRole('link', { name: 'Back to Home' }))
+
+    expect(
+      await screen.findByText('Start from a stable baseline, not a demo.'),
+    ).toBeInTheDocument()
+    expect(router.state.location.pathname).toBe('/')
+    expect(history.location.pathname).toBe('/')
+    await expectHomeHead()
   })
 })
 

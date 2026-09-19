@@ -1,6 +1,5 @@
 import { useRouterState } from '@tanstack/react-router'
 import { useEffect } from 'react'
-
 import { useLoaderStore } from './loaderStore'
 
 export const LoaderSync: React.FC = () => {

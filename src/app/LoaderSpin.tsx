@@ -44,11 +44,11 @@ export const LoaderSpin: React.FC = () => {
   return (
     <div
       role="status"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-gray-50"
+      className="bg-background fixed inset-0 z-50 flex items-center justify-center"
     >
       <span className="sr-only">Loading...</span>
       <div aria-hidden="true">
-        <FadeLoader color="#36d7b7" />
+        <FadeLoader color="var(--color-primary)" />
       </div>
     </div>
   )

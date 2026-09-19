@@ -320,6 +320,12 @@ Router 设置 `defaultPreloadStaleTime: 0`，将预加载的数据新鲜度判�
 
 ## 开发规则
 
+### 主题颜色
+
+模板使用深色背景与琥珀色主色。颜色统一定义在 `src/style.css` 的 `@theme` 中，组件使用 `bg-background`、`bg-surface`、`text-foreground`、`text-muted-foreground`、`bg-primary` 等语义类。主按钮文字使用 `text-primary-foreground`，错误提示使用 `danger-*`，焦点使用 `ring` 颜色。
+
+修改主题时优先调整这些变量；Loader 通过 `var(--color-primary)` 复用主色。作为图片导入的外部 SVG 无法继承页面变量，例如计数器图标，需要单独同步其静态色值。
+
 - React、router 和应用工具都使用显式导入。
 - 不要把业务逻辑放进 `App.tsx` 或 `app`；随着项目增长，产品行为应放到 feature 模块中。
 - 可复用 UI 放在 `components`，纯工具函数放在 `lib`。

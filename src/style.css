@@ -2,7 +2,31 @@
 /* https://github.com/tailwindlabs/tailwindcss/blob/main/packages/tailwindcss/preflight.css */
 @import 'tailwindcss';
 
+/* 页面与组件共用的语义颜色；更换主题时优先修改这里。 */
+@theme {
+  --color-background: #020617;
+  --color-foreground: #f1f5f9;
+  --color-surface: #0f172a;
+  --color-surface-hover: #1e293b;
+  --color-muted-foreground: #94a3b8;
+  --color-border: #334155;
+  --color-primary: #fbbf24;
+  --color-primary-hover: #fcd34d;
+  --color-primary-foreground: #020617;
+  --color-ring: #fcd34d;
+  --color-danger-surface: #450a0a;
+  --color-danger-foreground: #fee2e2;
+  --color-danger-border: #f87171;
+}
+
 @layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
   html,
   body,
   #root {

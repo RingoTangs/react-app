@@ -7,7 +7,7 @@ import { useLoaderStore } from './loaderStore'
 const PROGRESS_DELAY_MS = 150
 
 // 进度条外观。
-const PROGRESS_COLOR = '#fbbf24'
+const PROGRESS_COLOR = 'var(--color-primary)'
 const PROGRESS_HEIGHT_PX = 2
 
 // 进度条宽度变化的动画时长。

@@ -2,13 +2,13 @@ import type { VariantProps } from 'tailwind-variants'
 import { tv } from 'tailwind-variants'
 
 const buttonVariants = tv({
-  base: 'inline-flex cursor-pointer items-center justify-center rounded-lg px-6 py-3 text-base font-medium transition-all duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none',
+  base: 'focus-visible:ring-ring focus-visible:ring-offset-background inline-flex cursor-pointer items-center justify-center rounded-lg px-6 py-3 text-base font-medium transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
   variants: {
     intent: {
       primary:
-        'bg-blue-600 text-white shadow-md hover:bg-blue-700 hover:shadow-lg focus:ring-blue-500',
+        'bg-primary text-primary-foreground enabled:hover:bg-primary-hover shadow-md enabled:hover:shadow-lg',
       secondary:
-        'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 hover:text-gray-900 focus:ring-gray-500',
+        'border-border bg-surface text-foreground enabled:hover:bg-surface-hover border',
     },
   },
   defaultVariants: {

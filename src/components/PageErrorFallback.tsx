@@ -10,11 +10,11 @@ export const PageErrorFallback: React.FC<PageErrorFallbackProps> = ({
   onBackHome,
 }) => {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-8 text-center font-sans">
-      <h1 className="mb-4 text-4xl leading-tight font-bold text-gray-900">
+    <div className="bg-background flex min-h-screen flex-col items-center justify-center p-8 text-center font-sans">
+      <h1 className="text-foreground mb-4 text-4xl leading-tight font-bold">
         Oops! Something went wrong
       </h1>
-      <p className="mb-8 max-w-[500px] text-lg text-gray-500">
+      <p className="text-muted-foreground mb-8 max-w-[500px] text-lg">
         We encountered an unexpected error. Please try again or return to the
         home page.
       </p>

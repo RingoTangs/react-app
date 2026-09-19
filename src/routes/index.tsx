@@ -26,16 +26,16 @@ const highlights = [
 
 const HomePage: React.FC = () => {
   return (
-    <div className="min-h-screen bg-linear-to-br from-stone-950 via-slate-900 to-zinc-900">
+    <div className="bg-background min-h-screen">
       <div className="mx-auto max-w-6xl px-6 py-20">
         <div className="mb-20 text-center">
-          <p className="mb-4 text-sm font-medium tracking-[0.2em] text-amber-300 uppercase">
+          <p className="text-primary mb-4 text-sm font-medium tracking-[0.2em] uppercase">
             React Template
           </p>
-          <h1 className="mb-6 text-5xl font-bold tracking-tight text-white md:text-7xl">
+          <h1 className="text-foreground mb-6 text-5xl font-bold tracking-tight md:text-7xl">
             Start from a stable baseline, not a demo.
           </h1>
-          <p className="mx-auto max-w-3xl text-lg leading-relaxed text-slate-300 md:text-xl">
+          <p className="text-foreground mx-auto max-w-3xl text-lg leading-relaxed md:text-xl">
             This starter keeps runtime defaults conservative and pushes
             environment config, monitoring, providers, and transport concerns
             into clear boundaries.
@@ -43,7 +43,7 @@ const HomePage: React.FC = () => {
           <div className="mt-10 flex justify-center gap-4">
             <Link
               to="/error"
-              className="rounded-full bg-amber-400 px-8 py-3 font-semibold text-stone-950 shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:bg-amber-300"
+              className="bg-primary text-primary-foreground hover:bg-primary-hover focus-visible:outline-ring rounded-full px-8 py-3 font-semibold shadow-lg transition-all duration-300 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2"
             >
               Verify Error Boundary
             </Link>
@@ -51,7 +51,7 @@ const HomePage: React.FC = () => {
               href="https://github.com/RingoTangs/react-app"
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-full border border-slate-600 bg-slate-800/50 px-8 py-3 font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:border-slate-400 hover:bg-slate-700/50"
+              className="border-border bg-surface text-foreground hover:border-muted-foreground hover:bg-surface-hover focus-visible:outline-ring rounded-full border px-8 py-3 font-semibold backdrop-blur-sm transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2"
             >
               Open Repository
             </a>
@@ -62,12 +62,12 @@ const HomePage: React.FC = () => {
           {highlights.map((highlight) => (
             <div
               key={highlight.title}
-              className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm transition-all duration-300 hover:border-amber-300/40 hover:bg-white/8"
+              className="border-border bg-surface hover:border-primary/40 hover:bg-surface-hover rounded-2xl border p-6 backdrop-blur-sm transition-all duration-300"
             >
-              <h3 className="mb-3 text-lg font-semibold text-white">
+              <h3 className="text-foreground mb-3 text-lg font-semibold">
                 {highlight.title}
               </h3>
-              <p className="text-sm leading-relaxed text-slate-400">
+              <p className="text-muted-foreground text-sm leading-relaxed">
                 {highlight.description}
               </p>
             </div>
@@ -82,7 +82,7 @@ const HomePage: React.FC = () => {
           <PostsPreview />
         </div>
 
-        <div className="mt-20 text-center text-slate-500">
+        <div className="text-muted-foreground mt-20 text-center">
           <p>Extend through features, keep app wiring centralized.</p>
         </div>
       </div>

@@ -1,6 +1,6 @@
 import { createRouter } from '@tanstack/react-router'
-import { LoaderSync } from './LoaderSync'
-import { queryClient } from './queryClient'
+import { queryClient } from '../queryClient'
+import { LoaderSync } from './loading/LoaderSync'
 import { routeTree } from './routeTree.gen'
 
 // 在模块顶层创建路由，避免组件重新渲染时重复创建。

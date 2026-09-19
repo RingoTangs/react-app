@@ -112,15 +112,17 @@ src/
 ├── setupTests.ts               # Vitest 与 Testing Library 测试初始化
 │
 ├── app/                        # 当前应用的配置、初始化和集成
-│   ├── LoaderProgress.tsx      # 站内导航进度条，按加载轮次隔离动画
-│   ├── LoaderSpin.tsx          # 首次加载的全屏遮罩
-│   ├── LoaderSync.tsx          # 将 Router 状态同步到 loaderStore
-│   ├── loaderStore.ts          # idle / boot / navigation 加载模式
 │   ├── queryClient.ts          # Provider 与 Router 共用的 QueryClient
-│   ├── router.tsx              # Router 实例和默认配置
-│   ├── site.ts                 # 供路由标题复用的站点名称
 │   ├── reportError.ts          # 独立的错误上报集成点
-│   └── routeTree.gen.ts        # 生成的路由树；不要手动编辑
+│   ├── router/                 # TanStack Router 配置与应用级集成
+│   │   ├── index.tsx           # Router 实例和默认配置
+│   │   ├── loading/            # Router 全局加载状态与反馈
+│   │   │   ├── LoaderProgress.tsx
+│   │   │   ├── LoaderSpin.tsx
+│   │   │   ├── LoaderSync.tsx
+│   │   │   └── loaderStore.ts
+│   │   └── routeTree.gen.ts    # 生成的路由树；不要手动编辑
+│   └── site.ts                 # 供路由标题复用的站点名称
 │
 ├── routes/                     # TanStack 文件路由
 │   ├── -__root.spec.tsx        # 根路由行为测试
@@ -160,7 +162,7 @@ src/
 - `components` 负责通用 UI，`lib` 负责通用工具，`assets` 负责共享导入资源。这些通用模块不应依赖 `App.tsx`、`app`、`routes` 或 `features`。
 - `public` 负责不经过 Vite import、需要固定公开 URL 的静态文件。
 - `types` 负责 repo 级 ambient declarations。不要在 `src` 下散落全局 `.d.ts` 文件。
-- `app/routeTree.gen.ts` 由 TanStack Router 生成，输出路径在 Vite 插件配置中指定，不要手动编辑。
+- `app/router/routeTree.gen.ts` 由 TanStack Router 生成，输出路径在 Vite 插件配置中指定，不要手动编辑。
 
 Features 和通用代码不能导入应用环境配置；如需环境派生值，应通过 feature 公共接口或通用工具参数传入。
 
@@ -293,7 +295,7 @@ export const Route = createFileRoute('/users')({
 
 `routes/$.tsx` 承接未知 URL，复用共享 NotFound 组件，并声明专属 404 标题和描述。根路由仍保留 `notFoundComponent`，用于已匹配路由主动抛出 `notFound()` 的情况；它不额外覆盖路由元信息。通配路由只负责客户端 404 展示，不会自动让服务器返回 HTTP 404。
 
-如果 route loader 要预取 React Query 数据，Router context 必须暴露共享的 `queryClient`。`app/router.ts` 注入 `app/queryClient.ts` 的共享实例，`App.tsx` 的 Provider 也使用该实例；route 文件仍然只使用 feature 的 `queryOptions`，不拥有 API 细节。
+如果 route loader 要预取 React Query 数据，Router context 必须暴露共享的 `queryClient`。`app/router/index.tsx` 注入 `app/queryClient.ts` 的共享实例，`App.tsx` 的 Provider 也使用该实例；route 文件仍然只使用 feature 的 `queryOptions`，不拥有 API 细节。
 
 ### 错误兜底
 
@@ -335,7 +337,7 @@ Router 设置 `defaultPreloadStaleTime: 0`，将预加载的数据新鲜度判�
 - 路由级错误兜底使用 TanStack Router `errorComponent`。`react-error-boundary` 只用于明确的 feature 局部组件兜底。
 - Barrel export 只用于 `components`、`lib` 这类稳定公共边界；默认不要新增 feature 级或应用入口 barrel。
 - `components` 和 `lib` 只收纳通用代码；feature 私有组件、工具、状态和资源留在所属 feature 内，不因目录扁平化而上移。不要另建含义重复的顶层 `utils/`。
-- 不要手动编辑生成文件 `src/app/routeTree.gen.ts`。
+- 不要手动编辑生成文件 `src/app/router/routeTree.gen.ts`。
 - 提交 PR 前运行 `pnpm check`。
 
 ## 许可证

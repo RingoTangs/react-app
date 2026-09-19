@@ -8,7 +8,7 @@ import { act, cleanup, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import * as errorReporting from '@/app/reportError'
-import { routeTree } from '@/app/routeTree.gen'
+import { routeTree } from '@/app/router/routeTree.gen'
 import { useCounterStore } from '@/features/example-counter/model/counterStore'
 import { getPosts } from '@/features/example-posts/api/getPosts'
 

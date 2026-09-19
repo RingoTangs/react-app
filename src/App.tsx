@@ -11,16 +11,12 @@ const App: React.FC = () => {
       <RouterProvider router={router} />
       <RouterProgress />
       <RouterSpinner />
-      {import.meta.env.DEV ? (
-        <>
-          <TanStackRouterDevtools router={router} position="bottom-left" />
-          <ReactQueryDevtools
-            initialIsOpen={false}
-            position="bottom"
-            buttonPosition="bottom-right"
-          />
-        </>
-      ) : null}
+      <TanStackRouterDevtools router={router} position="bottom-left" />
+      <ReactQueryDevtools
+        initialIsOpen={false}
+        position="bottom"
+        buttonPosition="bottom-right"
+      />
     </QueryClientProvider>
   )
 }

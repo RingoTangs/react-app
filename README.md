@@ -313,7 +313,7 @@ Router 设置 `defaultPreloadStaleTime: 0`，将预加载的数据新鲜度判�
 
 首次加载使用全屏 Spinner：等待 150ms 后显示，显示后至少保留 300ms；后续前台导航使用顶部进度条，持续 150ms 后显示，每轮使用独立实例隔离完成动画。`LoaderSync` 通过 Router 的 `InnerWrap` 挂载在路由匹配树的 Suspense 外，独占同步 `loaderStore` 的 `idle / boot / navigation` 状态，卸载时清理。Loader 只反映应用启动后的路由加载和页面过渡，不代表所有网络请求，业务请求不写入这个 store。
 
-- Router 和 React Query devtools 只在开发环境启用。
+- Router 和 React Query devtools 使用依赖提供的标准入口，在非开发环境自动返回空内容并由构建工具裁剪。
 - 模板全局使用显式导入；例如 `tv()` 这类 helper 应在使用处显式导入。
 - SVG 和 XML 文件通过 `@prettier/plugin-xml` 使用 Prettier XML parser 格式化。
 - React Query 使用保守默认值：`staleTime: 30s`、`gcTime: 5m`、query `retry: 1`、mutation `retry: 0`、`refetchOnWindowFocus: false`、`refetchOnReconnect: true`。
@@ -331,7 +331,7 @@ Router 设置 `defaultPreloadStaleTime: 0`，将预加载的数据新鲜度判�
 - React、router 和应用工具都使用显式导入。
 - 不要把业务逻辑放进 `App.tsx` 或 `app`；随着项目增长，产品行为应放到 feature 模块中。
 - 可复用 UI 放在 `components`，纯工具函数放在 `lib`。
-- 应用装配和错误上报直接使用 `import.meta.env.DEV`，无需单独的环境封装；环境派生的业务配置通过参数或组件接口传入 features 和通用工具。
+- 错误上报可直接使用 `import.meta.env.DEV`，无需单独的环境封装；devtools 使用依赖自身的环境判断，环境派生的业务配置通过参数或组件接口传入 features 和通用工具。
 - Feature 会消费的 provider 能力应从 `src/<capability>` 或公共 feature API 暴露，再由 `App.tsx` 装配。
 - Feature 专属请求放在所属 feature 下；只有真实集成需求能支撑时，才引入共享传输层。
 - 路由级错误兜底使用 TanStack Router `errorComponent`。`react-error-boundary` 只用于明确的 feature 局部组件兜底。

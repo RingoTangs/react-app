@@ -103,7 +103,8 @@ public/
 └── app-icon.svg                # 固定 URL 访问的公共静态资产
 
 types/
-└── tanstack-router.d.ts         # TanStack Router 类型注册
+├── tanstack-router.d.ts        # TanStack Router 类型注册
+└── vite-env.d.ts               # Vite 环境变量类型
 
 src/
 ├── main.tsx                    # React DOM 启动入口
@@ -114,15 +115,14 @@ src/
 ├── app/                        # 当前应用的配置、初始化和集成
 │   ├── queryClient.ts          # Provider 与 Router 共用的 QueryClient
 │   ├── reportError.ts          # 独立的错误上报集成点
-│   ├── router/                 # TanStack Router 配置与应用级集成
-│   │   ├── index.ts            # App 装配所需的受控公共接口
-│   │   ├── RouterProgress.tsx  # 站内导航进度条
-│   │   ├── RouterSpinner.tsx   # 首次加载的全屏遮罩
-│   │   ├── LoaderSync.tsx      # 将 Router 状态同步到 loaderStore
-│   │   ├── loaderStore.ts      # idle / boot / navigation 加载模式
-│   │   ├── router.tsx          # Router 实例和默认配置
-│   │   └── routeTree.gen.ts    # 生成的路由树；不要手动编辑
-│   └── site.ts                 # 供路由标题复用的站点名称
+│   └── router/                 # TanStack Router 配置与应用级集成
+│       ├── index.ts            # App 装配所需的受控公共接口
+│       ├── RouterProgress.tsx  # 站内导航进度条
+│       ├── RouterSpinner.tsx   # 首次加载的全屏遮罩
+│       ├── LoaderSync.tsx      # 将 Router 状态同步到 loaderStore
+│       ├── loaderStore.ts      # idle / boot / navigation 加载模式
+│       ├── router.tsx          # Router 实例和默认配置
+│       └── routeTree.gen.ts    # 生成的路由树；不要手动编辑
 │
 ├── routes/                     # TanStack 文件路由
 │   ├── -__root.spec.tsx        # 根路由行为测试
@@ -177,7 +177,7 @@ Provider 在 `App.tsx` 中组合，而不是作为 feature 面向的公共 API�
 flowchart TD
   App["App.tsx<br/>Provider 与开发工具组合"]
   TanStack["app 初始化模块<br/>QueryClient、Router 与生成路由树"]
-  RouterIntegration["app 独立支持模块<br/>site、reportError"]
+  AppSupport["app 独立支持模块<br/>reportError"]
   Routes["routes<br/>URL 映射与加载编排"]
   Features["features<br/>业务能力"]
   Common["components / lib / assets<br/>产品无关基础模块"]
@@ -188,7 +188,7 @@ flowchart TD
   TanStack --> Common
   App --> ProviderCapability
   Routes --> Features
-  Routes --> RouterIntegration
+  Routes --> AppSupport
   Features --> Common
   ProviderCapability --> Common
 
@@ -198,13 +198,13 @@ flowchart TD
   Features -. 禁止 .-> App
   Features -. 禁止 .-> TanStack
   Common -. 禁止 .-> TanStack
-  Features -. 禁止 .-> RouterIntegration
-  Common -. 禁止 .-> RouterIntegration
+  Features -. 禁止 .-> AppSupport
+  Common -. 禁止 .-> AppSupport
 ```
 
 - `components`、`lib` 和 `assets` 是通用基础层，必须独立于 `App.tsx`、`app`、`routes` 和 `features`。
 - `App.tsx` 引用 `app` 的实例来组合 Provider；`app` 不提供顶层聚合入口，内聚子模块可以通过显式导出提供受控公共接口。
-- 路由可以直接导入独立的 `app/site` 和 `app/reportError`，但不得在运行时导入 Router 单例、生成路由树或 `App.tsx`，避免循环依赖。路由测试可以导入生成路由树，创建隔离的测试 Router。
+- 路由 head 可以直接读取 `VITE_SITE_NAME`，路由也可以导入独立的 `app/reportError`；但不得在运行时导入 Router 单例、生成路由树或 `App.tsx`，避免循环依赖。路由测试可以导入生成路由树，创建隔离的测试 Router。
 - `routes` 负责编排 URL 行为和加载流程、组合 feature，也可实现简单静态页面。
 - `features` 可以依赖通用基础模块和其他 feature 的公共 API，但不能依赖应用入口或 `app` 模块。
 - Provider 支撑的公共能力应从按需创建的 `src/<capability>` 或公共 feature API 暴露，再由 `App.tsx` 装配。

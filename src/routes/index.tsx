@@ -1,5 +1,4 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { SITE_NAME } from '@/app/site'
 import { Counter } from '@/features/example-counter/ui/Counter'
 import { PostsPreview } from '@/features/example-posts/ui/PostsPreview'
 
@@ -99,7 +98,7 @@ const HomePage: React.FC = () => {
 export const Route = createFileRoute('/')({
   head: () => ({
     meta: [
-      { title: `Home - ${SITE_NAME}` },
+      { title: `Home - ${import.meta.env.VITE_SITE_NAME}` },
       {
         name: 'description',
         content:

@@ -1,5 +1,4 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { SITE_NAME } from '@/app/site'
 import { sleep } from '@/lib'
 
 const LoadingDemoPage: React.FC = () => {
@@ -35,7 +34,9 @@ export const Route = createFileRoute('/loading')({
   loader: () => sleep(1500),
   head: () => ({
     meta: [
-      { title: `Router Loading Demo - ${SITE_NAME}` },
+      {
+        title: `Router Loading Demo - ${import.meta.env.VITE_SITE_NAME}`,
+      },
       {
         name: 'description',
         content: 'Demonstrates initial and navigation loading feedback.',

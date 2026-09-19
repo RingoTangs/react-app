@@ -1,6 +1,5 @@
 import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { reportError } from '@/app/reportError'
-import { SITE_NAME } from '@/app/site'
 import { NotFound } from '@/components'
 
 const NotFoundComponent: React.FC = () => {
@@ -19,7 +18,7 @@ export const Route = createFileRoute('/$')({
     return {
       meta: [
         {
-          title: `404 - Page Not Found | ${SITE_NAME}`,
+          title: `404 - Page Not Found | ${import.meta.env.VITE_SITE_NAME}`,
         },
         {
           name: 'description',

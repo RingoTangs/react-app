@@ -7,6 +7,8 @@ import { defineConfig, loadEnv } from 'vite'
 
 const PORT = 3000
 
+const dirname = import.meta.dirname
+
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, cwd(), 'VITE_')
@@ -20,7 +22,10 @@ export default defineConfig(({ mode }) => {
       // Please make sure that '@tanstack/router-plugin' is passed before '@vitejs/plugin-react'
       tanstackRouter({
         target: 'react',
-        generatedRouteTree: './src/app/router/routeTree.gen.ts',
+        generatedRouteTree: path.resolve(
+          dirname,
+          './src/app/router/routeTree.gen.ts',
+        ),
         autoCodeSplitting: true,
       }),
       react(),
@@ -34,7 +39,7 @@ export default defineConfig(({ mode }) => {
     },
     resolve: {
       alias: {
-        '@': path.resolve(import.meta.dirname, './src'),
+        '@': path.resolve(dirname, './src'),
       },
     },
     test: {

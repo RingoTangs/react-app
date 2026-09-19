@@ -20,7 +20,7 @@ const PROGRESS_WAITING_TIME_MS = 500
 const PROGRESS_TRANSITION_TIME_MS = 1000
 
 /*
- * RouterProgress 划分加载轮次，ProgressCycle 延迟显示，ActiveBar 控制动画。
+ * LoaderProgress 划分加载轮次，ProgressCycle 延迟显示，ActiveBar 控制动画。
  * 每轮使用独立实例，防止第三方库上一轮的完成定时器干扰新导航。
  */
 
@@ -100,23 +100,7 @@ const ProgressCycle: React.FC<{ pending: boolean }> = ({ pending }) => {
 }
 
 export const LoaderProgress: React.FC = () => {
-  /**
-   * TopProgressBar 只表示 SPA 内部的前台路由切换。
-   *
-   * - status === 'pending'
-   *   当前存在尚未完成的前台 navigation。
-   *
-   * - resolvedLocation !== undefined
-   *   Router 至少已经完成过一次 location resolution。
-   *   因此可以排除首次打开 / F5 刷新时的 initial navigation。
-   *
-   * Background loader reload 不会让 Router status 变成 pending，
-   * 所以普通后台刷新也不会触发 TopProgressBar。
-   */
-  // const pending = useRouterState({
-  //   select: (state) => state.status === 'pending',
-  // })
-
+  // 只展示 LoaderSync 同步的前台导航状态。
   const pending = useLoaderStore((state) => state.mode === 'navigation')
 
   // 保存上一轮状态和 navigation cycle 编号。

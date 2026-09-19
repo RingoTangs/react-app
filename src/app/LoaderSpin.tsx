@@ -2,8 +2,9 @@ import { useEffect, useRef, useState } from 'react'
 import { FadeLoader } from 'react-spinners'
 import { useLoaderStore } from './loaderStore'
 
-const SHOW_DELAY = 150
-const MIN_VISIBLE = 300
+// 快速加载不显示；显示后至少保留一小段时间，避免闪烁。
+const SHOW_DELAY_MS = 150
+const MIN_VISIBLE_MS = 300
 
 export function LoaderSpin() {
   const loading = useLoaderStore((state) => state.mode === 'boot')
@@ -14,15 +15,15 @@ export function LoaderSpin() {
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout> | undefined
 
-    if (loading) {
+    if (loading && !visible) {
       timer = setTimeout(() => {
         visibleAtRef.current = performance.now()
         setVisible(true)
-      }, SHOW_DELAY)
-    } else if (visible) {
+      }, SHOW_DELAY_MS)
+    } else if (!loading && visible) {
       const elapsed = performance.now() - visibleAtRef.current
 
-      const remaining = Math.max(MIN_VISIBLE - elapsed, 0)
+      const remaining = Math.max(MIN_VISIBLE_MS - elapsed, 0)
 
       timer = setTimeout(() => {
         setVisible(false)
@@ -30,7 +31,7 @@ export function LoaderSpin() {
     }
 
     return () => {
-      if (timer) {
+      if (timer !== undefined) {
         clearTimeout(timer)
       }
     }
@@ -41,8 +42,14 @@ export function LoaderSpin() {
   }
 
   return (
-    <div className="flex min-h-dvh w-full items-center justify-center">
-      <FadeLoader color="#36d7b7" />
+    <div
+      role="status"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-gray-50"
+    >
+      <span className="sr-only">Loading...</span>
+      <div aria-hidden="true">
+        <FadeLoader color="#36d7b7" />
+      </div>
     </div>
   )
 }

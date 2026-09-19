@@ -10,6 +10,7 @@ interface LoadingState {
   clearLoading: () => void
 }
 
+// 由 LoaderSync 独占同步路由状态；业务请求不写入这个 store。
 export const useLoaderStore = create<LoadingState>((set) => ({
   mode: 'boot',
 

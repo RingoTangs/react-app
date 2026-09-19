@@ -112,9 +112,13 @@ src/
 ├── setupTests.ts               # Vitest 与 Testing Library 测试初始化
 │
 ├── app/                        # 当前应用的配置、初始化和集成
-│   ├── RouterProgress.tsx      # 路由切换进度条，按加载轮次隔离动画
+│   ├── LoaderProgress.tsx      # 站内导航进度条，按加载轮次隔离动画
+│   ├── LoaderSpin.tsx          # 首次加载的全屏遮罩
+│   ├── LoaderSync.tsx          # 将 Router 状态同步到 loaderStore
+│   ├── loaderStore.ts          # idle / boot / navigation 加载模式
+│   ├── RouterInnerWrap.tsx     # 在路由匹配树外挂载状态同步组件
 │   ├── queryClient.ts          # Provider 与 Router 共用的 QueryClient
-│   ├── router.ts               # Router 实例和默认配置
+│   ├── router.tsx              # Router 实例和默认配置
 │   ├── site.ts                 # 供路由标题复用的站点名称
 │   ├── reportError.ts          # 独立的错误上报集成点
 │   └── routeTree.gen.ts        # 生成的路由树；不要手动编辑
@@ -171,7 +175,7 @@ Provider 在 `App.tsx` 中组合，而不是作为 feature 面向的公共 API�
 flowchart TD
   App["App.tsx<br/>Provider 与开发工具组合"]
   TanStack["app 初始化模块<br/>QueryClient、Router 与生成路由树"]
-  RouterIntegration["app 独立支持模块<br/>RouterProgress、site、reportError"]
+  RouterIntegration["app 独立支持模块<br/>site、reportError"]
   Routes["routes<br/>URL 映射与加载编排"]
   Features["features<br/>业务能力"]
   Common["components / lib / assets<br/>产品无关基础模块"]
@@ -198,7 +202,7 @@ flowchart TD
 
 - `components`、`lib` 和 `assets` 是通用基础层，必须独立于 `App.tsx`、`app`、`routes` 和 `features`。
 - `App.tsx` 引用 `app` 的实例来组合 Provider；该目录承载应用配置、初始化与集成，不添加 barrel 或业务查询代码。
-- 路由可以直接导入独立的 `app/site`、`app/reportError` 和 `app/RouterProgress`，但不得在运行时导入 Router 单例、生成路由树或 `App.tsx`，避免循环依赖。路由测试可以导入生成路由树，创建隔离的测试 Router。
+- 路由可以直接导入独立的 `app/site` 和 `app/reportError`，但不得在运行时导入 Router 单例、生成路由树或 `App.tsx`，避免循环依赖。路由测试可以导入生成路由树，创建隔离的测试 Router。
 - `routes` 负责编排 URL 行为和加载流程、组合 feature，也可实现简单静态页面。
 - `features` 可以依赖通用基础模块和其他 feature 的公共 API，但不能依赖应用入口或 `app` 模块。
 - Provider 支撑的公共能力应从按需创建的 `src/<capability>` 或公共 feature API 暴露，再由 `App.tsx` 装配。
@@ -306,7 +310,7 @@ Router 设置 `defaultPreloadStaleTime: 0`，将预加载的数据新鲜度判�
 
 ## 模板默认规则
 
-路由进度条在切换持续 150ms 后显示，仅反映路由加载和页面过渡，不代表普通 React Query 请求或所有网络请求。每轮加载使用独立进度条实例，避免上一轮完成动画干扰下一轮。
+首次加载使用全屏 Spinner：等待 150ms 后显示，显示后至少保留 300ms；后续前台导航使用顶部进度条，持续 150ms 后显示，每轮使用独立实例隔离完成动画。`LoaderSync` 通过 Router 的 `InnerWrap` 挂载在路由匹配树的 Suspense 外，独占同步 `loaderStore` 的 `idle / boot / navigation` 状态，卸载时清理。Loader 只反映应用启动后的路由加载和页面过渡，不代表所有网络请求，业务请求不写入这个 store。
 
 - Router 和 React Query devtools 只在开发环境启用。
 - 模板全局使用显式导入；例如 `tv()` 这类 helper 应在使用处显式导入。

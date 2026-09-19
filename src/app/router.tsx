@@ -1,10 +1,12 @@
 import { createRouter } from '@tanstack/react-router'
 import { queryClient } from './queryClient'
+import { RouterInnerWrap } from './RouterInnerWrap'
 import { routeTree } from './routeTree.gen'
 
 // 在模块顶层创建路由，避免组件重新渲染时重复创建。
 export const router = createRouter({
   routeTree,
+  InnerWrap: RouterInnerWrap,
   context: {
     queryClient,
   },

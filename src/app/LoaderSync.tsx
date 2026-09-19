@@ -20,17 +20,13 @@ export function LoaderSync() {
   const clearLoading = useLoaderStore((state) => state.clearLoading)
 
   useEffect(() => {
-    if (!routerState.pending) {
-      clearLoading()
-      return
-    }
-
     if (!routerState.resolved) {
       setBootLoading()
       return
     }
 
-    setNavigationLoading()
+    if (routerState.pending) setNavigationLoading()
+    else clearLoading()
   }, [
     routerState.pending,
     routerState.resolved,
@@ -38,6 +34,9 @@ export function LoaderSync() {
     setNavigationLoading,
     clearLoading,
   ])
+
+  // 独立于状态同步，只有卸载（或 StrictMode 重放）时清理。
+  useEffect(() => clearLoading, [clearLoading])
 
   return null
 }

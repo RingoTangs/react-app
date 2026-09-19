@@ -1,8 +1,8 @@
 import { act, cleanup, render, screen } from '@testing-library/react'
 import { StrictMode } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { LoaderSpin } from './LoaderSpin'
 import { useLoaderStore } from './loaderStore'
+import { RouterSpinner } from './RouterSpinner'
 
 const advance = (ms: number) => act(() => vi.advanceTimersByTime(ms))
 const stop = () => act(() => useLoaderStore.getState().clearLoading())
@@ -19,7 +19,7 @@ afterEach(() => {
 
 describe('启动加载遮罩', () => {
   it('快速加载不会显示', () => {
-    render(<LoaderSpin />)
+    render(<RouterSpinner />)
     advance(149)
     stop()
     advance(1000)
@@ -27,7 +27,7 @@ describe('启动加载遮罩', () => {
   })
 
   it('延迟显示后补足最短展示时间', () => {
-    render(<LoaderSpin />)
+    render(<RouterSpinner />)
     advance(150)
     expect(screen.getByRole('status')).toHaveTextContent('Loading...')
     expect(screen.getByRole('status')).toHaveClass('fixed', 'inset-0')
@@ -39,7 +39,7 @@ describe('启动加载遮罩', () => {
   })
 
   it('持续加载不会重置首次显示时间', () => {
-    render(<LoaderSpin />)
+    render(<RouterSpinner />)
     advance(150)
     advance(200)
     stop()
@@ -48,7 +48,7 @@ describe('启动加载遮罩', () => {
   })
 
   it('重新加载取消隐藏，已显示的遮罩不重新计时', () => {
-    render(<LoaderSpin />)
+    render(<RouterSpinner />)
     advance(150)
     stop()
     advance(100)
@@ -63,7 +63,7 @@ describe('启动加载遮罩', () => {
   it.each([50, 150])('strictMode 下在 %sms 卸载会清理定时器', (ms) => {
     const { unmount } = render(
       <StrictMode>
-        <LoaderSpin />
+        <RouterSpinner />
       </StrictMode>,
     )
     advance(ms)

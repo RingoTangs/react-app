@@ -9,10 +9,10 @@ import {
 import { act, cleanup, render, screen } from '@testing-library/react'
 import { StrictMode } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { LoaderProgress } from './LoaderProgress'
-import { LoaderSpin } from './LoaderSpin'
 import { useLoaderStore } from './loaderStore'
 import { LoaderSync } from './LoaderSync'
+import { RouterProgress } from './RouterProgress'
+import { RouterSpinner } from './RouterSpinner'
 
 const TestInnerWrap = ({ children }: React.PropsWithChildren) => (
   <>
@@ -58,8 +58,8 @@ const setup = () => {
   const view = render(
     <StrictMode>
       <RouterProvider router={router} />
-      <LoaderSpin />
-      <LoaderProgress />
+      <RouterSpinner />
+      <RouterProgress />
     </StrictMode>,
   )
   return { router, loader, resolve, reject, ...view }

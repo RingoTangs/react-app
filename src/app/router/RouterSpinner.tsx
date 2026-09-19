@@ -6,7 +6,7 @@ import { useLoaderStore } from './loaderStore'
 const SHOW_DELAY_MS = 150
 const MIN_VISIBLE_MS = 300
 
-export const LoaderSpin: React.FC = () => {
+export const RouterSpinner: React.FC = () => {
   const loading = useLoaderStore((state) => state.mode === 'boot')
 
   const [visible, setVisible] = useState(false)

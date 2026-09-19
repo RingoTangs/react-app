@@ -116,8 +116,8 @@ src/
 │   ├── reportError.ts          # 独立的错误上报集成点
 │   ├── router/                 # TanStack Router 配置与应用级集成
 │   │   ├── index.ts            # App 装配所需的受控公共接口
-│   │   ├── LoaderProgress.tsx  # 站内导航进度条
-│   │   ├── LoaderSpin.tsx      # 首次加载的全屏遮罩
+│   │   ├── RouterProgress.tsx  # 站内导航进度条
+│   │   ├── RouterSpinner.tsx   # 首次加载的全屏遮罩
 │   │   ├── LoaderSync.tsx      # 将 Router 状态同步到 loaderStore
 │   │   ├── loaderStore.ts      # idle / boot / navigation 加载模式
 │   │   ├── router.tsx          # Router 实例和默认配置

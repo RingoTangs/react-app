@@ -49,7 +49,7 @@ const HomePage: React.FC = () => {
             </Link>
             <Link
               to="/error"
-              className="border-border bg-surface text-foreground hover:border-muted-foreground hover:bg-surface-hover focus-visible:outline-ring rounded-full border px-8 py-3 font-semibold backdrop-blur-sm transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2"
+              className="bg-primary text-primary-foreground hover:bg-primary-hover focus-visible:outline-ring rounded-full px-8 py-3 font-semibold shadow-lg transition-all duration-300 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2"
             >
               Verify Error Boundary
             </Link>

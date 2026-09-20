@@ -42,13 +42,13 @@ const HomePage: React.FC = () => {
           <div className="mt-10 flex flex-wrap justify-center gap-4">
             <Link
               to="/loading"
-              className="bg-primary text-primary-foreground hover:bg-primary-hover focus-visible:outline-ring rounded-full px-8 py-3 font-semibold shadow-lg transition-all duration-300 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:outline-ring rounded-full px-8 py-3 font-semibold shadow-lg transition-all duration-300 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2"
             >
               Verify Router Loading
             </Link>
             <Link
               to="/error"
-              className="bg-primary text-primary-foreground hover:bg-primary-hover focus-visible:outline-ring rounded-full px-8 py-3 font-semibold shadow-lg transition-all duration-300 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:outline-ring rounded-full px-8 py-3 font-semibold shadow-lg transition-all duration-300 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2"
             >
               Verify Error Boundary
             </Link>
@@ -56,7 +56,7 @@ const HomePage: React.FC = () => {
               href="https://github.com/RingoTangs/react-app"
               target="_blank"
               rel="noopener noreferrer"
-              className="border-border bg-surface text-foreground hover:border-muted-foreground hover:bg-surface-hover focus-visible:outline-ring rounded-full border px-8 py-3 font-semibold backdrop-blur-sm transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2"
+              className="border-border bg-secondary text-secondary-foreground hover:border-muted-foreground hover:bg-secondary/80 focus-visible:outline-ring rounded-full border px-8 py-3 font-semibold transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2"
             >
               Open Repository
             </a>
@@ -67,9 +67,9 @@ const HomePage: React.FC = () => {
           {highlights.map((highlight) => (
             <div
               key={highlight.title}
-              className="border-border bg-surface hover:border-primary/40 hover:bg-surface-hover rounded-2xl border p-6 backdrop-blur-sm transition-all duration-300"
+              className="border-border bg-card text-card-foreground hover:border-primary/40 hover:bg-accent rounded-2xl border p-6 transition-all duration-300"
             >
-              <h3 className="text-foreground mb-3 text-lg font-semibold">
+              <h3 className="text-card-foreground mb-3 text-lg font-semibold">
                 {highlight.title}
               </h3>
               <p className="text-muted-foreground text-sm leading-relaxed">

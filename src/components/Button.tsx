@@ -6,9 +6,9 @@ const buttonVariants = tv({
   variants: {
     intent: {
       primary:
-        'bg-primary text-primary-foreground enabled:hover:bg-primary-hover shadow-md enabled:hover:shadow-lg',
+        'bg-primary text-primary-foreground enabled:hover:bg-primary/90 shadow-md enabled:hover:shadow-lg',
       secondary:
-        'border-border bg-surface text-foreground enabled:hover:bg-surface-hover border',
+        'border-border bg-secondary text-secondary-foreground enabled:hover:bg-secondary/80 border',
     },
   },
   defaultVariants: {

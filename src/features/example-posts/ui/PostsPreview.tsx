@@ -23,7 +23,7 @@ export const PostsPreview: React.FC = () => {
   const refreshError = postsQuery.isRefetchError ? (
     <div
       role="alert"
-      className="border-danger-border/30 bg-danger-surface/30 text-danger-foreground mb-6 rounded-xl border p-4"
+      className="border-destructive/30 bg-destructive/10 text-destructive mb-6 rounded-xl border p-4"
     >
       <p>Unable to refresh posts. Showing previously loaded data.</p>
       <p className="mt-2 text-sm">{getErrorMessage(postsQuery.error)}</p>
@@ -33,11 +33,11 @@ export const PostsPreview: React.FC = () => {
 
   if (postsQuery.isPending && !postsQuery.isFetched) {
     return (
-      <section className="border-border bg-surface rounded-3xl border p-6 backdrop-blur-sm sm:p-8">
+      <section className="border-border bg-card text-card-foreground rounded-3xl border p-6 sm:p-8">
         <p className="text-primary text-sm font-medium tracking-[0.16em] uppercase">
           Data Fetching
         </p>
-        <h2 className="text-foreground mt-3 text-2xl font-semibold">
+        <h2 className="text-card-foreground mt-3 text-2xl font-semibold">
           Loading posts...
         </h2>
         <p className="text-muted-foreground mt-3 text-sm">
@@ -49,14 +49,14 @@ export const PostsPreview: React.FC = () => {
 
   if (postsQuery.data === undefined) {
     return (
-      <section className="border-danger-border/30 bg-danger-surface/30 rounded-3xl border p-6 backdrop-blur-sm sm:p-8">
-        <p className="text-danger-foreground text-sm font-medium tracking-[0.16em] uppercase">
+      <section className="border-destructive/30 bg-destructive/10 rounded-3xl border p-6 sm:p-8">
+        <p className="text-destructive text-sm font-medium tracking-[0.16em] uppercase">
           Data Fetching
         </p>
         <h2 className="text-foreground mt-3 text-2xl font-semibold">
           Failed to load posts
         </h2>
-        <p className="text-danger-foreground mt-3 text-sm">
+        <p className="text-destructive mt-3 text-sm">
           {getErrorMessage(postsQuery.error ?? postsQuery.failureReason)}
         </p>
         {retryButton}
@@ -68,12 +68,12 @@ export const PostsPreview: React.FC = () => {
 
   if (posts.length === 0) {
     return (
-      <section className="border-border bg-surface rounded-3xl border p-6 backdrop-blur-sm sm:p-8">
+      <section className="border-border bg-card text-card-foreground rounded-3xl border p-6 sm:p-8">
         {refreshError}
         <p className="text-primary text-sm font-medium tracking-[0.16em] uppercase">
           Data Fetching
         </p>
-        <h2 className="text-foreground mt-3 text-2xl font-semibold">
+        <h2 className="text-card-foreground mt-3 text-2xl font-semibold">
           No posts found
         </h2>
         <p className="text-muted-foreground mt-3 text-sm">
@@ -84,13 +84,13 @@ export const PostsPreview: React.FC = () => {
   }
 
   return (
-    <section className="border-border bg-surface rounded-3xl border p-6 backdrop-blur-sm sm:p-8">
+    <section className="border-border bg-card text-card-foreground rounded-3xl border p-6 sm:p-8">
       {refreshError}
       <div className="mb-6 max-w-2xl">
         <p className="text-primary text-sm font-medium tracking-[0.16em] uppercase">
           Data Fetching
         </p>
-        <h2 className="text-foreground mt-3 text-3xl font-semibold">
+        <h2 className="text-card-foreground mt-3 text-3xl font-semibold">
           Feature-owned API + React Query
         </h2>
         <p className="text-muted-foreground mt-3 text-sm leading-relaxed">

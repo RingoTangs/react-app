@@ -8,7 +8,7 @@ const CounterValue: React.FC = () => {
 
   return (
     <p
-      className="text-foreground mt-4 text-xl tabular-nums"
+      className="text-card-foreground mt-4 text-xl tabular-nums"
       data-testid="count"
     >
       Current count: {count}
@@ -53,13 +53,13 @@ const CounterActions: React.FC = () => {
 
 export const Counter: React.FC = () => {
   return (
-    <section className="border-border bg-surface rounded-3xl border p-6 backdrop-blur-sm sm:p-8">
+    <section className="border-border bg-card text-card-foreground rounded-3xl border p-6 sm:p-8">
       <div className="max-w-2xl">
         <p className="text-primary text-sm font-medium tracking-[0.16em] uppercase">
           Zustand
         </p>
         <h2
-          className="text-foreground mt-3 text-3xl font-semibold"
+          className="text-card-foreground mt-3 text-3xl font-semibold"
           data-testid="title"
         >
           Counter

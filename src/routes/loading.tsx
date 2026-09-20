@@ -15,13 +15,13 @@ const LoadingDemoPage: React.FC = () => {
       <div className="flex flex-wrap justify-center gap-4">
         <a
           href="/loading"
-          className="bg-primary text-primary-foreground hover:bg-primary-hover focus-visible:ring-ring focus-visible:ring-offset-background inline-flex cursor-pointer items-center justify-center rounded-lg px-6 py-3 text-base font-medium shadow-md transition-all duration-200 hover:shadow-lg focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+          className="bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-ring focus-visible:ring-offset-background inline-flex cursor-pointer items-center justify-center rounded-lg px-6 py-3 text-base font-medium shadow-md transition-all duration-200 hover:shadow-lg focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
         >
           Reload to Verify Spinner
         </a>
         <Link
           to="/"
-          className="border-border bg-surface text-foreground hover:bg-surface-hover focus-visible:ring-ring focus-visible:ring-offset-background inline-flex cursor-pointer items-center justify-center rounded-lg border px-6 py-3 text-base font-medium transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+          className="border-border bg-secondary text-secondary-foreground hover:bg-secondary/80 focus-visible:ring-ring focus-visible:ring-offset-background inline-flex cursor-pointer items-center justify-center rounded-lg border px-6 py-3 text-base font-medium transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
         >
           Back to Home
         </Link>

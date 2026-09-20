@@ -109,10 +109,10 @@ describe('首页示例', () => {
     ).toBeInTheDocument()
     expect(await screen.findByText('No posts found')).toBeInTheDocument()
     expect(
-      screen.getByRole('link', { name: 'Verify Router Loading' }),
+      screen.getByRole('link', { name: 'Router Loading' }),
     ).toBeInTheDocument()
     expect(
-      screen.getByRole('link', { name: 'Verify Error Boundary' }),
+      screen.getByRole('link', { name: 'Error Boundary' }),
     ).toBeInTheDocument()
     await expectHomeHead()
     expect(screen.getByTestId('count')).toHaveTextContent('Current count: 0')
@@ -134,9 +134,7 @@ describe('router loading 演示页面', () => {
     const { history, router } = renderWithRouter(['/'])
 
     await screen.findByRole('heading', { name: 'Counter', level: 2 })
-    await user.click(
-      screen.getByRole('link', { name: 'Verify Router Loading' }),
-    )
+    await user.click(screen.getByRole('link', { name: 'Router Loading' }))
 
     expect(
       await screen.findByRole(
@@ -148,7 +146,7 @@ describe('router loading 演示页面', () => {
     expect(router.state.location.pathname).toBe('/loading')
     expect(history.location.pathname).toBe('/loading')
     expect(
-      screen.getByRole('link', { name: 'Reload to Verify Spinner' }),
+      screen.getByRole('link', { name: 'Reload Spinner' }),
     ).toHaveAttribute('href', '/loading')
     await expectLoadingHead()
 
@@ -176,7 +174,7 @@ describe('router loading 演示页面', () => {
       ),
     ).toBeInTheDocument()
     expect(
-      screen.getByRole('link', { name: 'Reload to Verify Spinner' }),
+      screen.getByRole('link', { name: 'Reload Spinner' }),
     ).toHaveAttribute('href', '/react-app/#/loading')
   })
 })
@@ -265,9 +263,7 @@ describe('root route error boundary', () => {
       await screen.findByText('Start from a stable baseline, not a demo.'),
     ).toBeInTheDocument()
 
-    await user.click(
-      screen.getByRole('link', { name: 'Verify Error Boundary' }),
-    )
+    await user.click(screen.getByRole('link', { name: 'Error Boundary' }))
 
     expect(
       await screen.findByText(

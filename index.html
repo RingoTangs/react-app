@@ -5,6 +5,21 @@
     <link rel="icon" type="image/svg+xml" href="/app-icon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>%VITE_SITE_NAME%</title>
+    <script>
+      ;(() => {
+        const saved = localStorage.getItem('theme') || 'system'
+
+        const theme =
+          saved === 'system'
+            ? matchMedia('(prefers-color-scheme: dark)').matches
+              ? 'dark'
+              : 'light'
+            : saved
+
+        document.documentElement.dataset.theme = theme
+        document.documentElement.style.colorScheme = theme
+      })()
+    </script>
   </head>
   <body>
     <noscript>

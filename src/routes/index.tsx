@@ -34,7 +34,7 @@ const HomePage: React.FC = () => {
           <h1 className="text-foreground mb-6 text-5xl font-bold tracking-tight md:text-7xl">
             Start from a stable baseline, not a demo.
           </h1>
-          <p className="text-foreground mx-auto max-w-3xl text-lg leading-relaxed md:text-xl">
+          <p className="text-muted-foreground mx-auto max-w-3xl text-lg leading-relaxed md:text-xl">
             This starter keeps runtime defaults conservative and pushes
             environment config, monitoring, providers, and transport concerns
             into clear boundaries.

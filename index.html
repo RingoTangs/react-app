@@ -11,7 +11,7 @@
         let saved = 'system'
 
         try {
-          const stored = localStorage.getItem('theme')
+          const stored = localStorage.getItem('%VITE_THEME_STORAGE_KEY%')
           if (themes.includes(stored)) saved = stored
         } catch {}
 

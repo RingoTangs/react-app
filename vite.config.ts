@@ -16,6 +16,12 @@ export default defineConfig(({ mode }) => {
     throw new Error('Missing required environment variable: VITE_SITE_NAME')
   }
 
+  if (!env.VITE_THEME_STORAGE_KEY?.trim()) {
+    throw new Error(
+      'Missing required environment variable: VITE_THEME_STORAGE_KEY',
+    )
+  }
+
   return {
     plugins: [
       // Please make sure that '@tanstack/router-plugin' is passed before '@vitejs/plugin-react'

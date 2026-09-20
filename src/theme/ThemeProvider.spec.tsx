@@ -2,6 +2,7 @@ import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { StrictMode } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { ThemeProvider, useTheme } from '@/theme'
+import { THEME_STORAGE_KEY } from './theme'
 
 const SYSTEM_THEME_QUERY = '(prefers-color-scheme: dark)'
 
@@ -97,11 +98,11 @@ describe('theme provider', () => {
     expect(screen.getByTestId('resolved-theme')).toHaveTextContent('light')
     expect(document.documentElement).toHaveAttribute('data-theme', 'light')
     expect(document.documentElement.style.colorScheme).toBe('light')
-    expect(localStorage.getItem('theme')).toBe('system')
+    expect(localStorage.getItem(THEME_STORAGE_KEY)).toBe('system')
   })
 
   it('恢复已保存的深色主题', () => {
-    localStorage.setItem('theme', 'dark')
+    localStorage.setItem(THEME_STORAGE_KEY, 'dark')
     installMatchMedia()
     renderTheme()
 
@@ -111,13 +112,13 @@ describe('theme provider', () => {
   })
 
   it('无效存储值回退为 system', () => {
-    localStorage.setItem('theme', 'unknown')
+    localStorage.setItem(THEME_STORAGE_KEY, 'unknown')
     installMatchMedia(true)
     renderTheme()
 
     expect(screen.getByTestId('theme')).toHaveTextContent('system')
     expect(screen.getByTestId('resolved-theme')).toHaveTextContent('dark')
-    expect(localStorage.getItem('theme')).toBe('system')
+    expect(localStorage.getItem(THEME_STORAGE_KEY)).toBe('system')
   })
 
   it('切换主题时同步 DOM 和存储', () => {
@@ -128,11 +129,11 @@ describe('theme provider', () => {
     expect(screen.getByTestId('theme')).toHaveTextContent('dark')
     expect(document.documentElement).toHaveAttribute('data-theme', 'dark')
     expect(document.documentElement.style.colorScheme).toBe('dark')
-    expect(localStorage.getItem('theme')).toBe('dark')
+    expect(localStorage.getItem(THEME_STORAGE_KEY)).toBe('dark')
 
     fireEvent.click(screen.getByRole('button', { name: 'Light' }))
     expect(document.documentElement).toHaveAttribute('data-theme', 'light')
-    expect(localStorage.getItem('theme')).toBe('light')
+    expect(localStorage.getItem(THEME_STORAGE_KEY)).toBe('light')
   })
 
   it('system 模式响应系统变化，显式主题保持不变', () => {
@@ -157,7 +158,7 @@ describe('theme provider', () => {
     act(() => {
       window.dispatchEvent(
         new StorageEvent('storage', {
-          key: 'theme',
+          key: THEME_STORAGE_KEY,
           newValue: 'dark',
         }),
       )

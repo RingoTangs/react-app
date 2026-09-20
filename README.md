@@ -79,9 +79,9 @@ Nginx 对 `/assets/` 下带内容哈希的构建文件设置一年 `immutable` �
 
 ### Docker 环境变量
 
-根目录 `.env` 保存项目公开且必需的 Vite 构建默认值，并受 Git 跟踪。Docker 构建会读取同一份 `.env`，因此本地构建和默认镜像使用一致的 `VITE_SITE_NAME`。`.env.local`、`.env.production` 等覆盖文件仍会被 Git 和 Docker 构建上下文排除。
+根目录 `.env` 保存项目公开且必需的 Vite 构建默认值，并受 Git 跟踪。Docker 构建会读取同一份 `.env`，因此本地构建和默认镜像使用一致的 `VITE_SITE_NAME` 和 `VITE_THEME_STORAGE_KEY`。`.env.local`、`.env.production` 等覆盖文件仍会被 Git 和 Docker 构建上下文排除。
 
-`VITE_SITE_NAME` 缺失或为空时，Vite 会立即终止启动或构建。所有 `VITE_*` 变量都会写入浏览器可访问的前端产物，因此不能存放密钥。修改这些值后需要重新构建；`docker run -e` 无法改变已经生成的静态文件。部署需要不同配置时，应在构建阶段注入对应值；若需要运行时切换环境，再按实际需求设计 `/config.js` 或 `/env.json` 等运行时配置机制。
+`VITE_SITE_NAME` 或 `VITE_THEME_STORAGE_KEY` 缺失或为空时，Vite 会立即终止启动或构建。所有 `VITE_*` 变量都会写入浏览器可访问的前端产物，因此不能存放密钥。修改这些值后需要重新构建；`docker run -e` 无法改变已经生成的静态文件。部署需要不同配置时，应在构建阶段注入对应值；若需要运行时切换环境，再按实际需求设计 `/config.js` 或 `/env.json` 等运行时配置机制。
 
 ## 项目结构
 
@@ -318,6 +318,8 @@ Router 设置 `defaultPreloadStaleTime: 0`，将预加载的数据新鲜度判�
 ### 主题颜色
 
 模板支持 `light`、`dark` 和跟随系统的 `system` 模式。颜色统一定义在 `src/style.css` 的 CSS variables 和 `@theme inline` 映射中，`src/theme` 管理用户选择、持久化、系统主题监听和 `data-theme`。`index.html` 在 React 启动前恢复主题，避免首屏闪烁。
+
+主题存储键由公开构建变量 `VITE_THEME_STORAGE_KEY` 统一提供给首屏脚本和 ThemeProvider。修改该值后，浏览器不会自动迁移旧 key 中保存的主题偏好。
 
 组件使用 `bg-background`、`bg-card`、`text-foreground`、`text-muted-foreground` 和 `bg-primary` 等语义类。修改主题时优先调整 CSS variables；Loader 通过 `var(--color-primary)` 复用主色。
 

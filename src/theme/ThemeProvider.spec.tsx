@@ -80,7 +80,7 @@ const renderTheme = () => {
 
 beforeEach(() => {
   localStorage.clear()
-  delete document.documentElement.dataset.theme
+  document.documentElement.classList.remove('dark')
   document.documentElement.style.colorScheme = ''
 })
 
@@ -96,7 +96,7 @@ describe('theme provider', () => {
 
     expect(screen.getByTestId('theme')).toHaveTextContent('system')
     expect(screen.getByTestId('resolved-theme')).toHaveTextContent('light')
-    expect(document.documentElement).toHaveAttribute('data-theme', 'light')
+    expect(document.documentElement).not.toHaveClass('dark')
     expect(document.documentElement.style.colorScheme).toBe('light')
     expect(localStorage.getItem(THEME_STORAGE_KEY)).toBe('system')
   })
@@ -108,7 +108,7 @@ describe('theme provider', () => {
 
     expect(screen.getByTestId('theme')).toHaveTextContent('dark')
     expect(screen.getByTestId('resolved-theme')).toHaveTextContent('dark')
-    expect(document.documentElement).toHaveAttribute('data-theme', 'dark')
+    expect(document.documentElement).toHaveClass('dark')
   })
 
   it('无效存储值回退为 system', () => {
@@ -127,12 +127,12 @@ describe('theme provider', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Dark' }))
     expect(screen.getByTestId('theme')).toHaveTextContent('dark')
-    expect(document.documentElement).toHaveAttribute('data-theme', 'dark')
+    expect(document.documentElement).toHaveClass('dark')
     expect(document.documentElement.style.colorScheme).toBe('dark')
     expect(localStorage.getItem(THEME_STORAGE_KEY)).toBe('dark')
 
     fireEvent.click(screen.getByRole('button', { name: 'Light' }))
-    expect(document.documentElement).toHaveAttribute('data-theme', 'light')
+    expect(document.documentElement).not.toHaveClass('dark')
     expect(localStorage.getItem(THEME_STORAGE_KEY)).toBe('light')
   })
 
@@ -142,13 +142,13 @@ describe('theme provider', () => {
 
     act(() => media.setMatches(true))
     expect(screen.getByTestId('resolved-theme')).toHaveTextContent('dark')
-    expect(document.documentElement).toHaveAttribute('data-theme', 'dark')
+    expect(document.documentElement).toHaveClass('dark')
 
     fireEvent.click(screen.getByRole('button', { name: 'Light' }))
     act(() => media.setMatches(false))
     act(() => media.setMatches(true))
     expect(screen.getByTestId('resolved-theme')).toHaveTextContent('light')
-    expect(document.documentElement).toHaveAttribute('data-theme', 'light')
+    expect(document.documentElement).not.toHaveClass('dark')
   })
 
   it('响应其他标签页的主题变化', () => {
@@ -165,7 +165,7 @@ describe('theme provider', () => {
     })
 
     expect(screen.getByTestId('theme')).toHaveTextContent('dark')
-    expect(document.documentElement).toHaveAttribute('data-theme', 'dark')
+    expect(document.documentElement).toHaveClass('dark')
   })
 
   it('strict mode 卸载后清理系统主题监听', () => {

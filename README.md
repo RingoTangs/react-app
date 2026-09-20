@@ -329,7 +329,7 @@ Router 设置 `defaultPreloadStaleTime: 0`，将预加载的数据新鲜度判�
 
 ### 主题颜色
 
-模板支持 `light`、`dark` 和跟随系统的 `system` 模式。颜色统一定义在 `src/style.css` 的 CSS variables 和 `@theme inline` 映射中，`src/theme` 管理用户选择、持久化、系统主题监听和 `data-theme`。`index.html` 在 React 启动前恢复主题，避免首屏闪烁。
+模板支持 `light`、`dark` 和跟随系统的 `system` 模式。颜色统一定义在 `src/style.css` 的 CSS variables 和 `@theme inline` 映射中，`src/theme` 管理用户选择、持久化、系统主题监听和根元素的 `.dark` class。`index.html` 在 React 启动前恢复主题，避免首屏闪烁。
 
 主题存储键由公开构建变量 `VITE_THEME_STORAGE_KEY` 统一提供给首屏脚本和 ThemeProvider。修改该值后，浏览器不会自动迁移旧 key 中保存的主题偏好。
 

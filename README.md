@@ -79,9 +79,11 @@ Nginx 对 `/assets/` 下带内容哈希的构建文件设置一年 `immutable` �
 
 ### Docker 环境变量
 
-根目录 `.env` 保存项目公开且必需的 Vite 构建默认值，并受 Git 跟踪。Docker 构建会读取同一份 `.env`，因此本地构建和默认镜像使用一致的 `VITE_SITE_NAME` 和 `VITE_THEME_STORAGE_KEY`。`.env.local`、`.env.production` 等覆盖文件仍会被 Git 和 Docker 构建上下文排除。
+根目录 `.env` 保存项目公开且必需的 Vite 构建默认值，并受 Git 跟踪。Docker 构建会读取同一份 `.env`，因此本地构建和默认镜像使用一致的 `VITE_BASE_PATH`、`VITE_SITE_NAME` 和 `VITE_THEME_STORAGE_KEY`。`.env.local`、`.env.production` 等覆盖文件仍会被 Git 和 Docker 构建上下文排除。
 
-`VITE_SITE_NAME` 或 `VITE_THEME_STORAGE_KEY` 缺失或为空时，Vite 会立即终止启动或构建。所有 `VITE_*` 变量都会写入浏览器可访问的前端产物，因此不能存放密钥。修改这些值后需要重新构建；`docker run -e` 无法改变已经生成的静态文件。部署需要不同配置时，应在构建阶段注入对应值；若需要运行时切换环境，再按实际需求设计 `/config.js` 或 `/env.json` 等运行时配置机制。
+`VITE_BASE_PATH` 同时配置 Vite 资源路径和 TanStack Router `basepath`，默认值为 `/`。它只接受 `/` 或以 `/` 开头和结尾的绝对路径，例如 `/react-app/`。使用子路径时，静态服务器必须在相同前缀提供构建产物，并将该前缀下的页面路由回退到对应的 `index.html`；仓库提供的 Nginx 配置保持根路径部署。
+
+任何必需的 Vite 环境变量缺失、为空或格式无效时，Vite 会立即终止启动或构建。所有 `VITE_*` 变量都会写入浏览器可访问的前端产物，因此不能存放密钥。修改这些值后需要重新构建；`docker run -e` 无法改变已经生成的静态文件。部署需要不同配置时，应在构建阶段注入对应值；若需要运行时切换环境，再按实际需求设计 `/config.js` 或 `/env.json` 等运行时配置机制。
 
 ## 项目结构
 

@@ -6,6 +6,8 @@ import { routeTree } from './routeTree.gen'
 // 在模块顶层创建路由，避免组件重新渲染时重复创建。
 export const router = createRouter({
   routeTree,
+  // 复用 Vite 根据 VITE_BASE_PATH 生成的路径，保证资源与路由前缀一致。
+  basepath: import.meta.env.BASE_URL,
   // 在路由匹配树的 Suspense 外同步状态，覆盖首次加载。
   InnerWrap: ({ children }) => (
     <>

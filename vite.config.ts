@@ -7,6 +7,7 @@ import { defineConfig, loadEnv } from 'vite'
 const PORT = 3000
 
 const PROJECT_ROOT = import.meta.dirname
+const BASE_PATH_PATTERN = /^\/(?:[^/?#\\\s]+\/)*$/
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
@@ -22,7 +23,24 @@ export default defineConfig(({ mode }) => {
     )
   }
 
+  const basePath = env.VITE_BASE_PATH?.trim()
+
+  if (!basePath) {
+    throw new Error('Missing required environment variable: VITE_BASE_PATH')
+  }
+
+  const hasDotSegment = basePath
+    .split('/')
+    .some((segment) => segment === '.' || segment === '..')
+
+  if (!BASE_PATH_PATTERN.test(basePath) || hasDotSegment) {
+    throw new Error(
+      'Invalid VITE_BASE_PATH: expected "/" or an absolute path ending in "/", for example "/react-app/"',
+    )
+  }
+
   return {
+    base: basePath,
     plugins: [
       // Please make sure that '@tanstack/router-plugin' is passed before '@vitejs/plugin-react'
       tanstackRouter({

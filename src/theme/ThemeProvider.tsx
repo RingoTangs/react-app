@@ -5,7 +5,6 @@ import {
   isThemeMode,
   persistTheme,
   readStoredTheme,
-  resolveTheme,
   SYSTEM_THEME_QUERY,
   THEME_STORAGE_KEY,
 } from './theme'
@@ -16,7 +15,7 @@ export const ThemeProvider: React.FC<React.PropsWithChildren> = ({
 }) => {
   const [theme, setTheme] = useState(readStoredTheme)
   const [systemTheme, setSystemTheme] = useState(getSystemTheme)
-  const resolvedTheme = resolveTheme(theme, systemTheme)
+  const resolvedTheme = theme === 'system' ? systemTheme : theme
 
   useEffect(() => {
     const mediaQuery = matchMedia(SYSTEM_THEME_QUERY)

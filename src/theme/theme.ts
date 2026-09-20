@@ -31,13 +31,6 @@ export const getSystemTheme = (): ResolvedTheme => {
   return matchMedia(SYSTEM_THEME_QUERY).matches ? 'dark' : 'light'
 }
 
-export const resolveTheme = (
-  theme: ThemeMode,
-  systemTheme: ResolvedTheme,
-): ResolvedTheme => {
-  return theme === 'system' ? systemTheme : theme
-}
-
 export const applyTheme = (theme: ResolvedTheme): void => {
   document.documentElement.dataset.theme = theme
   document.documentElement.style.colorScheme = theme

@@ -10,25 +10,30 @@ const PROJECT_ROOT = import.meta.dirname
 const BASE_PATH_PATTERN = /^\/(?:[^/?#\\\s]+\/)*$/
 const ROUTER_HISTORIES = ['browser', 'hash']
 
-// https://vite.dev/config/
-export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, PROJECT_ROOT, 'VITE_')
+type RequiredEnvKey =
+  | 'VITE_BASE_PATH'
+  | 'VITE_ROUTER_HISTORY'
+  | 'VITE_SITE_NAME'
+  | 'VITE_THEME_STORAGE_KEY'
 
-  if (!env.VITE_SITE_NAME?.trim()) {
-    throw new Error('Missing required environment variable: VITE_SITE_NAME')
+const getRequiredEnv = (
+  env: Record<string, string>,
+  key: RequiredEnvKey,
+): string => {
+  const value = env[key]?.trim()
+
+  if (!value) {
+    throw new Error(`Missing required environment variable: ${key}`)
   }
 
-  if (!env.VITE_THEME_STORAGE_KEY?.trim()) {
-    throw new Error(
-      'Missing required environment variable: VITE_THEME_STORAGE_KEY',
-    )
-  }
+  return value
+}
 
-  const basePath = env.VITE_BASE_PATH?.trim()
+const parseEnv = (env: Record<string, string>) => {
+  getRequiredEnv(env, 'VITE_SITE_NAME')
+  getRequiredEnv(env, 'VITE_THEME_STORAGE_KEY')
 
-  if (!basePath) {
-    throw new Error('Missing required environment variable: VITE_BASE_PATH')
-  }
+  const basePath = getRequiredEnv(env, 'VITE_BASE_PATH')
 
   const hasDotSegment = basePath
     .split('/')
@@ -40,17 +45,18 @@ export default defineConfig(({ mode }) => {
     )
   }
 
-  const routerHistory = env.VITE_ROUTER_HISTORY?.trim()
-
-  if (!routerHistory) {
-    throw new Error(
-      'Missing required environment variable: VITE_ROUTER_HISTORY',
-    )
-  }
+  const routerHistory = getRequiredEnv(env, 'VITE_ROUTER_HISTORY')
 
   if (!ROUTER_HISTORIES.includes(routerHistory)) {
     throw new Error('Invalid VITE_ROUTER_HISTORY: expected "browser" or "hash"')
   }
+
+  return { basePath }
+}
+
+// https://vite.dev/config/
+export default defineConfig(({ mode }) => {
+  const { basePath } = parseEnv(loadEnv(mode, PROJECT_ROOT, 'VITE_'))
 
   return {
     base: basePath,

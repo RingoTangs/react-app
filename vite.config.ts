@@ -29,12 +29,7 @@ const getRequiredEnv = (
   return value
 }
 
-const parseEnv = (env: Record<string, string>) => {
-  getRequiredEnv(env, 'VITE_SITE_NAME')
-  getRequiredEnv(env, 'VITE_THEME_STORAGE_KEY')
-
-  const basePath = getRequiredEnv(env, 'VITE_BASE_PATH')
-
+const parseBasePath = (basePath: string): string => {
   const hasDotSegment = basePath
     .split('/')
     .some((segment) => segment === '.' || segment === '..')
@@ -45,18 +40,27 @@ const parseEnv = (env: Record<string, string>) => {
     )
   }
 
-  const routerHistory = getRequiredEnv(env, 'VITE_ROUTER_HISTORY')
+  return basePath
+}
 
+const parseRouterHistory = (routerHistory: string): string => {
   if (!ROUTER_HISTORIES.includes(routerHistory)) {
     throw new Error('Invalid VITE_ROUTER_HISTORY: expected "browser" or "hash"')
   }
 
-  return { basePath }
+  return routerHistory
 }
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
-  const { basePath } = parseEnv(loadEnv(mode, PROJECT_ROOT, 'VITE_'))
+  const env = loadEnv(mode, PROJECT_ROOT, 'VITE_')
+
+  getRequiredEnv(env, 'VITE_SITE_NAME')
+  getRequiredEnv(env, 'VITE_THEME_STORAGE_KEY')
+
+  const basePath = parseBasePath(getRequiredEnv(env, 'VITE_BASE_PATH'))
+
+  parseRouterHistory(getRequiredEnv(env, 'VITE_ROUTER_HISTORY'))
 
   return {
     base: basePath,

@@ -43,12 +43,10 @@ const parseBasePath = (basePath: string): string => {
   return basePath
 }
 
-const parseRouterHistory = (routerHistory: string): string => {
+const validateRouterHistory = (routerHistory: string): void => {
   if (!ROUTER_HISTORIES.includes(routerHistory)) {
     throw new Error('Invalid VITE_ROUTER_HISTORY: expected "browser" or "hash"')
   }
-
-  return routerHistory
 }
 
 // https://vite.dev/config/
@@ -60,7 +58,7 @@ export default defineConfig(({ mode }) => {
 
   const basePath = parseBasePath(getRequiredEnv(env, 'VITE_BASE_PATH'))
 
-  parseRouterHistory(getRequiredEnv(env, 'VITE_ROUTER_HISTORY'))
+  validateRouterHistory(getRequiredEnv(env, 'VITE_ROUTER_HISTORY'))
 
   return {
     base: basePath,

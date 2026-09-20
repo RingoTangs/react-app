@@ -2,6 +2,13 @@
 /* https://github.com/tailwindlabs/tailwindcss/blob/main/packages/tailwindcss/preflight.css */
 @import 'tailwindcss';
 
+/*
+ * Tailwind 默认 dark: 使用 prefers-color-scheme。
+ * 项目使用 data-theme="dark" 控制。
+ * https://tailwindcss.com/docs/adding-custom-styles#adding-custom-variants
+ */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
 /* 页面与组件共用的语义颜色；更换主题时优先修改这里。 */
 @theme {
   --color-background: #020617;

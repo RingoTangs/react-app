@@ -1,6 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import {
-  createHashHistory,
   createMemoryHistory,
   createRouter,
   RouterProvider,
@@ -50,10 +49,7 @@ const expectNotFoundHead = () =>
     'The page you are looking for does not exist.',
   )
 
-const renderWithRouter = (
-  initialEntries: Array<string>,
-  history = createMemoryHistory({ initialEntries }),
-) => {
+const renderWithRouter = (initialEntries: Array<string>) => {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -63,6 +59,7 @@ const renderWithRouter = (
     },
   })
   queryClients.push(queryClient)
+  const history = createMemoryHistory({ initialEntries })
   const router = createRouter({
     routeTree,
     context: {
@@ -91,7 +88,6 @@ beforeEach(() => {
 
 afterEach(() => {
   cleanup()
-  window.history.replaceState(null, '', '/')
   useCounterStore.setState(useCounterStore.getInitialState(), true)
   queryClients.splice(0).forEach((client) => client.clear())
   vi.restoreAllMocks()
@@ -148,8 +144,8 @@ describe('router loading 演示页面', () => {
     expect(router.state.location.pathname).toBe('/loading')
     expect(history.location.pathname).toBe('/loading')
     expect(
-      screen.getByRole('link', { name: 'Reload to Verify Spinner' }),
-    ).toHaveAttribute('href', '/loading')
+      screen.getByRole('button', { name: 'Reload to Verify Spinner' }),
+    ).toHaveAttribute('type', 'button')
     await expectLoadingHead()
 
     await user.click(screen.getByRole('link', { name: 'Back to Home' }))
@@ -160,24 +156,6 @@ describe('router loading 演示页面', () => {
     expect(router.state.location.pathname).toBe('/')
     expect(history.location.pathname).toBe('/')
     await expectHomeHead()
-  })
-
-  it('在子路径使用 hash history 时生成正确的整页重载地址', async () => {
-    window.history.replaceState(null, '', '/react-app/#/loading')
-    const history = createHashHistory()
-
-    renderWithRouter([], history)
-
-    expect(
-      await screen.findByRole(
-        'heading',
-        { name: 'Router Loading Demo' },
-        { timeout: 3000 },
-      ),
-    ).toBeInTheDocument()
-    expect(
-      screen.getByRole('link', { name: 'Reload to Verify Spinner' }),
-    ).toHaveAttribute('href', '/react-app/#/loading')
   })
 })
 

@@ -62,6 +62,14 @@ pnpm check        # lint + format + typecheck + test
 pnpm check:fix    # 应用本地 lint 和格式化修复
 ```
 
+## GitHub Pages 部署
+
+项目通过 [deploy-pages.yml](.github/workflows/deploy-pages.yml) 部署到 GitHub Pages。推送到 `main` 分支时会自动运行，也可以在 GitHub Actions 页面手动触发。
+
+部署地址为 <https://ringotangs.github.io/react-app/>。工作流会根据 GitHub Pages 返回的路径设置 `VITE_BASE_PATH`，并使用 hash 路由，页面地址形如 `https://ringotangs.github.io/react-app/#/loading`。
+
+首次部署或在 fork 中使用时，需要在仓库的 **Settings → Pages → Build and deployment** 中将 **Source** 设置为 **GitHub Actions**。本地与 Docker 仍使用 `.env` 中的默认配置，无需为 GitHub Pages 修改该文件。
+
 ## Docker 部署
 
 构建静态生产镜像，并通过 Nginx 托管：

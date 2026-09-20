@@ -7,15 +7,15 @@ import { queryClient } from '../queryClient'
 import { LoaderSync } from './LoaderSync'
 import { routeTree } from './routeTree.gen'
 
-const useHashHistory = import.meta.env.VITE_ROUTER_HISTORY === 'hash'
-const history = useHashHistory ? createHashHistory() : createBrowserHistory()
+const isHashHistory = import.meta.env.VITE_ROUTER_HISTORY === 'hash'
+const history = isHashHistory ? createHashHistory() : createBrowserHistory()
 
 // 在模块顶层创建路由，避免组件重新渲染时重复创建。
 export const router = createRouter({
   routeTree,
   history,
   // Hash 中的路由从根路径开始，避免和 Hash 外的部署前缀重复。
-  basepath: useHashHistory ? '/' : import.meta.env.BASE_URL,
+  basepath: isHashHistory ? '/' : import.meta.env.BASE_URL,
   // 在路由匹配树的 Suspense 外同步状态，覆盖首次加载。
   InnerWrap: ({ children }) => (
     <>

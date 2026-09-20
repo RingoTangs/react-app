@@ -5,10 +5,7 @@ import react from '@vitejs/plugin-react'
 import { defineConfig, loadEnv } from 'vite'
 
 const PORT = 3000
-
 const PROJECT_ROOT = import.meta.dirname
-const BASE_PATH_PATTERN = /^\/(?:[^/?#\\\s]+\/)*$/
-const ROUTER_HISTORIES = ['browser', 'hash']
 
 type RequiredEnvKey =
   | 'VITE_BASE_PATH'
@@ -30,6 +27,7 @@ const getRequiredEnv = (
 }
 
 const parseBasePath = (basePath: string): string => {
+  const BASE_PATH_PATTERN = /^\/(?:[^/?#\\\s]+\/)*$/
   const hasDotSegment = basePath
     .split('/')
     .some((segment) => segment === '.' || segment === '..')
@@ -44,6 +42,8 @@ const parseBasePath = (basePath: string): string => {
 }
 
 const validateRouterHistory = (routerHistory: string): void => {
+  const ROUTER_HISTORIES = ['browser', 'hash']
+
   if (!ROUTER_HISTORIES.includes(routerHistory)) {
     throw new Error('Invalid VITE_ROUTER_HISTORY: expected "browser" or "hash"')
   }

@@ -130,6 +130,11 @@ src/
 │       └── ui/
 │
 ├── assets/                     # 由应用代码 import 的共享媒体资源
+├── theme/                      # 明暗主题状态、持久化和系统主题同步
+│   ├── index.ts                # 受控公共 API
+│   ├── ThemeProvider.tsx       # 主题 Context 与运行时同步
+│   ├── theme.ts                # 主题类型与浏览器集成
+│   └── useTheme.ts             # 主题消费 Hook
 ├── components/                 # 产品无关的通用 UI 组件
 │   ├── Button.tsx
 │   ├── NotFound.tsx
@@ -312,9 +317,9 @@ Router 设置 `defaultPreloadStaleTime: 0`，将预加载的数据新鲜度判�
 
 ### 主题颜色
 
-模板使用深色背景与琥珀色主色。颜色统一定义在 `src/style.css` 的 `@theme` 中，组件使用 `bg-background`、`bg-surface`、`text-foreground`、`text-muted-foreground`、`bg-primary` 等语义类。主按钮文字使用 `text-primary-foreground`，错误提示使用 `danger-*`，焦点使用 `ring` 颜色。
+模板支持 `light`、`dark` 和跟随系统的 `system` 模式。颜色统一定义在 `src/style.css` 的 CSS variables 和 `@theme inline` 映射中，`src/theme` 管理用户选择、持久化、系统主题监听和 `data-theme`。`index.html` 在 React 启动前恢复主题，避免首屏闪烁。
 
-修改主题时优先调整这些变量；Loader 通过 `var(--color-primary)` 复用主色。作为图片导入的外部 SVG 无法继承页面变量，例如计数器图标，需要单独同步其静态色值。
+组件使用 `bg-background`、`bg-card`、`text-foreground`、`text-muted-foreground` 和 `bg-primary` 等语义类。修改主题时优先调整 CSS variables；Loader 通过 `var(--color-primary)` 复用主色。
 
 - React、router 和应用工具都使用显式导入。
 - 不要把业务逻辑放进 `App.tsx` 或 `app`；随着项目增长，产品行为应放到 feature 模块中。

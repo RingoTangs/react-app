@@ -8,6 +8,7 @@ const PORT = 3000
 
 const PROJECT_ROOT = import.meta.dirname
 const BASE_PATH_PATTERN = /^\/(?:[^/?#\\\s]+\/)*$/
+const ROUTER_HISTORIES = ['browser', 'hash']
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
@@ -37,6 +38,18 @@ export default defineConfig(({ mode }) => {
     throw new Error(
       'Invalid VITE_BASE_PATH: expected "/" or an absolute path ending in "/", for example "/react-app/"',
     )
+  }
+
+  const routerHistory = env.VITE_ROUTER_HISTORY?.trim()
+
+  if (!routerHistory) {
+    throw new Error(
+      'Missing required environment variable: VITE_ROUTER_HISTORY',
+    )
+  }
+
+  if (!ROUTER_HISTORIES.includes(routerHistory)) {
+    throw new Error('Invalid VITE_ROUTER_HISTORY: expected "browser" or "hash"')
   }
 
   return {

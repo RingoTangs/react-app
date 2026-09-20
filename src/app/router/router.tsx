@@ -1,13 +1,21 @@
-import { createRouter } from '@tanstack/react-router'
+import {
+  createBrowserHistory,
+  createHashHistory,
+  createRouter,
+} from '@tanstack/react-router'
 import { queryClient } from '../queryClient'
 import { LoaderSync } from './LoaderSync'
 import { routeTree } from './routeTree.gen'
 
+const useHashHistory = import.meta.env.VITE_ROUTER_HISTORY === 'hash'
+const history = useHashHistory ? createHashHistory() : createBrowserHistory()
+
 // 在模块顶层创建路由，避免组件重新渲染时重复创建。
 export const router = createRouter({
   routeTree,
-  // 复用 Vite 根据 VITE_BASE_PATH 生成的路径，保证资源与路由前缀一致。
-  basepath: import.meta.env.BASE_URL,
+  history,
+  // Hash 中的路由从根路径开始，避免和 Hash 外的部署前缀重复。
+  basepath: useHashHistory ? '/' : import.meta.env.BASE_URL,
   // 在路由匹配树的 Suspense 外同步状态，覆盖首次加载。
   InnerWrap: ({ children }) => (
     <>

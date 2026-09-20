@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { sleep } from '@/lib'
+import { sleep } from '@/lib/sleep'
 
 const LoadingDemoPage: React.FC = () => {
   return (

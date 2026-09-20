@@ -137,8 +137,7 @@ src/
 │   └── index.ts
 └── lib/                        # 通用工具函数
     ├── date.ts
-    ├── sleep.ts
-    └── index.ts
+    └── sleep.ts
 ```
 
 ### 目录边界
@@ -222,7 +221,7 @@ src/features/<feature-name>/
 
 ### 导出与公共 Feature
 
-Barrel export 只用于稳定公共边界。模板保留 `src/components/index.ts` 和 `src/lib/index.ts`，因为这些目录对外提供产品无关的可复用 API；`src/app/router/index.ts` 也通过显式导出提供 App 装配所需的受控接口。不要创建 `src/app/index.ts`，也不要为了缩短导入路径新增 `src/features/index.ts`、route 文件 barrel 或 feature 子目录 barrel。
+Barrel export 只用于有意维护的稳定公共边界。模板保留 `src/components/index.ts`，`src/app/router/index.ts` 也通过显式导出提供 App 装配所需的受控接口。`src/lib` 中的工具从具体模块导入，不提供聚合入口。不要创建 `src/app/index.ts`，也不要为了缩短导入路径新增 `src/features/index.ts`、route 文件 barrel 或 feature 子目录 barrel。
 
 公共业务能力仍然放在 `src/features/<domain>`，不要放进通用基础目录。典型例子包括 `auth`、`current-user`、`permissions` 和 `notifications`。只有当某个 feature 明确需要向多个模块暴露稳定公共 API 时，才添加 `src/features/<feature>/index.ts`；它只应导出公共组件、hooks、类型和共享 query options，不导出私有 endpoint、测试或实现细节。
 
@@ -233,7 +232,7 @@ Barrel export 只用于稳定公共边界。模板保留 `src/components/index.t
 `lib/date.ts` 提供常用日期格式化，并导出已配置 UTC、时区插件的 `dayjs` 和格式常量 `dayPatterns`。
 
 ```ts
-import { dayjs, formatDate, formatDateTime, formatTime } from '@/lib'
+import { dayjs, formatDate, formatDateTime, formatTime } from '@/lib/date'
 
 formatDate('2026-09-16') // '2026-09-16'
 formatDateTime(new Date(2026, 8, 16, 14, 30, 5)) // '2026-09-16 14:30:05'

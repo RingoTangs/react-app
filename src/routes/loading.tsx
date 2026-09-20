@@ -34,7 +34,7 @@ const LoadingDemoPage: React.FC = () => {
           onClick={handleReload}
           className="bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-ring focus-visible:ring-offset-background inline-flex cursor-pointer items-center justify-center rounded-lg px-6 py-3 text-base font-medium shadow-md transition-all duration-200 hover:shadow-lg focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
         >
-          Reload to Verify Spinner
+          Reload Spinner
         </Link>
         <Link
           to="/"

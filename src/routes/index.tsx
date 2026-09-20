@@ -44,13 +44,13 @@ const HomePage: React.FC = () => {
               to="/loading"
               className="bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:outline-ring rounded-full px-8 py-3 font-semibold shadow-lg transition-all duration-300 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2"
             >
-              Verify Router Loading
+              Router Loading
             </Link>
             <Link
               to="/error"
               className="bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:outline-ring rounded-full px-8 py-3 font-semibold shadow-lg transition-all duration-300 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2"
             >
-              Verify Error Boundary
+              Error Boundary
             </Link>
             <a
               href="https://github.com/RingoTangs/react-app"

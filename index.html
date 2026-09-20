@@ -7,7 +7,13 @@
     <title>%VITE_SITE_NAME%</title>
     <script>
       ;(() => {
-        const saved = localStorage.getItem('theme') || 'system'
+        const themes = ['light', 'dark', 'system']
+        let saved = 'system'
+
+        try {
+          const stored = localStorage.getItem('theme')
+          if (themes.includes(stored)) saved = stored
+        } catch {}
 
         const theme =
           saved === 'system'

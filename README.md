@@ -150,8 +150,7 @@ src/
 ├── components/                 # 产品无关的通用 UI 组件
 │   ├── Button.tsx
 │   ├── NotFound.tsx
-│   ├── PageErrorFallback.tsx
-│   └── index.ts
+│   └── PageErrorFallback.tsx
 └── lib/                        # 通用工具函数
     ├── date.ts
     └── sleep.ts
@@ -238,7 +237,7 @@ src/features/<feature-name>/
 
 ### 导出与公共 Feature
 
-Barrel export 只用于有意维护的稳定公共边界。模板保留 `src/components/index.ts`，`src/app/router/index.ts` 也通过显式导出提供 App 装配所需的受控接口。`src/lib` 中的工具从具体模块导入，不提供聚合入口。不要创建 `src/app/index.ts`，也不要为了缩短导入路径新增 `src/features/index.ts`、route 文件 barrel 或 feature 子目录 barrel。
+Barrel export 只用于有意维护的稳定公共边界。`src/theme/index.ts` 和 `src/app/router/index.ts` 通过显式导出提供受控公共接口；`src/components` 和 `src/lib` 从具体模块导入，不提供聚合入口。不要创建 `src/app/index.ts`，也不要为了缩短导入路径新增 `src/features/index.ts`、route 文件 barrel 或 feature 子目录 barrel。
 
 公共业务能力仍然放在 `src/features/<domain>`，不要放进通用基础目录。典型例子包括 `auth`、`current-user`、`permissions` 和 `notifications`。只有当某个 feature 明确需要向多个模块暴露稳定公共 API 时，才添加 `src/features/<feature>/index.ts`；它只应导出公共组件、hooks、类型和共享 query options，不导出私有 endpoint、测试或实现细节。
 

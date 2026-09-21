@@ -1,4 +1,4 @@
-import { Button } from '@/components'
+import { Button } from '@/components/Button'
 import { useCounterStore } from '../model/counterStore'
 
 const buttonClassName = 'px-4 py-2 font-semibold'

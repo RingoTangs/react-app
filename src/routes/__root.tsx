@@ -5,7 +5,8 @@ import {
   useRouter,
 } from '@tanstack/react-router'
 import { reportError } from '@/app/reportError'
-import { NotFound, PageErrorFallback } from '@/components'
+import { NotFound } from '@/components/NotFound'
+import { PageErrorFallback } from '@/components/PageErrorFallback'
 
 const RootNotFoundComponent: React.FC = () => {
   const router = useRouter()

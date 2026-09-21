@@ -5,20 +5,8 @@ import {
   useRouter,
 } from '@tanstack/react-router'
 import { reportError } from '@/app/reportError'
-import { NotFound } from '@/components/NotFound'
 import { PageErrorFallback } from '@/components/PageErrorFallback'
-
-const RootNotFoundComponent: React.FC = () => {
-  const router = useRouter()
-
-  return (
-    <NotFound
-      onBackHome={() => {
-        router.navigate({ to: '/' }).catch(reportError)
-      }}
-    />
-  )
-}
+import { NotFoundError } from '@/features/errors/NotFoundError'
 
 const RootErrorComponent: React.FC = () => {
   const router = useRouter()
@@ -59,7 +47,7 @@ export const Route = createRootRouteWithContext<{
     </>
   ),
   errorComponent: RootErrorComponent,
-  notFoundComponent: RootNotFoundComponent,
+  notFoundComponent: NotFoundError,
   onCatch: (error) => {
     reportError(error)
   },

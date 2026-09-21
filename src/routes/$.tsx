@@ -1,17 +1,5 @@
-import { createFileRoute, useRouter } from '@tanstack/react-router'
-import { reportError } from '@/app/reportError'
-import { NotFound } from '@/components/NotFound'
-
-const NotFoundComponent: React.FC = () => {
-  const router = useRouter()
-  return (
-    <NotFound
-      onBackHome={() => {
-        router.navigate({ to: '/' }).catch(reportError)
-      }}
-    />
-  )
-}
+import { createFileRoute } from '@tanstack/react-router'
+import { NotFoundError } from '@/features/errors/NotFoundError'
 
 export const Route = createFileRoute('/$')({
   head: () => {
@@ -27,5 +15,5 @@ export const Route = createFileRoute('/$')({
       ],
     }
   },
-  component: NotFoundComponent,
+  component: NotFoundError,
 })

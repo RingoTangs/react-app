@@ -7,17 +7,8 @@ import { useLoaderStore } from './loaderStore'
 const PROGRESS_DELAY_MS = 150
 
 // 进度条外观。
-const PROGRESS_COLOR = 'var(--color-primary)'
+const PROGRESS_COLOR = 'var(--muted-foreground)'
 const PROGRESS_HEIGHT_PX = 2
-
-// 进度条宽度变化的动画时长。
-const PROGRESS_LOADER_SPEED_MS = 300
-
-// 到达 100% 后，等待多久开始淡出。
-const PROGRESS_WAITING_TIME_MS = 500
-
-// 淡出动画的时长。
-const PROGRESS_TRANSITION_TIME_MS = 1000
 
 /*
  * RouterProgress 划分加载轮次，ProgressCycle 延迟显示，ActiveBar 控制动画。
@@ -68,9 +59,6 @@ const ActiveBar: React.FC<{
       ref={barRef}
       height={PROGRESS_HEIGHT_PX}
       color={PROGRESS_COLOR}
-      loaderSpeed={PROGRESS_LOADER_SPEED_MS}
-      waitingTime={PROGRESS_WAITING_TIME_MS}
-      transitionTime={PROGRESS_TRANSITION_TIME_MS}
       containerClassName="router-progress"
       onLoaderFinished={onFinished}
     />

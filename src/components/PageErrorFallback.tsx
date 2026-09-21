@@ -1,4 +1,4 @@
-import { Button } from './Button'
+import { Button } from '@/components/ui/button'
 
 interface PageErrorFallbackProps {
   onRetry: () => void
@@ -19,10 +19,15 @@ export const PageErrorFallback: React.FC<PageErrorFallbackProps> = ({
         home page.
       </p>
       <div className="flex flex-wrap justify-center gap-4">
-        <Button type="button" intent="primary" onClick={onRetry}>
+        <Button type="button" size="lg" onClick={onRetry}>
           Try Again
         </Button>
-        <Button type="button" intent="secondary" onClick={onBackHome}>
+        <Button
+          type="button"
+          size="lg"
+          variant="secondary"
+          onClick={onBackHome}
+        >
           Back to Home
         </Button>
       </div>

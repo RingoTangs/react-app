@@ -1,4 +1,4 @@
-import { Button } from './Button'
+import { Button } from '@/components/ui/button'
 
 interface NotFoundProps {
   onBackHome: () => void
@@ -14,7 +14,7 @@ export const NotFound: React.FC<NotFoundProps> = ({ onBackHome }) => {
       <p className="text-muted-foreground mb-8 max-w-[500px] text-lg">
         The page you are looking for doesn't exist or has been moved.
       </p>
-      <Button type="button" intent="primary" onClick={onBackHome}>
+      <Button type="button" onClick={onBackHome}>
         Back to Home
       </Button>
     </div>

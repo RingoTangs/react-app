@@ -1,14 +1,3 @@
-/* 导入 Tailwind CSS 时自动注入基础样式 */
-/* https://github.com/tailwindlabs/tailwindcss/blob/main/packages/tailwindcss/preflight.css */
-@import 'tailwindcss';
-
-/*
- * Tailwind 默认 dark: 使用 prefers-color-scheme。
- * 项目使用根元素的 .dark class 控制。
- * https://tailwindcss.com/docs/adding-custom-styles#adding-custom-variants
- */
-@custom-variant dark (&:is(.dark *));
-
 :root {
   --background: #faf9f5;
   --foreground: #3d3929;
@@ -186,13 +175,4 @@
   --shadow-lg: var(--shadow-lg);
   --shadow-xl: var(--shadow-xl);
   --shadow-2xl: var(--shadow-2xl);
-}
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
 }

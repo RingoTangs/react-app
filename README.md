@@ -104,7 +104,9 @@ types/
 src/
 ├── main.tsx                    # React DOM 启动入口
 ├── App.tsx                     # providers 和开发工具装配
-├── style.css                   # 全局样式和 Tailwind CSS 入口
+├── styles/                     # 全局样式与主题变量
+│   ├── index.css               # Tailwind CSS 和全局基础样式入口
+│   └── theme.css               # 主题变量与 Tailwind 主题映射
 ├── setupTests.ts               # Vitest 与 Testing Library 测试初始化
 │
 ├── app/                        # 当前应用的配置、初始化和集成
@@ -324,7 +326,7 @@ Router 设置 `defaultPreloadStaleTime: 0`，将预加载的数据新鲜度判�
 
 ### 主题颜色
 
-模板支持 `light`、`dark` 和跟随系统的 `system` 模式。颜色统一定义在 `src/style.css` 的 CSS variables 和 `@theme inline` 映射中，`src/theme` 管理用户选择、持久化、系统主题监听和根元素的 `.dark` class。`index.html` 在 React 启动前恢复主题，避免首屏闪烁。
+模板支持 `light`、`dark` 和跟随系统的 `system` 模式。`src/styles/index.css` 是应用导入的全局样式入口，负责加载 Tailwind CSS、主题样式和全局基础样式；颜色统一定义在 `src/styles/theme.css` 的 CSS variables 和 `@theme inline` 映射中。`src/theme` 管理用户选择、持久化、系统主题监听和根元素的 `.dark` class。`index.html` 在 React 启动前恢复主题，避免首屏闪烁。
 
 主题存储键由公开构建变量 `VITE_THEME_STORAGE_KEY` 统一提供给首屏脚本和 ThemeProvider。修改该值后，浏览器不会自动迁移旧 key 中保存的主题偏好。
 

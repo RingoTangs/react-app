@@ -1,6 +1,7 @@
 /* 导入 Tailwind CSS 时自动注入基础样式 */
 /* https://github.com/tailwindlabs/tailwindcss/blob/main/packages/tailwindcss/preflight.css */
 @import 'tailwindcss';
+@import 'tw-animate-css';
 @import './theme.css';
 
 /*

@@ -1,19 +1,11 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { Button } from '@/components/ui/button'
 import { sleep } from '@/lib/sleep'
 
 const LoadingDemoPage: React.FC = () => {
-  const handleReload: React.MouseEventHandler<HTMLAnchorElement> = (event) => {
-    if (
-      event.button !== 0 ||
-      event.metaKey ||
-      event.altKey ||
-      event.ctrlKey ||
-      event.shiftKey
-    ) {
-      return
-    }
+  const navigate = useNavigate()
 
-    event.preventDefault()
+  const handleReload = () => {
     // 保留当前完整 URL，避免整页导航丢失 hash history 的部署前缀。
     window.location.reload()
   }
@@ -29,19 +21,16 @@ const LoadingDemoPage: React.FC = () => {
         during initial route resolution.
       </p>
       <div className="flex flex-wrap justify-center gap-4">
-        <Link
-          to="/loading"
-          onClick={handleReload}
-          className="bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-ring focus-visible:ring-offset-background inline-flex cursor-pointer items-center justify-center rounded-lg px-6 py-3 text-base font-medium shadow-md transition-all duration-200 hover:shadow-lg focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-        >
+        <Button size="lg" onClick={handleReload}>
           Reload Spinner
-        </Link>
-        <Link
-          to="/"
-          className="border-border bg-secondary text-secondary-foreground hover:bg-secondary/80 focus-visible:ring-ring focus-visible:ring-offset-background inline-flex cursor-pointer items-center justify-center rounded-lg border px-6 py-3 text-base font-medium transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+        </Button>
+        <Button
+          size="lg"
+          variant="outline"
+          onClick={() => navigate({ to: '/' })}
         >
           Back to Home
-        </Link>
+        </Button>
       </div>
     </div>
   )

@@ -1,4 +1,4 @@
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { usePostsQuery } from '../hooks/usePostsQuery'
 
 const getErrorMessage = (error: unknown) => {
@@ -15,7 +15,7 @@ export const PostsPreview: React.FC = () => {
         // 请求错误由 Query 管理；refetch 返回包含查询结果的 Promise。
         void postsQuery.refetch({ throwOnError: false })
       }}
-      className="mt-4 px-4 py-2 font-semibold"
+      className="mt-4"
     >
       {postsQuery.isFetching ? 'Retrying...' : 'Try Again'}
     </Button>

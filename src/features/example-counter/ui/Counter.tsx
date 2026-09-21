@@ -1,7 +1,5 @@
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { useCounterStore } from '../model/counterStore'
-
-const buttonClassName = 'px-4 py-2 font-semibold'
 
 const CounterValue: React.FC = () => {
   const count = useCounterStore((state) => state.count)
@@ -25,7 +23,7 @@ const CounterActions: React.FC = () => {
     <div className="mt-6 flex flex-wrap gap-3">
       <Button
         type="button"
-        className={buttonClassName}
+        size="lg"
         aria-label="Decrease count"
         onClick={decrement}
       >
@@ -33,18 +31,13 @@ const CounterActions: React.FC = () => {
       </Button>
       <Button
         type="button"
-        className={buttonClassName}
+        size="lg"
         aria-label="Increase count"
         onClick={increment}
       >
         +
       </Button>
-      <Button
-        type="button"
-        className={buttonClassName}
-        aria-label="Reset count"
-        onClick={reset}
-      >
+      <Button type="button" size="lg" aria-label="Reset count" onClick={reset}>
         Reset
       </Button>
     </div>

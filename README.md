@@ -95,7 +95,10 @@ Nginx 对 `/assets/` 下带内容哈希的构建文件设置一年 `immutable` �
 
 ```text
 public/
-└── app-icon.svg                # 固定 URL 访问的公共静态资产
+├── favicon.svg                 # 浅色模式 SVG favicon
+├── favicon.png                 # 浅色模式 PNG favicon
+├── favicon_light.svg           # 深色模式 SVG favicon
+└── favicon_light.png           # 深色模式 PNG favicon
 
 types/
 ├── tanstack-router.d.ts        # TanStack Router 类型注册
@@ -105,7 +108,8 @@ src/
 ├── main.tsx                    # React DOM 启动入口
 ├── App.tsx                     # providers 和开发工具装配
 ├── styles/                     # 全局样式与主题变量
-│   └── index.css               # Tailwind CSS、主题变量和全局样式入口
+│   ├── index.css               # Tailwind CSS 和全局基础样式入口
+│   └── theme.css               # 主题变量与 Tailwind 主题映射
 ├── setupTests.ts               # Vitest 与 Testing Library 测试初始化
 │
 ├── app/                        # 当前应用的配置、初始化和集成
@@ -121,7 +125,6 @@ src/
 │       └── routeTree.gen.ts    # 生成的路由树；不要手动编辑
 │
 ├── routes/                     # TanStack 文件路由
-│   ├── -__root.spec.tsx        # 根路由行为测试
 │   ├── __root.tsx              # 根路由 context、布局和错误边界
 │   ├── $.tsx                   # 未知 URL 的 404 页面及元信息
 │   ├── error.tsx               # demo error 路由
@@ -129,6 +132,9 @@ src/
 │   └── index.tsx               # / 路由
 │
 ├── features/                   # 按业务域组织的产品或 demo 能力
+│   ├── errors/                 # 路由错误与 404 页面
+│   │   ├── GeneralError.tsx
+│   │   └── NotFoundError.tsx
 │   ├── example-counter/        # demo Zustand 共享状态 feature
 │   │   ├── model/
 │   │   └── ui/
@@ -141,15 +147,16 @@ src/
 ├── assets/                     # 由应用代码 import 的共享媒体资源
 ├── theme/                      # 明暗主题状态、持久化和系统主题同步
 │   ├── index.ts                # 受控公共 API
+│   ├── ThemeContext.ts         # 主题 Context 定义
 │   ├── ThemeProvider.tsx       # 主题 Context 与运行时同步
 │   ├── theme.ts                # 主题类型与浏览器集成
 │   └── useTheme.ts             # 主题消费 Hook
 ├── components/                 # 产品无关的通用 UI 组件
-│   └── Button.tsx              # 通用按钮组件
+│   ├── Button.tsx              # 原生通用按钮组件
+│   └── Button.spec.tsx         # 按钮组件测试
 └── lib/                        # 通用工具函数
     ├── date.ts
-    ├── sleep.ts
-    └── utils.ts                # shadcn 样式类合并工具
+    └── sleep.ts
 ```
 
 ### 目录边界
@@ -157,7 +164,7 @@ src/
 - `App.tsx` 负责 Provider 和开发工具组合；`app` 管理应用配置、QueryClient 和 Router 初始化、错误上报及应用级集成组件。
 - `routes` 负责 URL 到页面的映射，可包含简单静态页面和 feature 组合；业务逻辑、数据访问和复杂页面放在 `features`。
 - `features` 负责业务或 demo 能力。新增真实产品行为时，优先按业务域放到这里。
-- `components` 负责通用 UI，`lib` 负责通用工具，`assets` 负责共享导入资源。这些通用模块不应依赖 `App.tsx`、`app`、`routes` 或 `features`。
+- `components` 负责通用 UI，`lib` 负责通用工具，`assets` 负责共享导入资源。当前 `Button` 基于原生按钮、`cva` 和 `cn` 实现，不绑定具体 UI 组件库。这些通用模块不应依赖 `App.tsx`、`app`、`routes` 或 `features`。
 - `public` 负责不经过 Vite import、需要固定公开 URL 的静态文件。
 - `types` 负责 repo 级 ambient declarations。不要在 `src` 下散落全局 `.d.ts` 文件。
 - `app/router/routeTree.gen.ts` 由 TanStack Router 生成，输出路径在 Vite 插件配置中指定，不要手动编辑。
@@ -291,15 +298,15 @@ export const Route = createFileRoute('/users')({
 
 `routes/loading.tsx` 使用 1500ms loader 展示 Router 的全局加载反馈：站内导航显示顶部进度条，直接访问或整页重载显示全屏 Spinner。`routes/error.tsx` 只负责触发和验证路由错误边界，不再承担加载反馈演示。
 
-如果 404、通用错误态等 fallback 页面不归属某个具体 feature，并且可跨业务复用，应放在 `components`。
+路由错误和 404 页面统一放在 `features/errors`；它们可以使用 Router 能力提供返回上一页和返回首页操作。不包含路由或业务行为的底层通用 UI 才放在 `components`。
 
-`routes/$.tsx` 承接未知 URL，复用共享 NotFound 组件，并声明专属 404 标题和描述。根路由仍保留 `notFoundComponent`，用于已匹配路由主动抛出 `notFound()` 的情况；它不额外覆盖路由元信息。通配路由只负责客户端 404 展示，不会自动让服务器返回 HTTP 404。
+`routes/$.tsx` 承接未知 URL，复用 `features/errors/NotFoundError` 并声明专属 404 标题和描述。根路由仍保留 `notFoundComponent`，用于已匹配路由主动抛出 `notFound()` 的情况；它不额外覆盖路由元信息。通配路由只负责客户端 404 展示，不会自动让服务器返回 HTTP 404。
 
 如果 route loader 要预取 React Query 数据，Router context 必须暴露共享的 `queryClient`。`app/router/router.tsx` 注入 `app/queryClient.ts` 的共享实例，`App.tsx` 的 Provider 也使用该实例；route 文件仍然只使用 feature 的 `queryOptions`，不拥有 API 细节。
 
 ### 错误兜底
 
-路由级 render error、loader error 和 route match error 应使用 TanStack Router `errorComponent` 处理。根路由提供默认 fallback UI，并通过 `reportError` 统一上报捕获到的错误。
+路由级 render error、loader error 和 route match error 应使用 TanStack Router `errorComponent` 处理。根路由使用 `features/errors/GeneralError` 作为默认 fallback UI，并通过 `reportError` 统一上报捕获到的错误。
 
 `reportError(error)` 是监控接入点，尚未配置实际监控服务：当前仅在开发环境输出日志，生产环境不执行上报。生产监控应在 `src/app/reportError.ts` 中接入。
 
@@ -314,7 +321,7 @@ Router 设置 `defaultPreloadStaleTime: 0`，将预加载的数据新鲜度判�
 首次加载使用全屏 Spinner：等待 150ms 后显示，显示后至少保留 300ms；后续前台导航使用顶部进度条，持续 150ms 后显示，每轮使用独立实例隔离完成动画。`LoaderSync` 通过 Router 的 `InnerWrap` 挂载在路由匹配树的 Suspense 外，独占同步 `loaderStore` 的 `idle / boot / navigation` 状态，卸载时清理。Loader 只反映应用启动后的路由加载和页面过渡，不代表所有网络请求，业务请求不写入这个 store。
 
 - Router 和 React Query devtools 使用依赖提供的标准入口，在非开发环境自动返回空内容并由构建工具裁剪。
-- 模板全局使用显式导入；例如 `tv()` 这类 helper 应在使用处显式导入。
+- 模板全局使用显式导入；例如 `cva()` 这类 helper 应在使用处显式导入。
 - SVG 和 XML 文件通过 `@prettier/plugin-xml` 使用 Prettier XML parser 格式化。
 - React Query 使用保守默认值：`staleTime: 30s`、`gcTime: 5m`、query `retry: 1`、mutation `retry: 0`、`refetchOnWindowFocus: false`、`refetchOnReconnect: true`。
 - 模板不预设共享 HTTP client；在真实共享传输层出现前，feature 自己的 `api` 文件可以先使用原生 `fetch`。
@@ -324,11 +331,11 @@ Router 设置 `defaultPreloadStaleTime: 0`，将预加载的数据新鲜度判�
 
 ### 主题颜色
 
-模板支持 `light`、`dark` 和跟随系统的 `system` 模式。`src/styles/index.css` 是应用导入的全局样式入口，负责加载 Tailwind CSS，并集中定义全局基础样式、CSS variables 和 `@theme inline` 映射。`src/theme` 管理用户选择、持久化、系统主题监听和根元素的 `.dark` class。`index.html` 在 React 启动前恢复主题，避免首屏闪烁。
+模板支持 `light`、`dark` 和跟随系统的 `system` 模式。`src/styles/index.css` 是应用导入的全局样式入口，负责加载 Tailwind CSS、动画工具、主题样式和全局基础样式；颜色等 CSS variables 与 `@theme inline` 映射定义在 `src/styles/theme.css` 中。`src/theme` 管理用户选择、持久化、系统主题监听和根元素的 `.dark` class。`index.html` 在 React 启动前恢复主题，避免首屏闪烁。
 
 主题存储键由公开构建变量 `VITE_THEME_STORAGE_KEY` 统一提供给首屏脚本和 ThemeProvider。修改该值后，浏览器不会自动迁移旧 key 中保存的主题偏好。
 
-组件使用 `bg-background`、`bg-card`、`text-foreground`、`text-muted-foreground` 和 `bg-primary` 等语义类。修改主题时优先调整 CSS variables；Loader 通过 `var(--color-primary)` 复用主色。
+组件使用 `bg-background`、`bg-card`、`text-foreground`、`text-muted-foreground` 和 `bg-primary` 等语义类。修改主题时优先调整 CSS variables；首次加载 Spinner 复用主色，导航进度条复用弱化前景色。
 
 - React、router 和应用工具都使用显式导入。
 - 不要把业务逻辑放进 `App.tsx` 或 `app`；随着项目增长，产品行为应放到 feature 模块中。

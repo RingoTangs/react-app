@@ -145,10 +145,7 @@ src/
 │   ├── theme.ts                # 主题类型与浏览器集成
 │   └── useTheme.ts             # 主题消费 Hook
 ├── components/                 # 产品无关的通用 UI 组件
-│   ├── NotFound.tsx
-│   ├── PageErrorFallback.tsx
-│   └── ui/
-│       └── button.tsx          # shadcn Button 组件
+│   └── Button.tsx              # 通用按钮组件
 └── lib/                        # 通用工具函数
     ├── date.ts
     ├── sleep.ts

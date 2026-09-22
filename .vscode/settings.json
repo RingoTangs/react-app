@@ -35,7 +35,7 @@
   "files.eol": "\n",
 
   // tailwindcss
-  "tailwindCSS.classFunctions": ["cva"],
+  "tailwindCSS.classFunctions": ["cva", "cn", "cx"],
   "tailwindCSS.lint.suggestCanonicalClasses": "ignore",
 
   "css.lint.unknownAtRules": "ignore",

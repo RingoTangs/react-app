@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/Button'
 import { useCounterStore } from '../model/counterStore'
 
 const CounterValue: React.FC = () => {

@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/Button'
 import { sleep } from '@/lib/sleep'
 
 const LoadingDemoPage: React.FC = () => {

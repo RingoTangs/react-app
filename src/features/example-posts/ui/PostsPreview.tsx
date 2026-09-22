@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/Button'
 import { usePostsQuery } from '../hooks/usePostsQuery'
 
 const getErrorMessage = (error: unknown) => {

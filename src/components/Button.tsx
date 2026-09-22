@@ -37,14 +37,16 @@ const buttonVariants = cva(
   },
 )
 
+type ButtonProps = React.ComponentPropsWithRef<'button'> &
+  VariantProps<typeof buttonVariants>
+
 function Button({
   className,
   variant = 'default',
   size = 'default',
   type = 'button',
   ...props
-}: React.ComponentPropsWithRef<'button'> &
-  VariantProps<typeof buttonVariants>) {
+}: ButtonProps) {
   return (
     <button
       type={type}

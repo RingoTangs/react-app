@@ -54,6 +54,9 @@ importers:
       '@prettier/plugin-xml':
         specifier: ^3.4.2
         version: 3.4.2(prettier@3.9.8)
+      '@ringotangs/tsconfig':
+        specifier: ^0.1.2
+        version: 0.1.2(typescript@5.9.3)
       '@tailwindcss/vite':
         specifier: ^4.3.3
         version: 4.3.3(vite@8.3.0(@types/node@22.20.4)(esbuild@0.27.7)(jiti@2.7.0)(tsx@4.21.0)(yaml@2.9.1))
@@ -690,6 +693,11 @@ packages:
     resolution: {integrity: sha512-/UyNlHfkuLXG6Ed85KB0WBF283xn2yavR+UtRibBRUcvEJId2DSLdGXwJ/cDa1X++SWDPzq3+GSFniHjkNy7yg==}
     peerDependencies:
       prettier: ^3.0.0
+
+  '@ringotangs/tsconfig@0.1.2':
+    resolution: {integrity: sha512-shRQp0SGJa2j+qxAlikFDUHe+lqbzg7NZ+oWt3eGVvp2yYWMvGqQ/ZyTdv61jqrNPdHdy/OZ2RB/9wOeye0fEA==}
+    peerDependencies:
+      typescript: '>=5.8.0'
 
   '@rolldown/binding-android-arm-eabi@1.2.8':
     resolution: {integrity: sha512-tN5aztYkKCte4i5SIrrz5yK/HMjEuCqCSCJa418jOV8tZ1cBY3YF2otxB1ktPxzsLA1BeTqwapK0bfjxNvHJVw==}
@@ -3627,6 +3635,10 @@ snapshots:
     dependencies:
       '@xml-tools/parser': 1.0.11
       prettier: 3.9.8
+
+  '@ringotangs/tsconfig@0.1.2(typescript@5.9.3)':
+    dependencies:
+      typescript: 5.9.3
 
   '@rolldown/binding-android-arm-eabi@1.2.8':
     optional: true

@@ -64,32 +64,17 @@ pnpm check:fix    # 应用本地 lint 和格式化修复
 
 部署地址为 <https://ringotangs.github.io/react-app/>。工作流会根据 GitHub Pages 返回的路径设置 `VITE_BASE_PATH`，并使用 hash 路由，页面地址形如 `https://ringotangs.github.io/react-app/#/loading`。
 
-首次部署或在 fork 中使用时，需要在仓库的 **Settings → Pages → Build and deployment** 中将 **Source** 设置为 **GitHub Actions**。本地与 Docker 仍使用 `.env` 中的默认配置，无需为 GitHub Pages 修改该文件。
+首次部署或在 fork 中使用时，需要在仓库的 **Settings → Pages → Build and deployment** 中将 **Source** 设置为 **GitHub Actions**。本地仍使用 `.env` 中的默认配置，无需为 GitHub Pages 修改该文件。
 
-## Docker 部署
+## 环境变量
 
-构建静态生产镜像，并通过 Nginx 托管：
+根目录 `.env` 保存项目公开且必需的 Vite 构建默认值，并受 Git 跟踪，包括 `VITE_BASE_PATH`、`VITE_ROUTER_HISTORY`、`VITE_SITE_NAME` 和 `VITE_THEME_STORAGE_KEY`。`.env.local`、`.env.production` 等覆盖文件被 Git 忽略，可按需用于本地或不同环境的构建。
 
-```bash
-docker build -t react-app:local .
-docker run --rm -p 8080:80 react-app:local
-```
-
-容器访问地址为 `http://localhost:8080`。镜像使用多阶段构建：Node 和 pnpm 负责生成 Vite `dist/` 产物，最终阶段只用 Nginx 托管静态资源。
-
-Nginx 对 `/assets/` 下带内容哈希的构建文件设置一年 `immutable` 缓存。该路径保留给 Vite 构建产物，不要在 `public/assets/` 放置固定文件名资源。HTML 和固定路径公共文件使用 `Cache-Control: no-cache`，复用前需要重新验证。不存在的静态文件路径（包括带扩展名的路径）返回 404，不回退到 SPA 页面；页面路由不要使用类似文件名的路径。Docker 安装依赖时采用与本地相同的工作区设置和 Node 版本检查。
-
-根目录 `nginx.conf` 已包含 SPA fallback，TanStack Router 路由可以直接刷新。
-
-### Docker 环境变量
-
-根目录 `.env` 保存项目公开且必需的 Vite 构建默认值，并受 Git 跟踪。Docker 构建会读取同一份 `.env`，因此本地构建和默认镜像使用一致的 `VITE_BASE_PATH`、`VITE_ROUTER_HISTORY`、`VITE_SITE_NAME` 和 `VITE_THEME_STORAGE_KEY`。`.env.local`、`.env.production` 等覆盖文件仍会被 Git 和 Docker 构建上下文排除。
-
-`VITE_BASE_PATH` 同时配置 Vite 资源路径和 TanStack Router `basepath`，默认值为 `/`。它只接受 `/` 或以 `/` 开头和结尾的绝对路径，例如 `/react-app/`。使用子路径时，静态服务器必须在相同前缀提供构建产物，并将该前缀下的页面路由回退到对应的 `index.html`；仓库提供的 Nginx 配置保持根路径部署。
+`VITE_BASE_PATH` 同时配置 Vite 资源路径和 TanStack Router `basepath`，默认值为 `/`。它只接受 `/` 或以 `/` 开头和结尾的绝对路径，例如 `/react-app/`。使用子路径时，静态服务器必须在相同前缀提供构建产物，并将该前缀下的页面路由回退到对应的 `index.html`。
 
 `VITE_ROUTER_HISTORY` 接受 `browser` 或 `hash`，默认使用 `browser`。Browser history 提供 `/loading` 形式的 URL，并要求静态服务器为页面路由提供 SPA fallback；hash history 提供 `/#/loading` 形式的 URL，不要求页面路由 fallback。与子路径组合时，hash URL 形如 `/react-app/#/loading`，部署前缀不会在 Hash 中重复。切换 history 不会迁移已有 URL 或浏览器书签。
 
-任何必需的 Vite 环境变量缺失、为空或格式无效时，Vite 会立即终止启动或构建。所有 `VITE_*` 变量都会写入浏览器可访问的前端产物，因此不能存放密钥。修改这些值后需要重新构建；`docker run -e` 无法改变已经生成的静态文件。部署需要不同配置时，应在构建阶段注入对应值；若需要运行时切换环境，再按实际需求设计 `/config.js` 或 `/env.json` 等运行时配置机制。
+任何必需的 Vite 环境变量缺失、为空或格式无效时，Vite 会立即终止启动或构建。所有 `VITE_*` 变量都会写入浏览器可访问的前端产物，因此不能存放密钥。修改这些值后需要重新构建。部署需要不同配置时，应在构建阶段注入对应值；若需要运行时切换环境，再按实际需求设计 `/config.js` 或 `/env.json` 等运行时配置机制。
 
 ## 项目结构
 

@@ -10,6 +10,7 @@ const DIRNAME = import.meta.dirname
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/',
   plugins: [
     viteEnvPlugin({
       siteName: 'React App Template',

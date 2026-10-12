@@ -62,21 +62,21 @@ pnpm check:fix    # 应用本地 lint 和格式化修复
 
 项目通过 [deploy-pages.yml](.github/workflows/deploy-pages.yml) 部署到 GitHub Pages。推送到 `main` 分支时会自动运行，也可以在 GitHub Actions 页面手动触发。
 
-部署地址为 <https://ringotangs.github.io/react-app/>。工作流会根据 GitHub Pages 返回的路径设置 `VITE_BASE_PATH`，并使用 hash 路由，页面地址形如 `https://ringotangs.github.io/react-app/#/loading`。
+部署地址为 <https://ringotangs.github.io/react-app/>。工作流会根据 GitHub Pages 返回的路径通过 Vite 的 `--base` 参数设置部署前缀，并使用 hash 路由，页面地址形如 `https://ringotangs.github.io/react-app/#/loading`。
 
-首次部署或在 fork 中使用时，需要在仓库的 **Settings → Pages → Build and deployment** 中将 **Source** 设置为 **GitHub Actions**。本地使用 `vite.config.ts` 中的插件参数作为默认配置，GitHub Pages 工作流通过环境变量覆盖部署路径和路由模式。
+首次部署或在 fork 中使用时，需要在仓库的 **Settings → Pages → Build and deployment** 中将 **Source** 设置为 **GitHub Actions**。本地使用 `vite.config.ts` 中的插件参数作为默认配置，GitHub Pages 工作流通过 `--base` 覆盖部署路径，通过环境变量覆盖路由模式。
 
 ## 环境变量
 
-`vite.config.ts` 通过 `viteEnvPlugin({ siteName: 'React App Template' })` 配置站点名称，`siteName` 必填且无默认值。可选参数 `basePath`、`routerHistory`、`themeStorageKey` 分别默认为 `/`、`browser`、`theme`，对应 `VITE_BASE_PATH`、`VITE_ROUTER_HISTORY`、`VITE_THEME_STORAGE_KEY`；站点名称对应 `VITE_SITE_NAME`。根目录 `vite-env-plugin.ts` 负责环境变量读取、覆盖、默认值补齐和 Zod 校验，无需 `.env` 即可启动和构建。
+`vite.config.ts` 通过 `viteEnvPlugin({ siteName: 'React App Template' })` 配置站点名称，`siteName` 必填且无默认值。可选参数 `routerHistory`、`themeStorageKey` 分别默认为 `browser`、`theme`，对应 `VITE_ROUTER_HISTORY`、`VITE_THEME_STORAGE_KEY`；站点名称对应 `VITE_SITE_NAME`。根目录 `vite-env-plugin.ts` 负责环境变量读取、覆盖、默认值补齐和 Zod 校验，无需 `.env` 即可启动和构建。
 
 可通过命令行或 CI 环境变量，以及被 Git 忽略的 `.env.local`、`.env.production` 等文件覆盖插件参数提供的默认值。进程环境变量优先于环境文件；环境文件按 Vite 的 mode 加载规则处理。解析后的配置通过 `define` 注入 `import.meta.env`，HTML 标题和首屏主题脚本使用 Vite 原生 `%VITE_*%` 替换，与 React 共用同一份配置。站点名称使用普通文本，主题存储键使用 `theme`、`app-theme` 等简单标识符；HTML 替换不提供特殊字符转义。
 
-`VITE_BASE_PATH` 同时配置 Vite 资源路径和 TanStack Router `basepath`，默认值为 `/`。它只接受 `/` 或以 `/` 开头和结尾的绝对路径，例如 `/react-app/`。使用子路径时，静态服务器必须在相同前缀提供构建产物，并将该前缀下的页面路由回退到对应的 `index.html`。
+部署路径统一在 `vite.config.ts` 的 `base` 中配置，默认值为 `/`；构建时可通过 `pnpm build --base /react-app/` 覆盖。Vite 将解析后的路径暴露为 `import.meta.env.BASE_URL`，browser 路由读取此值作为 TanStack Router `basepath`，hash 路由保持 `/`。推荐使用 `/` 或 `/react-app/` 形式的路径。使用子路径和 browser 路由时，静态服务器必须在相同前缀提供构建产物，并将该前缀下的页面路由回退到对应的 `index.html`。
 
 `VITE_ROUTER_HISTORY` 接受 `browser` 或 `hash`，默认使用 `browser`。Browser history 提供 `/loading` 形式的 URL，并要求静态服务器为页面路由提供 SPA fallback；hash history 提供 `/#/loading` 形式的 URL，不要求页面路由 fallback。与子路径组合时，hash URL 形如 `/react-app/#/loading`，部署前缀不会在 Hash 中重复。切换 history 不会迁移已有 URL 或浏览器书签。
 
-未提供上述变量时使用默认值；显式提供空值或非法的路径、路由模式时，Vite 会立即终止启动或构建。所有 `VITE_*` 变量都会写入浏览器可访问的前端产物，因此不能存放密钥。修改这些值后需要重新构建。部署需要不同配置时，应在构建阶段注入对应值；若需要运行时切换环境，再按实际需求设计 `/config.js` 或 `/env.json` 等运行时配置机制。
+未提供上述变量时使用默认值；显式提供空值或非法的路由模式时，Vite 会立即终止启动或构建。所有 `VITE_*` 变量都会写入浏览器可访问的前端产物，因此不能存放密钥。修改这些值后需要重新构建。部署需要不同配置时，应在构建阶段注入对应值；若需要运行时切换环境，再按实际需求设计 `/config.js` 或 `/env.json` 等运行时配置机制。
 
 ## 项目结构
 

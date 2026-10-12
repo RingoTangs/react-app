@@ -43,9 +43,9 @@ jobs:
         uses: actions/configure-pages@v6
 
       - name: Build
-        run: pnpm build
+        run: pnpm build --base "$PAGES_BASE_PATH"
         env:
-          VITE_BASE_PATH: ${{ steps.pages.outputs.base_path }}/
+          PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}/
           VITE_ROUTER_HISTORY: hash
 
       - name: Upload GitHub Pages artifact

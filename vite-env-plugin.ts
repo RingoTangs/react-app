@@ -5,29 +5,14 @@ import { z } from 'zod'
 const DIRNAME = import.meta.dirname
 
 export interface ViteEnvPluginOptions {
-  basePath?: string
   routerHistory?: 'browser' | 'hash'
   siteName: string
   themeStorageKey?: string
 }
 
 const nonEmptyString = z.string().trim().min(1, 'Must not be empty')
-const BASE_PATH_PATTERN = /^\/(?:[^/?#\\\s]+\/)*$/
 
 const envSchema = z.object({
-  VITE_BASE_PATH: nonEmptyString
-    .regex(
-      BASE_PATH_PATTERN,
-      'Expected "/" or an absolute path ending in "/", for example "/react-app/"',
-    )
-    .refine(
-      (value) =>
-        !value
-          .split('/')
-          .some((segment) => segment === '.' || segment === '..'),
-      'Path must not contain "." or ".." segments',
-    )
-    .default('/'),
   VITE_ROUTER_HISTORY: nonEmptyString
     .pipe(z.enum(['browser', 'hash']))
     .default('browser'),
@@ -41,7 +26,6 @@ export const viteEnvPlugin = (options: ViteEnvPluginOptions): Plugin => ({
   enforce: 'pre',
   config: (_, { mode }) => {
     const result = envSchema.safeParse({
-      VITE_BASE_PATH: options.basePath,
       VITE_ROUTER_HISTORY: options.routerHistory,
       VITE_SITE_NAME: options.siteName,
       VITE_THEME_STORAGE_KEY: options.themeStorageKey,
@@ -60,7 +44,6 @@ export const viteEnvPlugin = (options: ViteEnvPluginOptions): Plugin => ({
     const env = result.data
 
     return {
-      base: env.VITE_BASE_PATH,
       define: Object.fromEntries(
         Object.entries(env).map(([key, value]) => [
           `import.meta.env.${key}`,

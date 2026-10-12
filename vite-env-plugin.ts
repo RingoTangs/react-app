@@ -59,8 +59,8 @@ const resolveConfigEnv = (env: Record<string, string>) => {
   return configEnv
 }
 
-export const templateEnvPlugin = (): Plugin => ({
-  name: 'template-env',
+export const viteEnvPlugin = (): Plugin => ({
+  name: 'app:vite-env-plugin',
   // 在 Vitest 读取配置前注入环境变量。
   enforce: 'pre',
   config: (_, { mode }) => {

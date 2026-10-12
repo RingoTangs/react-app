@@ -3,7 +3,7 @@ import tailwindcss from '@tailwindcss/vite'
 import { tanstackRouter } from '@tanstack/router-plugin/vite'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
-import { templateEnvPlugin } from './vite-env-plugin.ts'
+import { viteEnvPlugin } from './vite-env-plugin.ts'
 
 const PORT = 3000
 const PROJECT_ROOT = import.meta.dirname
@@ -11,7 +11,7 @@ const PROJECT_ROOT = import.meta.dirname
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
-    templateEnvPlugin(),
+    viteEnvPlugin(),
     // Please make sure that '@tanstack/router-plugin' is passed before '@vitejs/plugin-react'
     tanstackRouter({
       target: 'react',

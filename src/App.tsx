@@ -11,12 +11,8 @@ const App: React.FC = () => {
     <ThemeProvider>
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
-        <TanStackRouterDevtools router={router} position="bottom-left" />
-        <ReactQueryDevtools
-          initialIsOpen={false}
-          position="bottom"
-          buttonPosition="bottom-right"
-        />
+        <TanStackRouterDevtools router={router} />
+        <ReactQueryDevtools client={queryClient} />
       </QueryClientProvider>
     </ThemeProvider>
   )

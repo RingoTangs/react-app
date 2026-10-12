@@ -44,14 +44,14 @@
   // tanstack router
   "files.readonlyInclude": {
     "**/routeTree.gen.ts": true,
-    "node_modules/**": true,
-    "pnpm-lock.yaml": true
+    "**/node_modules/**": true,
+    "**/pnpm-lock.yaml": true
   },
   "files.watcherExclude": {
     "**/routeTree.gen.ts": true
   },
   "search.exclude": {
     "**/routeTree.gen.ts": true,
-    "pnpm-lock.yaml": true
+    "**/pnpm-lock.yaml": true
   }
 }

@@ -16,13 +16,12 @@ const LoadingDemoPage: React.FC = () => {
         Router Loading Demo
       </h1>
       <p className="text-muted-foreground mb-8 max-w-[500px] text-lg">
-        Client-side navigation to this route displays the top progress bar while
-        its loader waits. Reload the page to display the full-screen spinner
-        during initial route resolution.
+        This route waits briefly before opening. A loading screen appears during
+        slow navigation and when you reload the page.
       </p>
       <div className="flex flex-wrap justify-center gap-4">
         <Button size="lg" onClick={handleReload}>
-          Reload Spinner
+          Reload Page
         </Button>
         <Button
           size="lg"

@@ -4,7 +4,7 @@ import {
   createRouter,
 } from '@tanstack/react-router'
 import { queryClient } from '../queryClient'
-import { LoaderSync } from './LoaderSync'
+import { RouterPending } from './RouterPending'
 import { routeTree } from './routeTree.gen'
 
 const isHashHistory = import.meta.env.VITE_ROUTER_HISTORY === 'hash'
@@ -16,13 +16,9 @@ export const router = createRouter({
   history,
   // Hash 中的路由从根路径开始，避免和 Hash 外的部署前缀重复。
   basepath: isHashHistory ? '/' : import.meta.env.BASE_URL,
-  // 在路由匹配树的 Suspense 外同步状态，覆盖首次加载。
-  InnerWrap: ({ children }) => (
-    <>
-      <LoaderSync />
-      {children}
-    </>
-  ),
+  defaultPendingComponent: RouterPending,
+  defaultPendingMs: 150,
+  defaultPendingMinMs: 300,
   context: {
     queryClient,
   },
@@ -65,7 +61,7 @@ export const router = createRouter({
    *
    * - 'blocking'：
    *   stale 后先重新执行 loader，并等待最新结果完成后再完成导航；
-   *   因此可以触发 Router 的 pending 状态、pendingComponent 和导航进度条。
+   *   因此可以触发 Router 的 pending 状态、pendingComponent。
    *
    * 注意：
    * staleReloadMode 只决定“stale 后如何 reload”，

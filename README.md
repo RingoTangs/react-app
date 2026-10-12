@@ -104,11 +104,7 @@ src/
 │   ├── reportError.ts          # 独立的错误上报集成点
 │   └── router/                 # TanStack Router 配置与应用级集成
 │       ├── index.ts            # App 装配所需的受控公共接口
-│       ├── RouterProgress.tsx  # 站内导航进度条
-│       ├── RouterSpinner.tsx   # 首次加载的全屏遮罩
-│       ├── LoaderSync.tsx      # 将 Router 状态同步到 loaderStore
-│       ├── loaderStore.ts      # idle / boot / navigation 加载模式
-│       ├── router.tsx          # Router 实例和默认配置
+│       ├── RouterPending.tsx   # Router 原生 pending 加载界面
 │       └── routeTree.gen.ts    # 生成的路由树；不要手动编辑
 │
 ├── routes/                     # TanStack 文件路由
@@ -283,7 +279,7 @@ export const Route = createFileRoute('/users')({
 
 模板首页作为局部组件放在 `src/routes/index.tsx`，直接导入 Counter 和 PostsPreview 的 UI 文件进行组合。出现独立业务逻辑或复杂页面后，再提取为 feature。
 
-`routes/loading.tsx` 使用 1500ms loader 展示 Router 的全局加载反馈：站内导航显示顶部进度条，直接访问或整页重载显示全屏 Spinner。`routes/error.tsx` 只负责触发和验证路由错误边界，不再承担加载反馈演示。
+`routes/loading.tsx` 使用 1500ms loader 展示 Router 的全局加载反馈：站内慢导航、直接访问或整页重载均由 Router 显示 pending 加载界面。`routes/error.tsx` 只负责触发和验证路由错误边界，不再承担加载反馈演示。
 
 路由错误和 404 页面统一放在 `features/errors`；它们可以使用 Router 能力提供返回上一页和返回首页操作。不包含路由或业务行为的底层通用 UI 才放在 `components`。
 
@@ -305,7 +301,7 @@ Router 设置 `defaultPreloadStaleTime: 0`，将预加载的数据新鲜度判�
 
 ## 模板默认规则
 
-首次加载使用全屏 Spinner：等待 150ms 后显示，显示后至少保留 300ms；后续前台导航使用顶部进度条，持续 150ms 后显示，每轮使用独立实例隔离完成动画。`LoaderSync` 通过 Router 的 `InnerWrap` 挂载在路由匹配树的 Suspense 外，独占同步 `loaderStore` 的 `idle / boot / navigation` 状态，卸载时清理。Loader 只反映应用启动后的路由加载和页面过渡，不代表所有网络请求，业务请求不写入这个 store。
+Router 使用 `RouterPending` 作为默认 pending 组件：等待 150ms 后显示，显示后至少保留 300ms，显示时机与生命周期由 Router 管理。首次加载和站内慢导航统一替换等待中的路由区域，不使用额外全屏遮罩、导航进度条或同步 store。该反馈只覆盖 Router 管理的等待，业务请求继续使用 feature 内的局部加载状态。
 
 - Router 和 React Query devtools 使用依赖提供的标准入口，在非开发环境自动返回空内容并由构建工具裁剪。
 - 模板全局使用显式导入；例如 `cva()` 这类 helper 应在使用处显式导入。
@@ -322,7 +318,7 @@ Router 设置 `defaultPreloadStaleTime: 0`，将预加载的数据新鲜度判�
 
 主题存储键由公开构建变量 `VITE_THEME_STORAGE_KEY` 统一提供给首屏脚本和 ThemeProvider。修改该值后，浏览器不会自动迁移旧 key 中保存的主题偏好。
 
-组件使用 `bg-background`、`bg-card`、`text-foreground`、`text-muted-foreground` 和 `bg-primary` 等语义类。修改主题时优先调整 CSS variables；首次加载 Spinner 复用主色，导航进度条复用弱化前景色。
+组件使用 `bg-background`、`bg-card`、`text-foreground`、`text-muted-foreground` 和 `bg-primary` 等语义类。修改主题时优先调整 CSS variables；Router pending 加载图标复用主色。
 
 - React、router 和应用工具都使用显式导入。
 - 不要把业务逻辑放进 `App.tsx` 或 `app`；随着项目增长，产品行为应放到 feature 模块中。

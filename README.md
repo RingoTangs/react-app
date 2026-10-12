@@ -64,13 +64,13 @@ pnpm check:fix    # 应用本地 lint 和格式化修复
 
 部署地址为 <https://ringotangs.github.io/react-app/>。工作流会根据 GitHub Pages 返回的路径设置 `VITE_BASE_PATH`，并使用 hash 路由，页面地址形如 `https://ringotangs.github.io/react-app/#/loading`。
 
-首次部署或在 fork 中使用时，需要在仓库的 **Settings → Pages → Build and deployment** 中将 **Source** 设置为 **GitHub Actions**。本地使用 `vite-env-plugin.ts` 中的默认配置，GitHub Pages 工作流通过环境变量覆盖部署路径和路由模式。
+首次部署或在 fork 中使用时，需要在仓库的 **Settings → Pages → Build and deployment** 中将 **Source** 设置为 **GitHub Actions**。本地使用 `vite.config.ts` 中的插件参数作为默认配置，GitHub Pages 工作流通过环境变量覆盖部署路径和路由模式。
 
 ## 环境变量
 
-根目录 `vite-env-plugin.ts` 中的 `DEFAULT_ENV` 集中维护公开构建配置，由 `vite.config.ts` 注册插件，无需 `.env` 即可启动和构建。默认值为 `VITE_BASE_PATH=/`、`VITE_ROUTER_HISTORY=browser`、`VITE_SITE_NAME=React App Template` 和 `VITE_THEME_STORAGE_KEY=theme`。
+`vite.config.ts` 中的 `viteEnvPlugin({ basePath, routerHistory, siteName, themeStorageKey })` 显式维护公开构建默认值，四个参数均必填；根目录 `vite-env-plugin.ts` 负责环境变量读取、覆盖和 Zod 校验，无需 `.env` 即可启动和构建。默认值为 `VITE_BASE_PATH=/`、`VITE_ROUTER_HISTORY=browser`、`VITE_SITE_NAME=React App Template` 和 `VITE_THEME_STORAGE_KEY=theme`。
 
-可通过命令行或 CI 环境变量，以及被 Git 忽略的 `.env.local`、`.env.production` 等文件覆盖默认值。进程环境变量优先于环境文件；环境文件按 Vite 的 mode 加载规则处理。解析后的配置通过 `define` 注入 `import.meta.env`，HTML 标题和首屏主题脚本使用 Vite 原生 `%VITE_*%` 替换，与 React 共用同一份配置。站点名称使用普通文本，主题存储键使用 `theme`、`app-theme` 等简单标识符；HTML 替换不提供特殊字符转义。
+可通过命令行或 CI 环境变量，以及被 Git 忽略的 `.env.local`、`.env.production` 等文件覆盖插件参数提供的默认值。进程环境变量优先于环境文件；环境文件按 Vite 的 mode 加载规则处理。解析后的配置通过 `define` 注入 `import.meta.env`，HTML 标题和首屏主题脚本使用 Vite 原生 `%VITE_*%` 替换，与 React 共用同一份配置。站点名称使用普通文本，主题存储键使用 `theme`、`app-theme` 等简单标识符；HTML 替换不提供特殊字符转义。
 
 `VITE_BASE_PATH` 同时配置 Vite 资源路径和 TanStack Router `basepath`，默认值为 `/`。它只接受 `/` 或以 `/` 开头和结尾的绝对路径，例如 `/react-app/`。使用子路径时，静态服务器必须在相同前缀提供构建产物，并将该前缀下的页面路由回退到对应的 `index.html`。
 

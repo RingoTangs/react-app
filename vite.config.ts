@@ -11,7 +11,12 @@ const DIRNAME = import.meta.dirname
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
-    viteEnvPlugin(),
+    viteEnvPlugin({
+      basePath: '/',
+      routerHistory: 'browser',
+      siteName: 'React App Template',
+      themeStorageKey: 'theme',
+    }),
     // Please make sure that '@tanstack/router-plugin' is passed before '@vitejs/plugin-react'
     tanstackRouter({
       target: 'react',

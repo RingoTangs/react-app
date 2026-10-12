@@ -4,12 +4,12 @@ import { z } from 'zod'
 
 const DIRNAME = import.meta.dirname
 
-const DEFAULT_ENV = {
-  VITE_BASE_PATH: '/',
-  VITE_ROUTER_HISTORY: 'browser',
-  VITE_SITE_NAME: 'React App Template',
-  VITE_THEME_STORAGE_KEY: 'theme',
-} as const
+export interface ViteEnvPluginOptions {
+  basePath: string
+  routerHistory: 'browser' | 'hash'
+  siteName: string
+  themeStorageKey: string
+}
 
 const nonEmptyString = z.string().trim().min(1, 'Must not be empty')
 const BASE_PATH_PATTERN = /^\/(?:[^/?#\\\s]+\/)*$/
@@ -26,23 +26,24 @@ const envSchema = z.object({
           .split('/')
           .some((segment) => segment === '.' || segment === '..'),
       'Path must not contain "." or ".." segments',
-    )
-    .default(DEFAULT_ENV.VITE_BASE_PATH),
-  VITE_ROUTER_HISTORY: nonEmptyString
-    .pipe(z.enum(['browser', 'hash']))
-    .default(DEFAULT_ENV.VITE_ROUTER_HISTORY),
-  VITE_SITE_NAME: nonEmptyString.default(DEFAULT_ENV.VITE_SITE_NAME),
-  VITE_THEME_STORAGE_KEY: nonEmptyString.default(
-    DEFAULT_ENV.VITE_THEME_STORAGE_KEY,
-  ),
+    ),
+  VITE_ROUTER_HISTORY: nonEmptyString.pipe(z.enum(['browser', 'hash'])),
+  VITE_SITE_NAME: nonEmptyString,
+  VITE_THEME_STORAGE_KEY: nonEmptyString,
 })
 
-export const viteEnvPlugin = (): Plugin => ({
+export const viteEnvPlugin = (options: ViteEnvPluginOptions): Plugin => ({
   name: 'app:vite-env-plugin',
   // 在 Vitest 读取配置前注入环境变量。
   enforce: 'pre',
   config: (_, { mode }) => {
-    const result = envSchema.safeParse(loadEnv(mode, DIRNAME, 'VITE_'))
+    const result = envSchema.safeParse({
+      VITE_BASE_PATH: options.basePath,
+      VITE_ROUTER_HISTORY: options.routerHistory,
+      VITE_SITE_NAME: options.siteName,
+      VITE_THEME_STORAGE_KEY: options.themeStorageKey,
+      ...loadEnv(mode, DIRNAME, 'VITE_'),
+    })
 
     if (!result.success) {
       const issues = result.error.issues.map(

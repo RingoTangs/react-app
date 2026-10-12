@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react'
 import { defineConfig, loadEnv } from 'vite'
 
 const PORT = 3000
-const DIRNAME = import.meta.dirname
+const PROJECT_ROOT = import.meta.dirname
 
 const DEFAULT_ENV = {
   VITE_BASE_PATH: '/',
@@ -16,7 +16,7 @@ const DEFAULT_ENV = {
 
 type EnvKey = keyof typeof DEFAULT_ENV
 
-const resolveEnv = (env: Record<string, string>, key: EnvKey): string => {
+const readEnv = (env: Record<string, string>, key: EnvKey): string => {
   const value = (env[key] ?? DEFAULT_ENV[key]).trim()
 
   if (!value) {
@@ -49,23 +49,28 @@ const validateRouterHistory = (routerHistory: string): void => {
   }
 }
 
+const resolveConfigEnv = (env: Record<string, string>) => {
+  const configEnv = {
+    VITE_BASE_PATH: readEnv(env, 'VITE_BASE_PATH'),
+    VITE_ROUTER_HISTORY: readEnv(env, 'VITE_ROUTER_HISTORY'),
+    VITE_SITE_NAME: readEnv(env, 'VITE_SITE_NAME'),
+    VITE_THEME_STORAGE_KEY: readEnv(env, 'VITE_THEME_STORAGE_KEY'),
+  }
+
+  parseBasePath(configEnv.VITE_BASE_PATH)
+  validateRouterHistory(configEnv.VITE_ROUTER_HISTORY)
+
+  return configEnv
+}
+
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, DIRNAME, 'VITE_')
-  const resolvedEnv = Object.fromEntries(
-    Object.keys(DEFAULT_ENV).map((key) => [
-      key,
-      resolveEnv(env, key as EnvKey),
-    ]),
-  ) as Record<EnvKey, string>
-  const basePath = parseBasePath(resolvedEnv.VITE_BASE_PATH)
-
-  validateRouterHistory(resolvedEnv.VITE_ROUTER_HISTORY)
+  const env = resolveConfigEnv(loadEnv(mode, PROJECT_ROOT, 'VITE_'))
 
   return {
-    base: basePath,
+    base: env.VITE_BASE_PATH,
     define: Object.fromEntries(
-      Object.entries(resolvedEnv).map(([key, value]) => [
+      Object.entries(env).map(([key, value]) => [
         `import.meta.env.${key}`,
         JSON.stringify(value),
       ]),
@@ -75,8 +80,8 @@ export default defineConfig(({ mode }) => {
       tanstackRouter({
         target: 'react',
         generatedRouteTree: path.resolve(
-          DIRNAME,
-          './src/app/router/routeTree.gen.ts',
+          PROJECT_ROOT,
+          'src/app/router/routeTree.gen.ts',
         ),
         autoCodeSplitting: true,
       }),
@@ -91,7 +96,7 @@ export default defineConfig(({ mode }) => {
     },
     resolve: {
       alias: {
-        '@': path.resolve(DIRNAME, './src'),
+        '@': path.resolve(PROJECT_ROOT, 'src'),
       },
     },
     test: {

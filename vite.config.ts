@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react'
 import { defineConfig, loadEnv } from 'vite'
 
 const PORT = 3000
-const PROJECT_ROOT = import.meta.dirname
+const DIRNAME = import.meta.dirname
 
 const DEFAULT_ENV = {
   VITE_BASE_PATH: '/',
@@ -51,7 +51,7 @@ const validateRouterHistory = (routerHistory: string): void => {
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, PROJECT_ROOT, 'VITE_')
+  const env = loadEnv(mode, DIRNAME, 'VITE_')
   const resolvedEnv = Object.fromEntries(
     Object.keys(DEFAULT_ENV).map((key) => [
       key,
@@ -75,7 +75,7 @@ export default defineConfig(({ mode }) => {
       tanstackRouter({
         target: 'react',
         generatedRouteTree: path.resolve(
-          PROJECT_ROOT,
+          DIRNAME,
           './src/app/router/routeTree.gen.ts',
         ),
         autoCodeSplitting: true,
@@ -91,7 +91,7 @@ export default defineConfig(({ mode }) => {
     },
     resolve: {
       alias: {
-        '@': path.resolve(PROJECT_ROOT, './src'),
+        '@': path.resolve(DIRNAME, './src'),
       },
     },
     test: {

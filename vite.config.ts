@@ -7,20 +7,20 @@ import { defineConfig, loadEnv } from 'vite'
 const PORT = 3000
 const PROJECT_ROOT = import.meta.dirname
 
-type RequiredEnvKey =
-  | 'VITE_BASE_PATH'
-  | 'VITE_ROUTER_HISTORY'
-  | 'VITE_SITE_NAME'
-  | 'VITE_THEME_STORAGE_KEY'
+const DEFAULT_ENV = {
+  VITE_BASE_PATH: '/',
+  VITE_ROUTER_HISTORY: 'browser',
+  VITE_SITE_NAME: 'React App Template',
+  VITE_THEME_STORAGE_KEY: 'theme',
+} as const
 
-const getRequiredEnv = (
-  env: Record<string, string>,
-  key: RequiredEnvKey,
-): string => {
-  const value = env[key]?.trim()
+type EnvKey = keyof typeof DEFAULT_ENV
+
+const resolveEnv = (env: Record<string, string>, key: EnvKey): string => {
+  const value = (env[key] ?? DEFAULT_ENV[key]).trim()
 
   if (!value) {
-    throw new Error(`Missing required environment variable: ${key}`)
+    throw new Error(`Empty environment variable: ${key}`)
   }
 
   return value
@@ -52,16 +52,24 @@ const validateRouterHistory = (routerHistory: string): void => {
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, PROJECT_ROOT, 'VITE_')
+  const resolvedEnv = Object.fromEntries(
+    Object.keys(DEFAULT_ENV).map((key) => [
+      key,
+      resolveEnv(env, key as EnvKey),
+    ]),
+  ) as Record<EnvKey, string>
+  const basePath = parseBasePath(resolvedEnv.VITE_BASE_PATH)
 
-  getRequiredEnv(env, 'VITE_SITE_NAME')
-  getRequiredEnv(env, 'VITE_THEME_STORAGE_KEY')
-
-  const basePath = parseBasePath(getRequiredEnv(env, 'VITE_BASE_PATH'))
-
-  validateRouterHistory(getRequiredEnv(env, 'VITE_ROUTER_HISTORY'))
+  validateRouterHistory(resolvedEnv.VITE_ROUTER_HISTORY)
 
   return {
     base: basePath,
+    define: Object.fromEntries(
+      Object.entries(resolvedEnv).map(([key, value]) => [
+        `import.meta.env.${key}`,
+        JSON.stringify(value),
+      ]),
+    ),
     plugins: [
       // Please make sure that '@tanstack/router-plugin' is passed before '@vitejs/plugin-react'
       tanstackRouter({

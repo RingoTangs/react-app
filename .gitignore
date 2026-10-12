@@ -20,7 +20,8 @@ build
 coverage
 .tanstack
 
-# Public Vite build defaults in .env are intentionally tracked
+# Local environment overrides
+.env
 .env.*
 !.env.example
 *.local

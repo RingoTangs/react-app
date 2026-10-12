@@ -6,7 +6,7 @@ import { defineConfig } from 'vite'
 import { viteEnvPlugin } from './vite-env-plugin.ts'
 
 const PORT = 3000
-const PROJECT_ROOT = import.meta.dirname
+const DIRNAME = import.meta.dirname
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -16,7 +16,7 @@ export default defineConfig({
     tanstackRouter({
       target: 'react',
       generatedRouteTree: path.resolve(
-        PROJECT_ROOT,
+        DIRNAME,
         'src/app/router/routeTree.gen.ts',
       ),
       autoCodeSplitting: true,
@@ -32,7 +32,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': path.resolve(PROJECT_ROOT, 'src'),
+      '@': path.resolve(DIRNAME, 'src'),
     },
   },
   test: {

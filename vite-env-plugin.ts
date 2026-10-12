@@ -1,7 +1,7 @@
 import type { Plugin } from 'vite'
 import { loadEnv } from 'vite'
 
-const PROJECT_ROOT = import.meta.dirname
+const DIRNAME = import.meta.dirname
 
 const DEFAULT_ENV = {
   VITE_BASE_PATH: '/',
@@ -64,7 +64,7 @@ export const viteEnvPlugin = (): Plugin => ({
   // 在 Vitest 读取配置前注入环境变量。
   enforce: 'pre',
   config: (_, { mode }) => {
-    const env = resolveConfigEnv(loadEnv(mode, PROJECT_ROOT, 'VITE_'))
+    const env = resolveConfigEnv(loadEnv(mode, DIRNAME, 'VITE_'))
 
     return {
       base: env.VITE_BASE_PATH,

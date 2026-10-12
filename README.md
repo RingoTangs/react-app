@@ -68,7 +68,7 @@ pnpm check:fix    # 应用本地 lint 和格式化修复
 
 ## 环境变量
 
-`vite.config.ts` 中的 `viteEnvPlugin({ basePath, routerHistory, siteName, themeStorageKey })` 显式维护公开构建默认值，四个参数均必填；根目录 `vite-env-plugin.ts` 负责环境变量读取、覆盖和 Zod 校验，无需 `.env` 即可启动和构建。默认值为 `VITE_BASE_PATH=/`、`VITE_ROUTER_HISTORY=browser`、`VITE_SITE_NAME=React App Template` 和 `VITE_THEME_STORAGE_KEY=theme`。
+`vite.config.ts` 通过 `viteEnvPlugin({ siteName: 'React App Template' })` 配置站点名称，`siteName` 必填且无默认值。可选参数 `basePath`、`routerHistory`、`themeStorageKey` 分别默认为 `/`、`browser`、`theme`，对应 `VITE_BASE_PATH`、`VITE_ROUTER_HISTORY`、`VITE_THEME_STORAGE_KEY`；站点名称对应 `VITE_SITE_NAME`。根目录 `vite-env-plugin.ts` 负责环境变量读取、覆盖、默认值补齐和 Zod 校验，无需 `.env` 即可启动和构建。
 
 可通过命令行或 CI 环境变量，以及被 Git 忽略的 `.env.local`、`.env.production` 等文件覆盖插件参数提供的默认值。进程环境变量优先于环境文件；环境文件按 Vite 的 mode 加载规则处理。解析后的配置通过 `define` 注入 `import.meta.env`，HTML 标题和首屏主题脚本使用 Vite 原生 `%VITE_*%` 替换，与 React 共用同一份配置。站点名称使用普通文本，主题存储键使用 `theme`、`app-theme` 等简单标识符；HTML 替换不提供特殊字符转义。
 

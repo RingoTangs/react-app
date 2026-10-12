@@ -5,10 +5,10 @@ import { z } from 'zod'
 const DIRNAME = import.meta.dirname
 
 export interface ViteEnvPluginOptions {
-  basePath: string
-  routerHistory: 'browser' | 'hash'
+  basePath?: string
+  routerHistory?: 'browser' | 'hash'
   siteName: string
-  themeStorageKey: string
+  themeStorageKey?: string
 }
 
 const nonEmptyString = z.string().trim().min(1, 'Must not be empty')
@@ -26,10 +26,13 @@ const envSchema = z.object({
           .split('/')
           .some((segment) => segment === '.' || segment === '..'),
       'Path must not contain "." or ".." segments',
-    ),
-  VITE_ROUTER_HISTORY: nonEmptyString.pipe(z.enum(['browser', 'hash'])),
+    )
+    .default('/'),
+  VITE_ROUTER_HISTORY: nonEmptyString
+    .pipe(z.enum(['browser', 'hash']))
+    .default('browser'),
   VITE_SITE_NAME: nonEmptyString,
-  VITE_THEME_STORAGE_KEY: nonEmptyString,
+  VITE_THEME_STORAGE_KEY: nonEmptyString.default('theme'),
 })
 
 export const viteEnvPlugin = (options: ViteEnvPluginOptions): Plugin => ({

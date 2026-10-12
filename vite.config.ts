@@ -3,7 +3,7 @@ import tailwindcss from '@tailwindcss/vite'
 import { tanstackRouter } from '@tanstack/router-plugin/vite'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
-import { viteEnvPlugin } from './vite-env-plugin.ts'
+import { viteEnvPlugin } from './vite-env-plugin.js'
 
 const PORT = 3000
 const DIRNAME = import.meta.dirname

@@ -1,12 +1,9 @@
 {
-  "extends": "@ringotangs/tsconfig",
+  "extends": "@ringotangs/tsconfig/nodejs",
   "compilerOptions": {
     "incremental": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
-    "types": ["node", "vitest/config"],
-    "allowImportingTsExtensions": true
+    "types": ["node", "vitest/config"]
   },
   "include": ["vite.config.ts", "vite-env-plugin.ts"]
 }

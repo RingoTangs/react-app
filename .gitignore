@@ -18,7 +18,7 @@ build
 .output
 .data
 coverage
-.tanstack/
+.tanstack
 
 # Public Vite build defaults in .env are intentionally tracked
 .env.*

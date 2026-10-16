@@ -1,4 +1,5 @@
 import path from 'node:path'
+import { reactTheme } from '@ringotangs/react-theme/vite'
 import tailwindcss from '@tailwindcss/vite'
 import { tanstackRouter } from '@tanstack/router-plugin/vite'
 import react from '@vitejs/plugin-react'
@@ -24,6 +25,7 @@ export default defineConfig({
       ),
       autoCodeSplitting: true,
     }),
+    reactTheme(),
     react(),
     tailwindcss(),
   ],

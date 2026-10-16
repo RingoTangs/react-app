@@ -68,9 +68,9 @@ pnpm check:fix    # 应用本地 lint 和格式化修复
 
 ## 环境变量
 
-`vite.config.ts` 通过 `viteEnvPlugin({ siteName: 'React App Template' })` 配置站点名称，`siteName` 必填且无默认值。可选参数 `routerHistory`、`themeStorageKey` 分别默认为 `browser`、`theme`，对应 `VITE_ROUTER_HISTORY`、`VITE_THEME_STORAGE_KEY`；站点名称对应 `VITE_SITE_NAME`。根目录 `vite-env-plugin.ts` 负责环境变量读取、覆盖、默认值补齐和 Zod 校验，无需 `.env` 即可启动和构建。
+`vite.config.ts` 通过 `viteEnvPlugin({ siteName: 'React App Template' })` 配置站点名称，`siteName` 必填且无默认值。可选参数 `routerHistory` 默认为 `browser`，对应 `VITE_ROUTER_HISTORY`；站点名称对应 `VITE_SITE_NAME`。根目录 `vite-env-plugin.ts` 负责环境变量读取、覆盖、默认值补齐和 Zod 校验，无需 `.env` 即可启动和构建。
 
-可通过命令行或 CI 环境变量，以及被 Git 忽略的 `.env.local`、`.env.production` 等文件覆盖插件参数提供的默认值。进程环境变量优先于环境文件；环境文件按 Vite 的 mode 加载规则处理。解析后的配置通过 `define` 注入 `import.meta.env`，HTML 标题和首屏主题脚本使用 Vite 原生 `%VITE_*%` 替换，与 React 共用同一份配置。站点名称使用普通文本，主题存储键使用 `theme`、`app-theme` 等简单标识符；HTML 替换不提供特殊字符转义。
+可通过命令行或 CI 环境变量，以及被 Git 忽略的 `.env.local`、`.env.production` 等文件覆盖插件参数提供的默认值。进程环境变量优先于环境文件；环境文件按 Vite 的 mode 加载规则处理。解析后的配置通过 `define` 注入 `import.meta.env`，HTML 标题使用 Vite 原生 `%VITE_SITE_NAME%` 替换，与 React 共用同一份配置。站点名称使用普通文本；HTML 替换不提供特殊字符转义。
 
 部署路径统一在 `vite.config.ts` 的 `base` 中配置，默认值为 `/`；构建时可通过 `pnpm build --base /react-app/` 覆盖。Vite 将解析后的路径暴露为 `import.meta.env.BASE_URL`，browser 路由读取此值作为 TanStack Router `basepath`，hash 路由保持 `/`。推荐使用 `/` 或 `/react-app/` 形式的路径。使用子路径和 browser 路由时，静态服务器必须在相同前缀提供构建产物，并将该前缀下的页面路由回退到对应的 `index.html`。
 
@@ -128,12 +128,6 @@ src/
 │       └── ui/
 │
 ├── assets/                     # 由应用代码 import 的共享媒体资源
-├── theme/                      # 明暗主题状态、持久化和系统主题同步
-│   ├── index.ts                # 受控公共 API
-│   ├── ThemeContext.ts         # 主题 Context 定义
-│   ├── ThemeProvider.tsx       # 主题 Context 与运行时同步
-│   ├── theme.ts                # 主题类型与浏览器集成
-│   └── useTheme.ts             # 主题消费 Hook
 ├── components/                 # 产品无关的通用 UI 组件
 │   ├── Button.tsx              # 原生通用按钮组件
 │   └── Button.spec.tsx         # 按钮组件测试
@@ -223,7 +217,7 @@ src/features/<feature-name>/
 
 ### 导出与公共 Feature
 
-Barrel export 只用于有意维护的稳定公共边界。`src/theme/index.ts` 和 `src/app/router/index.ts` 通过显式导出提供受控公共接口；`src/components` 和 `src/lib` 从具体模块导入，不提供聚合入口。不要创建 `src/app/index.ts`，也不要为了缩短导入路径新增 `src/features/index.ts`、route 文件 barrel 或 feature 子目录 barrel。
+Barrel export 只用于有意维护的稳定公共边界。`src/app/router/index.ts` 通过显式导出提供受控公共接口；`src/components` 和 `src/lib` 从具体模块导入，不提供聚合入口。不要创建 `src/app/index.ts`，也不要为了缩短导入路径新增 `src/features/index.ts`、route 文件 barrel 或 feature 子目录 barrel。
 
 公共业务能力仍然放在 `src/features/<domain>`，不要放进通用基础目录。典型例子包括 `auth`、`current-user`、`permissions` 和 `notifications`。只有当某个 feature 明确需要向多个模块暴露稳定公共 API 时，才添加 `src/features/<feature>/index.ts`；它只应导出公共组件、hooks、类型和共享 query options，不导出私有 endpoint、测试或实现细节。
 
@@ -314,9 +308,9 @@ Router 使用 `RouterPending` 作为默认 pending 组件：等待 150ms 后显�
 
 ### 主题颜色
 
-模板支持 `light`、`dark` 和跟随系统的 `system` 模式。`src/styles/index.css` 是应用导入的全局样式入口，负责加载 Tailwind CSS、动画工具、主题样式和全局基础样式；颜色等 CSS variables 与 `@theme inline` 映射定义在 `src/styles/theme.css` 中。`src/theme` 管理用户选择、持久化、系统主题监听和根元素的 `.dark` class。`index.html` 在 React 启动前恢复主题，避免首屏闪烁。
+模板支持 `light`、`dark` 和跟随系统的 `system` 模式。`src/styles/index.css` 是应用导入的全局样式入口，负责加载 Tailwind CSS、动画工具、主题样式和全局基础样式；颜色等 CSS variables 与 `@theme inline` 映射定义在 `src/styles/theme.css` 中。`App.tsx` 直接使用 `@ringotangs/react-theme` 的 `ThemeProvider` 管理用户选择、持久化、系统主题监听和根元素的 `.dark` class 与 `colorScheme`。Vite 配置中的 `reactTheme()` 插件自动注入首屏初始化脚本，在 React 启动前恢复主题，避免首屏闪烁。
 
-主题存储键由公开构建变量 `VITE_THEME_STORAGE_KEY` 统一提供给首屏脚本和 ThemeProvider。修改该值后，浏览器不会自动迁移旧 key 中保存的主题偏好。
+Provider 和首屏脚本均使用包默认配置：默认模式为 `system`，localStorage 存储键为 `theme`，深色类名为 `dark`。组件需要消费主题时，直接从 `@ringotangs/react-theme` 导入 `useTheme` 和相关类型，无需本地包装模块。已有 `theme` 键中的偏好继续生效，其他存储键中的偏好不会自动迁移。
 
 组件使用 `bg-background`、`bg-card`、`text-foreground`、`text-muted-foreground` 和 `bg-primary` 等语义类。修改主题时优先调整 CSS variables；Router pending 加载图标复用主色。
 

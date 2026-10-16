@@ -1,10 +1,10 @@
+import { ThemeProvider } from '@ringotangs/react-theme'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { RouterProvider } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import { queryClient } from '@/app/queryClient'
 import { router } from '@/app/router'
-import { ThemeProvider } from '@/theme'
 
 const App: React.FC = () => {
   return (

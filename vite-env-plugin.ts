@@ -7,7 +7,6 @@ const DIRNAME = import.meta.dirname
 export interface ViteEnvPluginOptions {
   routerHistory?: 'browser' | 'hash'
   siteName: string
-  themeStorageKey?: string
 }
 
 const nonEmptyString = z.string().trim().min(1, 'Must not be empty')
@@ -17,7 +16,6 @@ const envSchema = z.object({
     .pipe(z.enum(['browser', 'hash']))
     .default('browser'),
   VITE_SITE_NAME: nonEmptyString,
-  VITE_THEME_STORAGE_KEY: nonEmptyString.default('theme'),
 })
 
 export const viteEnvPlugin = (options: ViteEnvPluginOptions): Plugin => ({
@@ -28,7 +26,6 @@ export const viteEnvPlugin = (options: ViteEnvPluginOptions): Plugin => ({
     const result = envSchema.safeParse({
       VITE_ROUTER_HISTORY: options.routerHistory,
       VITE_SITE_NAME: options.siteName,
-      VITE_THEME_STORAGE_KEY: options.themeStorageKey,
       ...loadEnv(mode, DIRNAME, 'VITE_'),
     })
 

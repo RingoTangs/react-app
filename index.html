@@ -28,27 +28,6 @@
     />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title id="app-bootstrap-title">%VITE_SITE_NAME%</title>
-    <script>
-      ;(() => {
-        const themes = ['light', 'dark', 'system']
-        let saved = 'system'
-
-        try {
-          const stored = localStorage.getItem('%VITE_THEME_STORAGE_KEY%')
-          if (themes.includes(stored)) saved = stored
-        } catch {}
-
-        const theme =
-          saved === 'system'
-            ? matchMedia('(prefers-color-scheme: dark)').matches
-              ? 'dark'
-              : 'light'
-            : saved
-
-        document.documentElement.classList.toggle('dark', theme === 'dark')
-        document.documentElement.style.colorScheme = theme
-      })()
-    </script>
   </head>
   <body>
     <noscript>

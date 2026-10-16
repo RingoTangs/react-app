@@ -3,7 +3,7 @@ import tailwindcss from '@tailwindcss/vite'
 import { tanstackRouter } from '@tanstack/router-plugin/vite'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
-import { viteEnvPlugin } from './vite-env-plugin.js'
+import { viteEnvPlugin } from './vite-env-plugin.ts'
 
 const PORT = 3000
 const DIRNAME = import.meta.dirname
@@ -40,7 +40,7 @@ export default defineConfig({
   },
   test: {
     environment: 'jsdom',
-    setupFiles: './src/setupTests.ts',
+    setupFiles: './test/setup.dom.ts',
   },
   build: {
     target: ['chrome111', 'edge111', 'firefox128', 'safari16.4'],

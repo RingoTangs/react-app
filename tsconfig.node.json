@@ -1,9 +1,24 @@
 {
-  "extends": "@ringotangs/tsconfig/nodejs",
+  "extends": "@ringotangs/tsconfig/react",
   "compilerOptions": {
     "incremental": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
-    "types": ["node", "vitest/config"]
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "types": ["node", "vite/client", "vitest/config"],
+    "allowImportingTsExtensions": true
   },
-  "include": ["vite.config.ts", "vite-env-plugin.ts"]
+  "include": [
+    "vite.config.ts",
+    "vite-env-plugin.ts",
+    "types/**/*.d.ts",
+    "test/**/*.ts",
+    "test/**/*.tsx",
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    "src/**/*.spec.ts",
+    "src/**/*.spec.tsx"
+  ],
+  "exclude": []
 }

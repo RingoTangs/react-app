@@ -5,7 +5,6 @@ import {
   useRouterState,
 } from '@tanstack/react-router'
 import { useLayoutEffect } from 'react'
-import { reportError } from '@/app/reportError'
 
 const RootShell: React.FC<React.PropsWithChildren> = ({ children }) => {
   const matches = useRouterState({ select: (state) => state.matches })
@@ -45,7 +44,4 @@ export const Route = createRootRouteWithContext<{
     }
   },
   shellComponent: ({ children }) => <RootShell>{children}</RootShell>,
-  onCatch: (error) => {
-    reportError(error)
-  },
 })

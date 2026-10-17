@@ -6,6 +6,7 @@ import {
 import { GeneralError } from '@/components/GeneralError'
 import { NotFound } from '@/components/NotFound'
 import { queryClient } from '../queryClient'
+import { reportError } from '../reportError'
 import { RouterPending } from './RouterPending'
 import { routeTree } from './routeTree.gen'
 
@@ -23,6 +24,9 @@ export const router = createRouter({
   defaultPendingMinMs: 300,
   defaultErrorComponent: () => <GeneralError />,
   defaultNotFoundComponent: () => <NotFound />,
+  defaultOnCatch: (error) => {
+    reportError(error)
+  },
   context: {
     queryClient,
   },

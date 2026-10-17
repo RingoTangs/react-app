@@ -6,7 +6,7 @@ import {
 } from '@tanstack/react-router'
 import { useLayoutEffect } from 'react'
 
-const RootShell: React.FC<React.PropsWithChildren> = ({ children }) => {
+const RootShell = ({ children }: React.PropsWithChildren) => {
   const matches = useRouterState({ select: (state) => state.matches })
 
   useLayoutEffect(() => {
@@ -43,5 +43,5 @@ export const Route = createRootRouteWithContext<{
       ],
     }
   },
-  shellComponent: ({ children }) => <RootShell>{children}</RootShell>,
+  shellComponent: RootShell,
 })

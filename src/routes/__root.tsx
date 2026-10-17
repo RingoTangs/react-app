@@ -6,10 +6,8 @@ import {
 } from '@tanstack/react-router'
 import { useLayoutEffect } from 'react'
 import { reportError } from '@/app/reportError'
-import { GeneralError } from '@/features/errors/GeneralError'
-import { NotFoundError } from '@/features/errors/NotFoundError'
 
-const RootShell = ({ children }: { children: React.ReactNode }) => {
+const RootShell: React.FC<React.PropsWithChildren> = ({ children }) => {
   const matches = useRouterState({ select: (state) => state.matches })
 
   useLayoutEffect(() => {
@@ -46,9 +44,7 @@ export const Route = createRootRouteWithContext<{
       ],
     }
   },
-  shellComponent: RootShell,
-  errorComponent: GeneralError,
-  notFoundComponent: NotFoundError,
+  shellComponent: ({ children }) => <RootShell>{children}</RootShell>,
   onCatch: (error) => {
     reportError(error)
   },

@@ -1,7 +1,7 @@
 import { useNavigate, useRouter } from '@tanstack/react-router'
 import { Button } from '@/components/Button'
 
-export const NotFoundError: React.FC = () => {
+export const NotFound: React.FC = () => {
   const navigate = useNavigate()
   const { history } = useRouter()
   return (

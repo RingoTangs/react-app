@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { NotFoundError } from '@/features/errors/NotFoundError'
+import { NotFound } from '@/components/NotFound'
 
 export const Route = createFileRoute('/$')({
   head: () => {
@@ -15,5 +15,5 @@ export const Route = createFileRoute('/$')({
       ],
     }
   },
-  component: NotFoundError,
+  component: () => <NotFound />,
 })

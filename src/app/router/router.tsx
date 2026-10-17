@@ -3,6 +3,8 @@ import {
   createHashHistory,
   createRouter,
 } from '@tanstack/react-router'
+import { GeneralError } from '@/components/GeneralError'
+import { NotFound } from '@/components/NotFound'
 import { queryClient } from '../queryClient'
 import { RouterPending } from './RouterPending'
 import { routeTree } from './routeTree.gen'
@@ -19,6 +21,8 @@ export const router = createRouter({
   defaultPendingComponent: RouterPending,
   defaultPendingMs: 150,
   defaultPendingMinMs: 300,
+  defaultErrorComponent: () => <GeneralError />,
+  defaultNotFoundComponent: () => <NotFound />,
   context: {
     queryClient,
   },

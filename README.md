@@ -47,8 +47,7 @@ pnpm dev
 pnpm dev          # 启动 Vite 开发服务器
 pnpm build        # 执行类型检查并生成生产构建
 pnpm preview      # 本地预览生产构建
-pnpm test         # 以 watch 模式运行 Vitest
-pnpm test:run     # 单次运行测试，适合 CI
+pnpm test         # 单次运行 Vitest，适合本地验证和 CI
 pnpm lint         # 运行 ESLint
 pnpm lint:fix     # 应用 ESLint 自动修复
 pnpm format       # 检查 Prettier 格式
@@ -57,6 +56,8 @@ pnpm typecheck    # 运行 TypeScript 项目检查
 pnpm check        # lint + format + typecheck + test
 pnpm check:fix    # 应用本地 lint 和格式化修复
 ```
+
+需要 watch 模式时，运行 `pnpm exec vitest`。
 
 ## GitHub Pages 部署
 
@@ -91,33 +92,33 @@ types/
 ├── tanstack-router.d.ts        # TanStack Router 类型注册
 └── vite-env.d.ts               # Vite 环境变量类型
 
+test/
+└── setup.dom.ts                # Vitest 与 Testing Library 测试初始化
+
 src/
 ├── main.tsx                    # React DOM 启动入口
 ├── App.tsx                     # providers 和开发工具装配
 ├── styles/                     # 全局样式与主题变量
 │   ├── index.css               # Tailwind CSS 和全局基础样式入口
 │   └── theme.css               # 主题变量与 Tailwind 主题映射
-├── setupTests.ts               # Vitest 与 Testing Library 测试初始化
 │
 ├── app/                        # 当前应用的配置、初始化和集成
 │   ├── queryClient.ts          # Provider 与 Router 共用的 QueryClient
 │   ├── reportError.ts          # 独立的错误上报集成点
 │   └── router/                 # TanStack Router 配置与应用级集成
 │       ├── index.ts            # App 装配所需的受控公共接口
+│       ├── router.tsx          # Router 实例与全局默认策略
 │       ├── RouterPending.tsx   # Router 原生 pending 加载界面
 │       └── routeTree.gen.ts    # 生成的路由树；不要手动编辑
 │
 ├── routes/                     # TanStack 文件路由
-│   ├── __root.tsx              # 根路由 context、布局和错误边界
+│   ├── __root.tsx              # 根路由 context 类型、默认 head 和 shell
 │   ├── $.tsx                   # 未知 URL 的 404 页面及元信息
 │   ├── error.tsx               # demo error 路由
 │   ├── loading.tsx             # Router 加载反馈演示路由
 │   └── index.tsx               # / 路由
 │
 ├── features/                   # 按业务域组织的产品或 demo 能力
-│   ├── errors/                 # 路由错误与 404 页面
-│   │   ├── GeneralError.tsx
-│   │   └── NotFoundError.tsx
 │   ├── example-counter/        # demo Zustand 共享状态 feature
 │   │   ├── model/
 │   │   └── ui/
@@ -130,7 +131,9 @@ src/
 ├── assets/                     # 由应用代码 import 的共享媒体资源
 ├── components/                 # 产品无关的通用 UI 组件
 │   ├── Button.tsx              # 原生通用按钮组件
-│   └── Button.spec.tsx         # 按钮组件测试
+│   ├── Button.spec.tsx         # 按钮组件测试
+│   ├── GeneralError.tsx        # 通用错误页面
+│   └── NotFound.tsx            # 通用 404 页面
 └── lib/                        # 通用工具函数
     ├── date.ts
     └── sleep.ts
@@ -275,15 +278,19 @@ export const Route = createFileRoute('/users')({
 
 `routes/loading.tsx` 使用 1500ms loader 展示 Router 的全局加载反馈：站内慢导航、直接访问或整页重载均由 Router 显示 pending 加载界面。`routes/error.tsx` 只负责触发和验证路由错误边界，不再承担加载反馈演示。
 
-路由错误和 404 页面统一放在 `features/errors`；它们可以使用 Router 能力提供返回上一页和返回首页操作。不包含路由或业务行为的底层通用 UI 才放在 `components`。
+通用错误页 `GeneralError` 和 404 页面 `NotFound` 放在 `components`，可以使用 Router 能力提供返回上一页和返回首页操作，但不依赖应用初始化模块。业务专属错误页面仍放在所属 feature。
 
-`routes/$.tsx` 承接未知 URL，复用 `features/errors/NotFoundError` 并声明专属 404 标题和描述。根路由仍保留 `notFoundComponent`，用于已匹配路由主动抛出 `notFound()` 的情况；它不额外覆盖路由元信息。通配路由只负责客户端 404 展示，不会自动让服务器返回 HTTP 404。
+`routes/$.tsx` 承接未知 URL，复用 `components/NotFound` 并声明专属 404 标题和描述。Router 的 `defaultNotFoundComponent` 为已匹配路由主动抛出 `notFound()` 等情况提供默认 404 界面，不额外覆盖路由元信息。通配路由只负责客户端 404 展示，不会自动让服务器返回 HTTP 404。
+
+`routes/__root.tsx` 保留根路由 context 类型、默认 head 和 shell；shell 负责渲染 `HeadContent`，并在路由标题提交后移除静态启动标题。全局 pending、错误页、404 和错误上报默认策略集中在 `app/router/router.tsx`。
 
 如果 route loader 要预取 React Query 数据，Router context 必须暴露共享的 `queryClient`。`app/router/router.tsx` 注入 `app/queryClient.ts` 的共享实例，`App.tsx` 的 Provider 也使用该实例；route 文件仍然只使用 feature 的 `queryOptions`，不拥有 API 细节。
 
 ### 错误兜底
 
-路由级 render error、loader error 和 route match error 应使用 TanStack Router `errorComponent` 处理。根路由使用 `features/errors/GeneralError` 作为默认 fallback UI，并通过 `reportError` 统一上报捕获到的错误。
+路由级 render error、loader error 和 route match error 应使用 TanStack Router `errorComponent` 处理。Router 通过 `defaultErrorComponent` 使用 `components/GeneralError` 作为默认 fallback UI，通过 `defaultNotFoundComponent` 使用 `components/NotFound`，并在 `defaultOnCatch` 中调用 `reportError` 上报捕获到的错误。
+
+各路由可以单独配置 `errorComponent`、`notFoundComponent` 和 `onCatch`，覆盖对应的全局默认值。局部 `onCatch` 不会自动叠加执行 `defaultOnCatch`；需要保留错误上报时，应显式调用 `reportError`。
 
 `reportError(error)` 是监控接入点，尚未配置实际监控服务：当前仅在开发环境输出日志，生产环境不执行上报。生产监控应在 `src/app/reportError.ts` 中接入。
 

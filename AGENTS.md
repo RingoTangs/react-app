@@ -11,7 +11,7 @@ Use `pnpm@10.24.0` with Node `22.23.2`. `.nvmrc` selects Node 22.23.2. `.npmrc` 
 - `pnpm dev` starts Vite on `http://localhost:3000`.
 - `pnpm build` runs TypeScript project builds, then creates a production bundle in `dist/`.
 - `pnpm preview` serves the built app locally.
-- `pnpm test` runs Vitest in watch mode; `pnpm test:run` is the non-interactive CI-style run.
+- `pnpm test` runs Vitest once for local validation and CI; `pnpm exec vitest` starts watch mode.
 - `pnpm lint` checks ESLint rules, `pnpm lint:fix` applies safe fixes.
 - `pnpm format` verifies Prettier formatting, and `pnpm format:fix` rewrites files.
 - `pnpm check` is the main pre-PR gate: lint, Prettier, typecheck, and tests together.
@@ -25,7 +25,7 @@ Write explanatory comments in hand-written `src` code in Simplified Chinese. Pre
 
 ## Testing Guidelines
 
-Vitest runs in the `jsdom` environment with shared setup from `src/setupTests.ts`. Application and test code are checked together by `tsconfig.app.json`; the setup file imports jest-dom assertion types. Import Vitest APIs explicitly in tests; production app code should not rely on test APIs. Write component tests with Testing Library and keep them close to the source file, for example `src/features/billing/ui/BillingPage.spec.tsx`. Cover new UI states, user interactions, and error boundaries when behavior changes. Run `pnpm test:run` before opening a PR.
+Vitest runs in the `jsdom` environment with shared setup from `test/setup.dom.ts`, which imports jest-dom DOM assertions. `tsconfig.app.json` excludes `*.test.ts`, `*.test.tsx`, `*.spec.ts`, and `*.spec.tsx` files under `src`; `pnpm typecheck` does not typecheck these test files. Import Vitest APIs explicitly in tests; production app code should not rely on test APIs. Write component tests with Testing Library and keep them close to the source file, for example `src/features/billing/ui/BillingPage.spec.tsx`. Cover new UI states, user interactions, and error boundaries when behavior changes. Run `pnpm test` before opening a PR.
 
 ## Commit & Pull Request Guidelines
 
